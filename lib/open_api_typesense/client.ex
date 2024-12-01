@@ -1,29 +1,27 @@
 defmodule OpenApiTypesense.Client do
-  @moduledoc since: "0.1.0"
+  @moduledoc since: "0.2.0"
   @moduledoc """
   Http client for Typesense server.
   """
 
   alias OpenApiTypesense.Connection
 
-  @typedoc since: "0.1.0"
-  @type request_body() :: iodata() | nil
+  @typedoc since: "0.2.0"
+  @type response() ::
+          {:ok, any()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
+          | {:error, String.t()}
+          | :error
 
-  @typedoc since: "0.1.0"
-  @type request_method() :: :get | :post | :delete | :patch | :put
-
-  @typedoc since: "0.1.0"
-  @type request_path() :: String.t()
-
-  @doc since: "0.1.0"
+  @doc since: "0.2.0"
   @spec get_host :: String.t() | nil
   def get_host, do: Application.get_env(:open_api_typesense, :host)
 
-  @doc since: "0.1.0"
+  @doc since: "0.2.0"
   @spec get_scheme :: String.t() | nil
   def get_scheme, do: Application.get_env(:open_api_typesense, :scheme)
 
-  @doc since: "0.1.0"
+  @doc since: "0.2.0"
   @spec get_port :: non_neg_integer() | nil
   def get_port do
     Application.get_env(:open_api_typesense, :port)
@@ -38,87 +36,129 @@ defmodule OpenApiTypesense.Client do
   > function will still return the key and accessible inside
   > shell (assuming bad actors [pun unintended `:/`] can get in as well).
   """
-  @doc since: "0.1.0"
+  @doc since: "0.2.0"
   @spec api_key :: String.t() | nil
   def api_key, do: Application.get_env(:open_api_typesense, :api_key)
 
-  def run(opts \\ %{}) do
-    conn = Connection.new()
+  @doc """
+  Command for making http requests.
+
+  > #### On using this function {: .info}
+  > Functions e.g. `OpenApiTypesense.Health.health` don't need to explicitly pass
+  > a `connection` unless you want to use custom `connection`. See [`README`](/README.md) for
+  > more details or `OpenApiTypesense.Connection` module.
+
+  ## Options
+
+  - `:body`: Payload for passing as request body (defaults to `nil`).
+  - `:url`: Request path.
+  - `:method`: Request method (e.g. `:get`, `:post`, `:put`, `:patch`, `:delete`). Defaults to `:get`.
+  - `:query`: Request query params (defaults to `%{}`).
+
+  ## Examples
+      iex> alias OpenApiTypesense.Client
+
+      iex> connection = %OpenApiTypesense.Connection{
+      ...>   host: "localhost",
+      ...>   api_key: "some_api_key",
+      ...>   port: "8108",
+      ...>   scheme: "http"
+      ...> }
+
+      iex> opts = %{
+      ...>   args: [],
+      ...>   call: {OpenApiTypesense.Health, :health},
+      ...>   url: "/health",
+      ...>   method: :get,
+      ...>   response: [{200, {OpenApiTypesense.HealthStatus, :t}}],
+      ...>   opts: opts
+      ...> }
+
+      iex> Client.request(connection, opts)
+      {:ok, %OpenApiTypesense.HealthStatus{ok: true}}
+  """
+  @doc since: "0.2.0"
+  @spec request(Connection.t(), map()) :: response()
+  def request(conn, opts \\ %{}) do
     # Req.Request.append_error_steps and its retry option are used here.
     # options like retry, max_retries, etc. can be found in:
     # https://hexdocs.pm/req/Req.Steps.html#retry/1
     # NOTE: look at source code in Github
-    retry = fn request ->
+    retry =
       if Mix.env() === :test do
-        {req, resp_or_err} = request
-
         # disabled in order to cut time in tests
-        req = %{req | options: %{retry: false}}
-
-        Req.Steps.retry({req, resp_or_err})
+        false
       else
-        Req.Steps.retry(request)
+        :safe_transient
       end
-    end
+
+    max_retries =
+      if Mix.env() === :test do
+        # disabled in order to cut time in tests
+        0
+      else
+        # default
+        3
+      end
 
     url =
       %URI{
         scheme: conn.scheme,
         host: conn.host,
         port: conn.port,
-        path: opts[:path],
-        query: URI.encode_query(opts[:query] || %{})
+        path: opts[:url],
+        query: URI.encode_query(opts[:opts] || %{})
       }
 
-    response =
-      %Req.Request{
-        body: opts[:body] || nil,
+    {_req, resp} =
+      [
         method: opts[:method] || :get,
-        url: url
-      }
-      |> Req.Request.put_header("x-typesense-api-key", HttpClient.api_key())
-      |> Req.Request.put_header("content-type", opts[:content_type] || "application/json")
-      |> Req.Request.append_error_steps(retry: retry)
-      |> Req.Request.run!()
+        body: opts[:body] || nil,
+        url: url,
+        retry: retry,
+        max_retries: max_retries,
+        decode_json: [keys: :atoms!]
+      ]
+      |> Req.new()
+      |> Req.Request.put_header("x-typesense-api-key", api_key())
+      |> Req.Request.run_request()
 
-    case response.status in 200..299 do
-      true ->
-        body =
-          if opts[:content_type] === "text/plain",
-            do: String.split(response.body, "\n", trim: true) |> Enum.map(&Jason.decode!/1),
-            else: Jason.decode!(response.body)
+    parse_resp(resp, opts.response)
+  end
 
-        {:ok, body}
+  defp parse_resp(%Req.TransportError{} = error, _opts_resp) do
+    {:error, Exception.message(error)}
+  end
 
-      false ->
-        {:error, Jason.decode!(response.body)["message"]}
-    end
+  defp parse_resp(%Req.HTTPError{} = error, _opts_resp) do
+    {:error, Exception.message(error)}
+  end
 
-    # @spec request(map) :: {:ok, term} | {:error, term} | Operation.t()
-    # def request(%{opts: opts} = info) do
-    #   %Operation{
-    #     request_method: method,
-    #     request_server: server,
-    #     request_url: url
-    #   } = operation = Operation.new(info)
+  defp parse_resp(resp, opts_resp) do
+    {code, values} =
+      opts_resp
+      |> Enum.find(fn {code, _values} ->
+        code === resp.status
+      end)
 
-    #   metadata = %{
-    #     client: __MODULE__,
-    #     info: info,
-    #     request_method: method,
-    #     request_server: server,
-    #     request_url: url
-    #   }
+    parse_values(code, values, resp.body)
+  end
 
-    #   :telemetry.span([:oapi_github, :request], metadata, fn ->
-    #     result = reduce_stack(operation)
+  defp parse_values(code, values, body) when is_list(values) do
+    status = if code in 200..299, do: :ok, else: :error
 
-    #     if Config.wrap(opts) do
-    #       wrap_result(result, metadata)
-    #     else
-    #       {result, Map.put(metadata, :response_code, 0)}
-    #     end
-    #   end)
-    # end
+    resp =
+      values
+      |> Enum.map(fn {module, _func_name} ->
+        struct(module, body)
+      end)
+
+    {status, resp}
+  end
+
+  defp parse_values(code, {module, _func_name} = _values, body) do
+    status = if code in 200..299, do: :ok, else: :error
+
+    {status, struct(module, body)}
   end
 end

@@ -10,7 +10,7 @@ services:
       - ./typesense-data:/data
     command: "--data-dir /data --api-key=xyz --enable-cors"
   typesense_dashboard:
-    image: ghcr.io/bfritscher/typesense-dashboard:latest
+    image: ghcr.io/bfritscher/typesense-dashboard:1.9.3
     container_name: typesense_dashboard
     restart: on-failure
     ports:

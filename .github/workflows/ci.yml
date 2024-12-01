@@ -4,7 +4,6 @@ on:
   push:
     branches: ["main"]
   pull_request:
-    branches: ["main"]
 
 jobs:
   # https://docs.github.com/en/actions/managing-workflow-runs/skipping-workflow-runs

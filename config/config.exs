@@ -6,7 +6,9 @@ if Mix.env() in [:dev, :test] do
     host: "localhost",
     port: 8108,
     scheme: "http"
+end
 
+if Mix.env() == :dev do
   config :oapi_generator,
     default: [
       output: [

@@ -3,6 +3,8 @@ defmodule OpenApiTypesense.Collections do
   Provides API endpoints related to collections
   """
 
+  alias OpenApiTypesense.Connection
+
   @default_client OpenApiTypesense.Client
 
   @doc """
@@ -10,13 +12,13 @@ defmodule OpenApiTypesense.Collections do
 
   When a collection is created, we give it a name and describe the fields that will be indexed from the documents added to the collection.
   """
-  @spec create_collection(OpenApiTypesense.CollectionSchema.t(), keyword) ::
+  @spec create_collection(Connection.t(), OpenApiTypesense.CollectionSchema.t(), keyword) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def create_collection(body, opts \\ []) do
+  def create_collection(conn \\ Connection.new(), body, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [body: body],
       call: {OpenApiTypesense.Collections, :create_collection},
       url: "/collections",
@@ -58,13 +60,13 @@ defmodule OpenApiTypesense.Collections do
 
   Permanently drops a collection. This action cannot be undone. For large collections, this might have an impact on read latencies.
   """
-  @spec delete_collection(String.t(), keyword) ::
+  @spec delete_collection(Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_collection(collectionName, opts \\ []) do
+  def delete_collection(conn \\ Connection.new(), collectionName, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName],
       call: {OpenApiTypesense.Collections, :delete_collection},
       url: "/collections/#{collectionName}",
@@ -82,12 +84,12 @@ defmodule OpenApiTypesense.Collections do
 
   Find out which collection an alias points to by fetching it
   """
-  @spec get_alias(String.t(), keyword) ::
+  @spec get_alias(Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_alias(aliasName, opts \\ []) do
+  def get_alias(conn \\ Connection.new(), aliasName, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [aliasName: aliasName],
       call: {OpenApiTypesense.Collections, :get_alias},
       url: "/aliases/#{aliasName}",
@@ -105,11 +107,12 @@ defmodule OpenApiTypesense.Collections do
 
   List all aliases and the corresponding collections that they map to.
   """
-  @spec get_aliases(keyword) :: {:ok, OpenApiTypesense.CollectionAliasesResponse.t()} | :error
-  def get_aliases(opts \\ []) do
+  @spec get_aliases(Connection.t(), keyword) ::
+          {:ok, OpenApiTypesense.CollectionAliasesResponse.t()} | :error
+  def get_aliases(conn \\ Connection.new(), opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Collections, :get_aliases},
       url: "/aliases",
@@ -124,13 +127,13 @@ defmodule OpenApiTypesense.Collections do
 
   Retrieve the details of a collection, given its name.
   """
-  @spec get_collection(String.t(), keyword) ::
+  @spec get_collection(Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_collection(collectionName, opts \\ []) do
+  def get_collection(conn \\ Connection.new(), collectionName, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName],
       call: {OpenApiTypesense.Collections, :get_collection},
       url: "/collections/#{collectionName}",
@@ -148,11 +151,12 @@ defmodule OpenApiTypesense.Collections do
 
   Returns a summary of all your collections. The collections are returned sorted by creation date, with the most recent collections appearing first.
   """
-  @spec get_collections(keyword) :: {:ok, [OpenApiTypesense.CollectionResponse.t()]} | :error
-  def get_collections(opts \\ []) do
+  @spec get_collections(Connection.t(), keyword) ::
+          {:ok, [OpenApiTypesense.CollectionResponse.t()]} | :error
+  def get_collections(conn \\ Connection.new(), opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Collections, :get_collections},
       url: "/collections",

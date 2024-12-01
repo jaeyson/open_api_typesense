@@ -3,6 +3,8 @@ defmodule OpenApiTypesense.Keys do
   Provides API endpoints related to keys
   """
 
+  alias OpenApiTypesense.Connection
+
   @default_client OpenApiTypesense.Client
 
   @doc """
@@ -10,12 +12,12 @@ defmodule OpenApiTypesense.Keys do
 
   Create an API Key with fine-grain access control. You can restrict access on both a per-collection and per-action level. The generated key is returned only during creation. You want to store this key carefully in a secure place.
   """
-  @spec create_key(OpenApiTypesense.ApiKeySchema.t(), keyword) ::
+  @spec create_key(Connection.t(), OpenApiTypesense.ApiKeySchema.t(), keyword) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def create_key(body, opts \\ []) do
+  def create_key(conn \\ Connection.new(), body, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [body: body],
       call: {OpenApiTypesense.Keys, :create_key},
       url: "/keys",
@@ -34,13 +36,13 @@ defmodule OpenApiTypesense.Keys do
   @doc """
   Delete an API key given its ID.
   """
-  @spec delete_key(integer, keyword) ::
+  @spec delete_key(Connection.t(), integer, keyword) ::
           {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_key(keyId, opts \\ []) do
+  def delete_key(conn \\ Connection.new(), keyId, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [keyId: keyId],
       call: {OpenApiTypesense.Keys, :delete_key},
       url: "/keys/#{keyId}",
@@ -59,12 +61,12 @@ defmodule OpenApiTypesense.Keys do
 
   Retrieve (metadata about) a key. Only the key prefix is returned when you retrieve a key. Due to security reasons, only the create endpoint returns the full API key.
   """
-  @spec get_key(integer, keyword) ::
+  @spec get_key(Connection.t(), integer, keyword) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_key(keyId, opts \\ []) do
+  def get_key(conn \\ Connection.new(), keyId, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [keyId: keyId],
       call: {OpenApiTypesense.Keys, :get_key},
       url: "/keys/#{keyId}",
@@ -77,11 +79,11 @@ defmodule OpenApiTypesense.Keys do
   @doc """
   Retrieve (metadata about) all keys.
   """
-  @spec get_keys(keyword) :: {:ok, OpenApiTypesense.ApiKeysResponse.t()} | :error
-  def get_keys(opts \\ []) do
+  @spec get_keys(Connection.t(), keyword) :: {:ok, OpenApiTypesense.ApiKeysResponse.t()} | :error
+  def get_keys(conn \\ Connection.new(), opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Keys, :get_keys},
       url: "/keys",
