@@ -113,11 +113,11 @@ defmodule OpenApiTypesense.Client do
     {_req, resp} =
       [
         method: opts[:method] || :get,
-        body: opts[:body] || nil,
+        body: Jason.encode!(opts[:body] || nil),
         url: url,
         retry: retry,
         max_retries: max_retries,
-        decode_json: [keys: :atoms!]
+        decode_json: [keys: :atoms]
       ]
       |> Req.new()
       |> Req.Request.put_header("x-typesense-api-key", api_key())
