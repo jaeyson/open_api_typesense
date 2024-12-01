@@ -1,6 +1,6 @@
-defmodule OpenApiTypesense.Promote do
+defmodule OpenApiTypesense.Curation do
   @moduledoc """
-  Provides API endpoints related to promote
+  Provides API endpoints related to curation
   """
 
   @default_client OpenApiTypesense.Client
@@ -9,17 +9,18 @@ defmodule OpenApiTypesense.Promote do
   Delete an override associated with a collection
   """
   @spec delete_search_override(String.t(), String.t(), keyword) ::
-          {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_search_override(collectionName, overrideId, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
       args: [collectionName: collectionName, overrideId: overrideId],
-      call: {OpenApiTypesense.Promote, :delete_search_override},
+      call: {OpenApiTypesense.Curation, :delete_search_override},
       url: "/collections/#{collectionName}/overrides/#{overrideId}",
       method: :delete,
       response: [
-        {200, {OpenApiTypesense.SearchOverride, :t}},
+        {200, {OpenApiTypesense.SearchOverrideDeleteResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -36,7 +37,7 @@ defmodule OpenApiTypesense.Promote do
 
     client.request(%{
       args: [collectionName: collectionName],
-      call: {OpenApiTypesense.Promote, :get_search_overrides},
+      call: {OpenApiTypesense.Curation, :get_search_overrides},
       url: "/collections/#{collectionName}/overrides",
       method: :get,
       response: [{200, {OpenApiTypesense.SearchOverridesResponse, :t}}],
@@ -61,7 +62,7 @@ defmodule OpenApiTypesense.Promote do
 
     client.request(%{
       args: [collectionName: collectionName, overrideId: overrideId, body: body],
-      call: {OpenApiTypesense.Promote, :upsert_search_override},
+      call: {OpenApiTypesense.Curation, :upsert_search_override},
       url: "/collections/#{collectionName}/overrides/#{overrideId}",
       body: body,
       method: :put,

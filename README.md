@@ -1,7 +1,5 @@
 # OpenApiTypesense
 
-**TODO: Add description**
-
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
@@ -10,7 +8,7 @@ by adding `open_api_typesense` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:open_api_typesense, "~> 0.1.0"}
+    {:open_api_typesense, "~> 0.1"}
   ]
 end
 ```

@@ -5,11 +5,12 @@ defmodule OpenApiTypesense.AnalyticsRuleParameters do
 
   @type t :: %__MODULE__{
           destination: OpenApiTypesense.AnalyticsRuleParametersDestination.t(),
-          limit: integer,
+          expand_query: boolean | nil,
+          limit: integer | nil,
           source: OpenApiTypesense.AnalyticsRuleParametersSource.t()
         }
 
-  defstruct [:destination, :limit, :source]
+  defstruct [:destination, :expand_query, :limit, :source]
 
   @doc false
   @spec __fields__(atom) :: keyword
@@ -18,6 +19,7 @@ defmodule OpenApiTypesense.AnalyticsRuleParameters do
   def __fields__(:t) do
     [
       destination: {OpenApiTypesense.AnalyticsRuleParametersDestination, :t},
+      expand_query: :boolean,
       limit: :integer,
       source: {OpenApiTypesense.AnalyticsRuleParametersSource, :t}
     ]

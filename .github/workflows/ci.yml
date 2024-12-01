@@ -1,0 +1,127 @@
+name: Continuous Integration (CI)
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  # https://docs.github.com/en/actions/managing-workflow-runs/skipping-workflow-runs
+  # Workflows that would otherwise be triggered using `on: push` or
+  # `on: pull_request` won't be triggered if you add any of the
+  # following strings to the commit message in a push, or the HEAD
+  # commit of a pull request:
+  # - [skip ci]
+  # - [ci skip]
+  # - [no ci]
+  # - [skip actions]
+  # - [actions skip]
+
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+        - typesense: '0.25.2'
+          otp: '25'
+          elixir: '1.14'
+          lint: true
+        - typesense: '26.0'
+          otp: '25'
+          elixir: '1.14'
+          lint: true
+        - typesense: '27.1'
+          otp: '25'
+          elixir: '1.14'
+          lint: true
+        - typesense: '0.25.2'
+          otp: '27'
+          elixir: '1.17'
+          lint: true
+        - typesense: '26.0'
+          otp: '27'
+          elixir: '1.17'
+          lint: true
+        - typesense: '27.1'
+          otp: '27'
+          elixir: '1.17'
+          lint: true
+
+    env:
+      MIX_ENV: test
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    services:
+      typesense:
+        image: typesense/typesense:${{ matrix.typesense }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Start Typesense
+        run: |
+          docker run -d \
+          -p 8108:8108 \
+          --name typesense \
+          -v /tmp/typesense-data:/data \
+          typesense/typesense:${{ matrix.typesense}} \
+          --api-key=xyz \
+          --data-dir /data \
+          --enable-cors
+
+      - name: Curl Typesense
+        run: sleep 1 && curl http://localhost:8108/health
+
+      - name: Setup Elixir/OTP
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+
+      - name: Cache dependencies/builds
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-mix-typesense-${{ matrix.typesense}}-${{ matrix.otp}}-${{ matrix.elixir}}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-typesense-${{ matrix.typesense}}
+
+      - name: Install Dependencies
+        run: |
+          mix local.rebar --if-missing
+          mix local.hex --if-missing
+          mix deps.get
+
+      - name: Find unused dependencies
+        run: mix deps.unlock --check-unused
+        if: ${{ matrix.lint }}
+
+      - name: Check retired dependencies
+        run: mix hex.audit
+        if: ${{ matrix.lint }}
+
+      - name: Security audit of dependencies
+        run: mix deps.audit
+        if: ${{ matrix.lint }}
+
+      - name: Compile project
+        run: mix compile --all-warnings
+
+      - name: Run static analysis
+        run: mix credo --all --strict
+        if: ${{ matrix.lint }}
+
+      - name: Check format files
+        run: mix format --check-formatted
+        if: ${{ matrix.lint }}
+
+      - name: Run tests
+        run: mix test
+
+      - name: Post test coverage to Coveralls
+        run: mix coveralls.github

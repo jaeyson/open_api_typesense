@@ -35,7 +35,8 @@ defmodule OpenApiTypesense.Keys do
   Delete an API key given its ID.
   """
   @spec delete_key(integer, keyword) ::
-          {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_key(keyId, opts \\ []) do
     client = opts[:client] || @default_client
 
@@ -45,7 +46,7 @@ defmodule OpenApiTypesense.Keys do
       url: "/keys/#{keyId}",
       method: :delete,
       response: [
-        {200, {OpenApiTypesense.ApiKey, :t}},
+        {200, {OpenApiTypesense.ApiKeyDeleteResponse, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],

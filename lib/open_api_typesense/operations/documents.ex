@@ -61,7 +61,8 @@ defmodule OpenApiTypesense.Documents do
   Delete an override associated with a collection
   """
   @spec delete_search_override(String.t(), String.t(), keyword) ::
-          {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_search_override(collectionName, overrideId, opts \\ []) do
     client = opts[:client] || @default_client
 
@@ -71,28 +72,7 @@ defmodule OpenApiTypesense.Documents do
       url: "/collections/#{collectionName}/overrides/#{overrideId}",
       method: :delete,
       response: [
-        {200, {OpenApiTypesense.SearchOverride, :t}},
-        {404, {OpenApiTypesense.ApiResponse, :t}}
-      ],
-      opts: opts
-    })
-  end
-
-  @doc """
-  Delete a synonym associated with a collection
-  """
-  @spec delete_search_synonym(String.t(), String.t(), keyword) ::
-          {:ok, OpenApiTypesense.SearchSynonym.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_search_synonym(collectionName, synonymId, opts \\ []) do
-    client = opts[:client] || @default_client
-
-    client.request(%{
-      args: [collectionName: collectionName, synonymId: synonymId],
-      call: {OpenApiTypesense.Documents, :delete_search_synonym},
-      url: "/collections/#{collectionName}/synonyms/#{synonymId}",
-      method: :delete,
-      response: [
-        {200, {OpenApiTypesense.SearchSynonym, :t}},
+        {200, {OpenApiTypesense.SearchOverrideDeleteResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -185,51 +165,6 @@ defmodule OpenApiTypesense.Documents do
   end
 
   @doc """
-  Retrieve a single search synonym
-
-  Retrieve the details of a search synonym, given its id.
-  """
-  @spec get_search_synonym(String.t(), String.t(), keyword) ::
-          {:ok, OpenApiTypesense.SearchSynonym.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_search_synonym(collectionName, synonymId, opts \\ []) do
-    client = opts[:client] || @default_client
-
-    client.request(%{
-      args: [collectionName: collectionName, synonymId: synonymId],
-      call: {OpenApiTypesense.Documents, :get_search_synonym},
-      url: "/collections/#{collectionName}/synonyms/#{synonymId}",
-      method: :get,
-      response: [
-        {200, {OpenApiTypesense.SearchSynonym, :t}},
-        {404, {OpenApiTypesense.ApiResponse, :t}}
-      ],
-      opts: opts
-    })
-  end
-
-  @doc """
-  List all collection synonyms
-  """
-  @spec get_search_synonyms(String.t(), keyword) ::
-          {:ok, OpenApiTypesense.SearchSynonymsResponse.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_search_synonyms(collectionName, opts \\ []) do
-    client = opts[:client] || @default_client
-
-    client.request(%{
-      args: [collectionName: collectionName],
-      call: {OpenApiTypesense.Documents, :get_search_synonyms},
-      url: "/collections/#{collectionName}/synonyms",
-      method: :get,
-      response: [
-        {200, {OpenApiTypesense.SearchSynonymsResponse, :t}},
-        {404, {OpenApiTypesense.ApiResponse, :t}}
-      ],
-      opts: opts
-    })
-  end
-
-  @doc """
   Import documents into a collection
 
   The documents to be imported must be formatted in a newline delimited JSON structure. You can feed the output file from a Typesense export operation directly as import.
@@ -270,13 +205,14 @@ defmodule OpenApiTypesense.Documents do
   ## Options
 
     * `action`: Additional action to perform
+    * `dirty_values`: Dealing with Dirty Data
 
   """
   @spec index_document(String.t(), map, keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def index_document(collectionName, body, opts \\ []) do
     client = opts[:client] || @default_client
-    query = Keyword.take(opts, [:action])
+    query = Keyword.take(opts, [:action, :dirty_values])
 
     client.request(%{
       args: [collectionName: collectionName, body: body],
@@ -359,11 +295,17 @@ defmodule OpenApiTypesense.Documents do
   Update a document
 
   Update an individual document from a collection by using its ID. The update can be partial.
+
+  ## Options
+
+    * `dirty_values`: Dealing with Dirty Data
+
   """
   @spec update_document(String.t(), String.t(), map, keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_document(collectionName, documentId, body, opts \\ []) do
     client = opts[:client] || @default_client
+    query = Keyword.take(opts, [:dirty_values])
 
     client.request(%{
       args: [collectionName: collectionName, documentId: documentId, body: body],
@@ -371,6 +313,7 @@ defmodule OpenApiTypesense.Documents do
       url: "/collections/#{collectionName}/documents/#{documentId}",
       body: body,
       method: :patch,
+      query: query,
       request: [{"application/json", :map}],
       response: [{200, :map}, {404, {OpenApiTypesense.ApiResponse, :t}}],
       opts: opts
@@ -436,36 +379,6 @@ defmodule OpenApiTypesense.Documents do
       request: [{"application/json", {OpenApiTypesense.SearchOverrideSchema, :t}}],
       response: [
         {200, {OpenApiTypesense.SearchOverride, :t}},
-        {404, {OpenApiTypesense.ApiResponse, :t}}
-      ],
-      opts: opts
-    })
-  end
-
-  @doc """
-  Create or update a synonym
-
-  Create or update a synonym  to define search terms that should be considered equivalent.
-  """
-  @spec upsert_search_synonym(
-          String.t(),
-          String.t(),
-          OpenApiTypesense.SearchSynonymSchema.t(),
-          keyword
-        ) ::
-          {:ok, OpenApiTypesense.SearchSynonym.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_search_synonym(collectionName, synonymId, body, opts \\ []) do
-    client = opts[:client] || @default_client
-
-    client.request(%{
-      args: [collectionName: collectionName, synonymId: synonymId, body: body],
-      call: {OpenApiTypesense.Documents, :upsert_search_synonym},
-      url: "/collections/#{collectionName}/synonyms/#{synonymId}",
-      body: body,
-      method: :put,
-      request: [{"application/json", {OpenApiTypesense.SearchSynonymSchema, :t}}],
-      response: [
-        {200, {OpenApiTypesense.SearchSynonym, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts

@@ -17,16 +17,16 @@ defmodule OpenApiTypesense.Client do
 
   @doc since: "0.1.0"
   @spec get_host :: String.t() | nil
-  def get_host, do: Application.get_env(:ex_typesense, :host)
+  def get_host, do: Application.get_env(:open_api_typesense, :host)
 
   @doc since: "0.1.0"
   @spec get_scheme :: String.t() | nil
-  def get_scheme, do: Application.get_env(:ex_typesense, :scheme)
+  def get_scheme, do: Application.get_env(:open_api_typesense, :scheme)
 
   @doc since: "0.1.0"
   @spec get_port :: non_neg_integer() | nil
   def get_port do
-    Application.get_env(:ex_typesense, :port)
+    Application.get_env(:open_api_typesense, :port)
   end
 
   @doc """
@@ -40,7 +40,7 @@ defmodule OpenApiTypesense.Client do
   """
   @doc since: "0.1.0"
   @spec api_key :: String.t() | nil
-  def api_key, do: Application.get_env(:ex_typesense, :api_key)
+  def api_key, do: Application.get_env(:open_api_typesense, :api_key)
 
   def run(opts \\ %{}) do
     conn = Connection.new()

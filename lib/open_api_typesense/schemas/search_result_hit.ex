@@ -9,6 +9,7 @@ defmodule OpenApiTypesense.SearchResultHit do
           highlight: map | nil,
           highlights: [OpenApiTypesense.SearchHighlight.t()] | nil,
           text_match: integer | nil,
+          text_match_info: OpenApiTypesense.SearchResultHitTextMatchInfo.t() | nil,
           vector_distance: number | nil
         }
 
@@ -18,6 +19,7 @@ defmodule OpenApiTypesense.SearchResultHit do
     :highlight,
     :highlights,
     :text_match,
+    :text_match_info,
     :vector_distance
   ]
 
@@ -32,6 +34,7 @@ defmodule OpenApiTypesense.SearchResultHit do
       highlight: :map,
       highlights: [{OpenApiTypesense.SearchHighlight, :t}],
       text_match: :integer,
+      text_match_info: {OpenApiTypesense.SearchResultHitTextMatchInfo, :t},
       vector_distance: :number
     ]
   end
