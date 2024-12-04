@@ -3,28 +3,12 @@ defmodule CollectionsTest do
   doctest OpenApiTypesense.Collections
 
   alias OpenApiTypesense.ApiResponse
-  alias OpenApiTypesense.Collections
+  alias OpenApiTypesense.CollectionAlias
   alias OpenApiTypesense.CollectionAliasesResponse
   alias OpenApiTypesense.CollectionResponse
-  alias OpenApiTypesense.Connection
-  alias OpenApiTypesense.Field
-  alias OpenApiTypesense.CollectionSchema
+  alias OpenApiTypesense.Collections
 
   setup_all do
-    # fields =
-    #   [
-    #     %{name: "company_name", type: "string"},
-    #     %{name: "companies_id", type: "int32"},
-    #     %{name: "country", type: "string", facet: true}
-    #   ]
-    #   |> Enum.map(&struct(Field, &1))
-
-    # schema =
-    #   struct(CollectionSchema, %{
-    #     name: "companies",
-    #     fields: fields,
-    #     default_sorting_field: "companies_id"
-    #   })
     schema = %{
       name: "companies",
       fields: [
@@ -39,22 +23,56 @@ defmodule CollectionsTest do
       Collections.delete_collection(schema.name)
     end)
 
-    %{schema: schema}
+    %{schema: schema, alias_name: "foo_bar"}
   end
 
-  test "wip: create collection", %{schema: schema} do
-    assert Collections.create_collection(schema) == :ok
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "success: create a collection", %{schema: schema} do
+    name = schema.name
+
+    assert {:ok, %CollectionResponse{name: ^name}} = Collections.create_collection(schema)
   end
 
-  test "success: list empty collection" do
-    assert {:ok, [%CollectionResponse{}]} = Collections.get_collections()
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "success: list empty collection", %{schema: schema} do
+    Collections.delete_collection(schema.name)
+
+    assert {:ok, [%CollectionResponse{name: nil, created_at: nil}]} =
+             Collections.get_collections()
   end
 
-  test "success: list empty aliases" do
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "success: update an existing collection" do
+    name = "burgers"
+
+    schema = %{
+      name: name,
+      fields: [
+        %{name: "burger_name", type: "string"},
+        %{name: name <> "_id", type: "int32"},
+        %{name: "price", type: "string"}
+      ],
+      default_sorting_field: name <> "_id"
+    }
+
+    assert {:ok, %CollectionResponse{name: ^name}} = Collections.create_collection(schema)
+
+    body = %{fields: [%{name: "price", drop: true}]}
+
+    assert {:ok, %OpenApiTypesense.CollectionUpdateSchema{}} =
+             Collections.update_collection(name, body)
+
+    Collections.delete_collection(name)
+  end
+
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "success: list empty aliases", %{alias_name: alias_name} do
+    Collections.delete_alias(alias_name)
     assert {:ok, %CollectionAliasesResponse{aliases: []}} = Collections.get_aliases()
   end
 
-  test "success: delete missing collection" do
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "success: delete a missing collection" do
     assert Collections.delete_collection("non-existing-collection") ==
              {:error,
               %OpenApiTypesense.ApiResponse{
@@ -62,12 +80,26 @@ defmodule CollectionsTest do
               }}
   end
 
-  test "error: non-existing alias" do
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "success: upsert an alias", %{schema: schema, alias_name: alias_name} do
+    collection_name = schema.name
+
+    body = %{
+      "collection_name" => collection_name
+    }
+
+    assert {:ok, %CollectionAlias{collection_name: ^collection_name, name: ^alias_name}} =
+             Collections.upsert_alias(alias_name, body)
+  end
+
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "error: get a non-existing alias" do
     assert Collections.get_alias("non-existing-alias") ==
              {:error, %ApiResponse{message: "Not Found"}}
   end
 
-  test "error: non-existing collection" do
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "error: get a non-existing collection" do
     assert Collections.get_collection("non-existing-collection") ==
              {:error, %ApiResponse{message: "Not Found"}}
   end

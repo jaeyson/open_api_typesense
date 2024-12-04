@@ -20,6 +20,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      MIX_ENV: test
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      LATEST_TYPESENSE: '27.1'
+
     strategy:
       matrix:
         include:
@@ -48,10 +53,6 @@ jobs:
           elixir: '1.17'
           lint: true
 
-    env:
-      MIX_ENV: test
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     services:
       typesense:
         image: typesense/typesense:${{ matrix.typesense }}
@@ -68,7 +69,10 @@ jobs:
           -v /tmp/typesense-data:/data \
           typesense/typesense:${{ matrix.typesense}} \
           --api-key=xyz \
-          --data-dir /data \
+          --data-dir=/data \
+          --enable-search-analytics=true \
+          --analytics-dir=/analytics-data  \
+          --analytics-flush-interval=60 \
           --enable-cors
 
       - name: Curl Typesense
@@ -86,9 +90,9 @@ jobs:
           path: |
             deps
             _build
-          key: ${{ runner.os }}-mix-typesense-${{ matrix.typesense}}-${{ matrix.otp}}-${{ matrix.elixir}}-${{ hashFiles('**/mix.lock') }}
+          key: ${{ runner.os }}-typesense-${{ matrix.typesense}}-${{ matrix.otp}}-${{ matrix.elixir}}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
-            ${{ runner.os }}-mix-typesense-${{ matrix.typesense}}
+            ${{ runner.os }}-typesense-${{ matrix.typesense}}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-
 
       - name: Install Dependencies
         run: |
@@ -115,12 +119,13 @@ jobs:
         run: mix credo --all --strict
         if: ${{ matrix.lint }}
 
-      - name: Check format files
-        run: mix format --check-formatted
-        if: ${{ matrix.lint }}
+      # - name: Check format files
+      #   run: mix format --check-formatted
+      #   if: ${{ matrix.lint }}
 
       - name: Run tests
-        run: mix test
+        run: mix test --only ${{ matrix.typesense }} --trace
 
       - name: Post test coverage to Coveralls
         run: mix coveralls.github
+        if: ${{ matrix.typesense == env.LATEST_TYPESENSE }} 

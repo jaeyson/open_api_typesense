@@ -13,6 +13,8 @@ if Mix.env() == :dev do
     default: [
       output: [
         base_module: OpenApiTypesense,
+        processor: OpenAPI.Processor,
+        renderer: OpenAPI.Renderer,
         location: "lib/open_api_typesense",
         operation_subdirectory: "operations/",
         schema_subdirectory: "schemas/"

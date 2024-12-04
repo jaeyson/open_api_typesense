@@ -3,6 +3,10 @@ defmodule OpenApiTypesense.Debug do
   Provides API endpoint related to debug
   """
 
+  defstruct [:version]
+
+  alias OpenApiTypesense.Connection
+
   @default_client OpenApiTypesense.Client
 
   @type debug_200_json_resp :: %{version: String.t() | nil}
@@ -12,11 +16,11 @@ defmodule OpenApiTypesense.Debug do
 
   Print debugging information
   """
-  @spec debug(keyword) :: {:ok, map} | :error
-  def debug(opts \\ []) do
+  @spec debug(Connection.t(), keyword) :: {:ok, map} | :error
+  def debug(conn \\ Connection.new(), opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Debug, :debug},
       url: "/debug",

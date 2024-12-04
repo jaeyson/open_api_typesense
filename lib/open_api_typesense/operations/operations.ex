@@ -3,6 +3,8 @@ defmodule OpenApiTypesense.Operations do
   Provides API endpoints related to operations
   """
 
+  alias OpenApiTypesense.Connection
+
   @default_client OpenApiTypesense.Client
 
   @doc """
@@ -10,11 +12,12 @@ defmodule OpenApiTypesense.Operations do
 
   Retrieve the stats about API endpoints.
   """
-  @spec retrieve_api_stats(keyword) :: {:ok, OpenApiTypesense.APIStatsResponse.t()} | :error
-  def retrieve_api_stats(opts \\ []) do
+  @spec retrieve_api_stats(Connection.t(), keyword) ::
+          {:ok, OpenApiTypesense.APIStatsResponse.t()} | :error
+  def retrieve_api_stats(conn \\ Connection.new(), opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Operations, :retrieve_api_stats},
       url: "/stats.json",
@@ -29,11 +32,11 @@ defmodule OpenApiTypesense.Operations do
 
   Retrieve the metrics.
   """
-  @spec retrieve_metrics(keyword) :: {:ok, map} | :error
-  def retrieve_metrics(opts \\ []) do
+  @spec retrieve_metrics(Connection.t(), keyword) :: {:ok, map} | :error
+  def retrieve_metrics(conn \\ Connection.new(), opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Operations, :retrieve_metrics},
       url: "/metrics.json",
@@ -53,12 +56,13 @@ defmodule OpenApiTypesense.Operations do
     * `snapshot_path`: The directory on the server where the snapshot should be saved.
 
   """
-  @spec take_snapshot(keyword) :: {:ok, OpenApiTypesense.SuccessStatus.t()} | :error
-  def take_snapshot(opts \\ []) do
+  @spec take_snapshot(Connection.t(), keyword) ::
+          {:ok, OpenApiTypesense.SuccessStatus.t()} | :error
+  def take_snapshot(conn \\ Connection.new(), opts) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:snapshot_path])
 
-    client.request(%{
+    client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Operations, :take_snapshot},
       url: "/operations/snapshot",
@@ -74,11 +78,11 @@ defmodule OpenApiTypesense.Operations do
 
   Triggers a follower node to initiate the raft voting process, which triggers leader re-election. The follower node that you run this operation against will become the new leader, once this command succeeds.
   """
-  @spec vote(keyword) :: {:ok, OpenApiTypesense.SuccessStatus.t()} | :error
-  def vote(opts \\ []) do
+  @spec vote(Connection.t(), keyword) :: {:ok, OpenApiTypesense.SuccessStatus.t()} | :error
+  def vote(conn \\ Connection.new(), opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Operations, :vote},
       url: "/operations/vote",

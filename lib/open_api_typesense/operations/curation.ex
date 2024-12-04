@@ -3,6 +3,8 @@ defmodule OpenApiTypesense.Curation do
   Provides API endpoints related to curation
   """
 
+  alias OpenApiTypesense.Connection
+
   @default_client OpenApiTypesense.Client
 
   @doc """
@@ -30,12 +32,12 @@ defmodule OpenApiTypesense.Curation do
   @doc """
   List all collection overrides
   """
-  @spec get_search_overrides(String.t(), keyword) ::
+  @spec get_search_overrides(Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
-  def get_search_overrides(collectionName, opts \\ []) do
+  def get_search_overrides(conn \\ Connection.new(), collectionName, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName],
       call: {OpenApiTypesense.Curation, :get_search_overrides},
       url: "/collections/#{collectionName}/overrides",

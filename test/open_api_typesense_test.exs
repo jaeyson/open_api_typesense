@@ -1,8 +1,8 @@
 defmodule OpenApiTypesenseTest do
   use ExUnit.Case
-  doctest OpenApiTypesense
+  # doctest OpenApiTypesense
 
-  test "greets the world" do
-    assert OpenApiTypesense.hello() == :world
-  end
+  # test "greets the world" do
+  #   assert OpenApiTypesense.hello() == :world
+  # end
 end

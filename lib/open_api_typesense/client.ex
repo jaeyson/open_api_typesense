@@ -107,7 +107,7 @@ defmodule OpenApiTypesense.Client do
         host: conn.host,
         port: conn.port,
         path: opts[:url],
-        query: URI.encode_query(opts[:opts] || %{})
+        query: URI.encode_query(opts[:query] || %{})
       }
 
     {_req, resp} =
@@ -142,6 +142,12 @@ defmodule OpenApiTypesense.Client do
       end)
 
     parse_values(code, values, resp.body)
+  end
+
+  defp parse_values(code, :map, body) when is_map(body) do
+    status = if code in 200..299, do: :ok, else: :error
+
+    {status, body}
   end
 
   defp parse_values(code, values, body) when is_list(values) do

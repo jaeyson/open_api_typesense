@@ -3,6 +3,8 @@ defmodule OpenApiTypesense.Presets do
   Provides API endpoints related to presets
   """
 
+  alias OpenApiTypesense.Connection
+
   @default_client OpenApiTypesense.Client
 
   @doc """
@@ -34,12 +36,12 @@ defmodule OpenApiTypesense.Presets do
 
   Retrieve the details of all presets
   """
-  @spec retrieve_all_presets(keyword) ::
+  @spec retrieve_all_presets(Connection.t(), keyword) ::
           {:ok, OpenApiTypesense.PresetsRetrieveSchema.t()} | :error
-  def retrieve_all_presets(opts \\ []) do
+  def retrieve_all_presets(conn \\ Connection.new(), opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Presets, :retrieve_all_presets},
       url: "/presets",

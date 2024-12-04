@@ -3,6 +3,8 @@ defmodule OpenApiTypesense.Analytics do
   Provides API endpoints related to analytics
   """
 
+  alias OpenApiTypesense.Connection
+
   @default_client OpenApiTypesense.Client
 
   @doc """
@@ -62,13 +64,13 @@ defmodule OpenApiTypesense.Analytics do
 
   Permanently deletes an analytics rule, given it's name
   """
-  @spec delete_analytics_rule(String.t(), keyword) ::
+  @spec delete_analytics_rule(Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.AnalyticsRuleDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_analytics_rule(ruleName, opts \\ []) do
+  def delete_analytics_rule(conn \\ Connection.new(), ruleName, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [ruleName: ruleName],
       call: {OpenApiTypesense.Analytics, :delete_analytics_rule},
       url: "/analytics/rules/#{ruleName}",
@@ -86,13 +88,13 @@ defmodule OpenApiTypesense.Analytics do
 
   Retrieve the details of an analytics rule, given it's name
   """
-  @spec retrieve_analytics_rule(String.t(), keyword) ::
+  @spec retrieve_analytics_rule(Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_analytics_rule(ruleName, opts \\ []) do
+  def retrieve_analytics_rule(conn \\ Connection.new(), ruleName, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [ruleName: ruleName],
       call: {OpenApiTypesense.Analytics, :retrieve_analytics_rule},
       url: "/analytics/rules/#{ruleName}",
@@ -110,12 +112,12 @@ defmodule OpenApiTypesense.Analytics do
 
   Retrieve the details of all analytics rules
   """
-  @spec retrieve_analytics_rules(keyword) ::
+  @spec retrieve_analytics_rules(Connection.t(), keyword) ::
           {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()} | :error
-  def retrieve_analytics_rules(opts \\ []) do
+  def retrieve_analytics_rules(conn \\ Connection.new(), opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Analytics, :retrieve_analytics_rules},
       url: "/analytics/rules",
