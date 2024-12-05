@@ -114,12 +114,9 @@ jobs:
         run: mix credo --all --strict
         if: ${{ matrix.lint }}
 
-      # TODO: how do we fix problem in Github Actions? there's some weird
-      # thing where it just throws format error even though mix format
-      # is ran multiple times locally!
-      # - name: Check format files
-      #   run: mix format --check-formatted
-      #   if: ${{ matrix.lint }}
+      - name: Check format files
+        run: mix format --check-formatted
+        if: ${{ matrix.lint }}
 
       - name: Run tests
         run: mix test --only ${{ matrix.typesense }} --trace

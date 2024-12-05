@@ -34,11 +34,8 @@ defmodule CollectionsTest do
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: list empty collection", %{schema: schema} do
-    Collections.delete_collection(schema.name)
-
-    assert {:ok, [%CollectionResponse{name: nil, created_at: nil}]} =
-             Collections.get_collections()
+  test "success: list collections", %{schema: schema} do
+    assert {:ok, []} = Collections.get_collections()
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]

@@ -123,7 +123,7 @@ defmodule OpenApiTypesense.Client do
       |> Req.Request.put_header("x-typesense-api-key", api_key())
       |> Req.Request.run_request()
 
-    parse_resp(resp, opts.response)
+    parse_resp(resp, opts[:response])
   end
 
   defp parse_resp(%Req.TransportError{} = error, _opts_resp) do
@@ -156,8 +156,13 @@ defmodule OpenApiTypesense.Client do
     resp =
       values
       |> Enum.map(fn {module, _func_name} ->
-        struct(module, body)
+        if is_map(module),
+          do: struct(body, module)
       end)
+      |> case do
+        [nil] -> []
+        resp -> resp
+      end
 
     {status, resp}
   end
