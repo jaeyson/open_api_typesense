@@ -3,6 +3,8 @@ defmodule OpenApiTypesense.Documents do
   Provides API endpoints related to documents
   """
 
+  defstruct [:num_deleted, :num_updated]
+
   @default_client OpenApiTypesense.Client
 
   @doc """

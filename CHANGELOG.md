@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.2.0 (2024.12.xx)
+
+### Changed
+
+* Bumped dependencies
+
+### Added
+
+* Default client, currently using [`Req`](https://hexdocs.pm/req).
+* `Connection` module, which is taken from [`ExTypesense`](https://hexdocs.pm/ex_typesense) because someone requested for loading of credentials at runtime.
+* `defstruct` in Modules `Debug`, `Documents` and `Stopwords` because it is throwing undefined struct error.
+
 ## 0.1.0 (2024.11.08)
 
 * Initial release
