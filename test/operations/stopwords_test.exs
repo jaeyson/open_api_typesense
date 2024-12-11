@@ -41,7 +41,7 @@ defmodule StopwordsTest do
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": false]
-  test "success: retreive specific stopwords set" do
+  test "success: retrieve specific stopwords set" do
     set_id = "stopword_set_names"
 
     body =

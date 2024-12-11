@@ -12,9 +12,15 @@ defmodule OpenApiTypesense.Override do
 
   Retrieve the details of a search override, given its id.
   """
+  @spec get_search_override(String.t(), String.t(), keyword) ::
+          {:ok, OpenApiTypesense.SearchOverride.t()} | :error
+  def get_search_override(collectionName, overrideId, opts \\ []) do
+    get_search_override(Connection.new(), collectionName, overrideId, opts)
+  end
+
   @spec get_search_override(Connection.t(), String.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | :error
-  def get_search_override(conn \\ Connection.new(), collectionName, overrideId, opts \\ []) do
+  def get_search_override(conn, collectionName, overrideId, opts) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{

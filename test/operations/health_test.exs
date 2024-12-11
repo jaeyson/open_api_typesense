@@ -34,6 +34,6 @@ defmodule HealthTest do
         scheme: "http"
       })
 
-    assert Health.health(conn) === {:error, "non-existing domain"}
+    assert Health.health(conn, []) === {:error, "non-existing domain"}
   end
 end

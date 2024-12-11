@@ -16,8 +16,13 @@ defmodule OpenApiTypesense.Debug do
 
   Print debugging information
   """
+  @spec debug(keyword) :: {:ok, map} | :error
+  def debug(opts \\ []) do
+    debug(Connection.new(), opts)
+  end
+
   @spec debug(Connection.t(), keyword) :: {:ok, map} | :error
-  def debug(conn \\ Connection.new(), opts \\ []) do
+  def debug(conn, opts) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{

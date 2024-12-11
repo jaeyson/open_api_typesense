@@ -12,8 +12,13 @@ defmodule OpenApiTypesense.Health do
 
   Checks if Typesense server is ready to accept requests.
   """
+  @spec health(keyword) :: {:ok, OpenApiTypesense.HealthStatus.t()} | :error
+  def health(opts \\ []) do
+    health(Connection.new(), opts)
+  end
+
   @spec health(Connection.t(), keyword) :: {:ok, OpenApiTypesense.HealthStatus.t()} | :error
-  def health(conn \\ Connection.new(), opts \\ []) do
+  def health(conn, opts) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{

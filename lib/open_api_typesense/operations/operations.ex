@@ -12,9 +12,15 @@ defmodule OpenApiTypesense.Operations do
 
   Retrieve the stats about API endpoints.
   """
+  @spec retrieve_api_stats(keyword) ::
+          {:ok, OpenApiTypesense.APIStatsResponse.t()} | :error
+  def retrieve_api_stats(opts \\ []) do
+    retrieve_api_stats(Connection.new(), opts)
+  end
+
   @spec retrieve_api_stats(Connection.t(), keyword) ::
           {:ok, OpenApiTypesense.APIStatsResponse.t()} | :error
-  def retrieve_api_stats(conn \\ Connection.new(), opts \\ []) do
+  def retrieve_api_stats(conn, opts) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{
@@ -33,7 +39,12 @@ defmodule OpenApiTypesense.Operations do
   Retrieve the metrics.
   """
   @spec retrieve_metrics(Connection.t(), keyword) :: {:ok, map} | :error
-  def retrieve_metrics(conn \\ Connection.new(), opts \\ []) do
+  def retrieve_metrics(opts \\ []) do
+    retrieve_metrics(Connection.new(), opts)
+  end
+
+  @spec retrieve_metrics(Connection.t(), keyword) :: {:ok, map} | :error
+  def retrieve_metrics(conn, opts) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{
@@ -78,8 +89,13 @@ defmodule OpenApiTypesense.Operations do
 
   Triggers a follower node to initiate the raft voting process, which triggers leader re-election. The follower node that you run this operation against will become the new leader, once this command succeeds.
   """
+  @spec vote(keyword) :: {:ok, OpenApiTypesense.SuccessStatus.t()} | :error
+  def vote(opts \\ []) do
+    vote(Connection.new(), opts)
+  end
+
   @spec vote(Connection.t(), keyword) :: {:ok, OpenApiTypesense.SuccessStatus.t()} | :error
-  def vote(conn \\ Connection.new(), opts \\ []) do
+  def vote(conn, opts) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{

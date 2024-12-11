@@ -10,10 +10,17 @@ defmodule OpenApiTypesense.Curation do
   @doc """
   Delete an override associated with a collection
   """
+  @spec delete_search_override(String.t(), String.t(), keyword) ::
+          {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
+  def delete_search_override(collectionName, overrideId, opts \\ []) do
+    delete_search_override(Connection.new(), collectionName, overrideId, opts)
+  end
+
   @spec delete_search_override(Connection.t(), String.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_search_override(conn \\ Connection.new(), collectionName, overrideId, opts \\ []) do
+  def delete_search_override(conn, collectionName, overrideId, opts) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{
@@ -32,9 +39,15 @@ defmodule OpenApiTypesense.Curation do
   @doc """
   List all collection overrides
   """
+  @spec get_search_overrides(String.t(), keyword) ::
+          {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
+  def get_search_overrides(collectionName, opts \\ []) do
+    get_search_overrides(Connection.new(), collectionName, opts)
+  end
+
   @spec get_search_overrides(Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
-  def get_search_overrides(conn \\ Connection.new(), collectionName, opts \\ []) do
+  def get_search_overrides(conn, collectionName, opts) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{
@@ -53,6 +66,22 @@ defmodule OpenApiTypesense.Curation do
   Create or update an override to promote certain documents over others. Using overrides, you can include or exclude specific documents for a given query.
   """
   @spec upsert_search_override(
+          String.t(),
+          String.t(),
+          OpenApiTypesense.SearchOverrideSchema.t(),
+          keyword
+        ) ::
+          {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def upsert_search_override(
+        collectionName,
+        overrideId,
+        body,
+        opts \\ []
+      ) do
+    upsert_search_override(Connection.new(), collectionName, overrideId, body, opts)
+  end
+
+  @spec upsert_search_override(
           Connection.t(),
           String.t(),
           String.t(),
@@ -61,11 +90,11 @@ defmodule OpenApiTypesense.Curation do
         ) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_search_override(
-        conn \\ Connection.new(),
+        conn,
         collectionName,
         overrideId,
         body,
-        opts \\ []
+        opts
       ) do
     client = opts[:client] || @default_client
 

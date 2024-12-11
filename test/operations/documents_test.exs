@@ -5,8 +5,10 @@ defmodule DocumentsTest do
   alias OpenApiTypesense.Documents
   alias OpenApiTypesense.Collections
   alias OpenApiTypesense.CollectionResponse
+  alias OpenApiTypesense.MultiSearchResult
   alias OpenApiTypesense.SearchOverride
   alias OpenApiTypesense.SearchOverridesResponse
+  alias OpenApiTypesense.SearchResult
 
   setup_all do
     name = "shoes"
@@ -27,11 +29,144 @@ defmodule DocumentsTest do
     {:ok, %CollectionResponse{name: ^name}} = Collections.create_collection(schema)
 
     on_exit(fn ->
-      {:ok, collections} = Collections.get_collections()
-      Enum.map(collections, &Collections.delete_collection(&1.name))
+      {:ok, %CollectionResponse{name: ^name}} = Collections.delete_collection(name)
     end)
 
     %{coll_name: name}
+  end
+
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "error: update a non-existent document", %{coll_name: coll_name} do
+    body =
+      %{
+        "shoe_type" => "athletic shoes"
+      }
+      |> Jason.encode!()
+
+    document_id = 9999
+    message = "Could not find a document with id: #{document_id}"
+
+    assert {:error, %ApiResponse{message: ^message}} =
+             Documents.update_document(coll_name, document_id, body)
+  end
+
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "success: search a document", %{coll_name: coll_name} do
+    body =
+      [
+        %{
+          "shoes_id" => 333,
+          "shoe_type" => "slipper",
+          "description" => """
+          UGG Men's Scuff Slipper
+          - Full-grain leather upper
+          - 17mm sheepskin insole
+          - Foam footbed
+          - Suede outsole
+          - Recycled polyester binding
+          """,
+          "price" => "usd 89.95"
+        },
+        %{
+          "shoes_id" => 888,
+          "shoe_type" => "boot",
+          "description" => """
+          UGG Men's Classic Ultra Mini Boot
+          - 17mm Twinface sheepskin upper
+          - 17mm UGGplush upcycled wool insole
+          - Treadlite by UGG outsole
+          - Foam footbed
+          """,
+          "price" => "usd 149.95"
+        }
+      ]
+      |> Enum.map_join("\n", &Jason.encode!/1)
+
+    assert {:ok, _} = Documents.import_documents(coll_name, body)
+
+    assert {:ok, %SearchResult{hits: hits}} =
+             Documents.search_collection(coll_name, q: "sheepskin", query_by: "description")
+
+    assert length(hits) === 2
+  end
+
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "error: update non-existent documents", %{coll_name: coll_name} do
+    body =
+      [
+        %{"id" => "9981", "price" => "usd 1.00"},
+        %{"id" => "9982", "price" => "usd 1.00"}
+      ]
+      |> Enum.map_join("\n", &Jason.encode!/1)
+
+    assert {:ok, [%{"success" => false}, %{"success" => false}]} =
+             Documents.import_documents(coll_name, body, action: "update")
+  end
+
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "error: multi-search with no documents" do
+    body =
+      %{
+        "searches" => [
+          %{collection: "shoes", q: "Nike"},
+          %{collection: "shoes", q: "Adidas"}
+        ]
+      }
+      |> Jason.encode!()
+
+    assert {:ok, %MultiSearchResult{results: results}} =
+             Documents.multi_search(body, query_by: "description")
+
+    [result_one, result_two] = results
+    assert result_one.found === 0
+    assert result_two.found === 0
+  end
+
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "success: update documents by query", %{coll_name: coll_name} do
+    body =
+      [
+        %{
+          "shoes_id" => 55,
+          "shoe_type" => "sneaker",
+          "description" => """
+          UGG Men's South Bay Low Sneaker
+          - Full-grain leather upper
+          - Suede overlays
+          - Treadlite by UGG outsole for comfort
+          - Textile lining
+          - Cotton laces
+          """,
+          "price" => "usd 99.95"
+        },
+        %{
+          "shoes_id" => 66,
+          "shoe_type" => "slipper",
+          "description" => """
+          UGG Men's Leather Ascot Slipper
+          - Cast in a classic loafer silhouette. Water-resistant suede.
+          - Rubber outsole
+          - UGGpure wool lining and insole
+          - Suede upper
+          - Available in whole sizes only. If between sizes, please order 1/2 size up from your usual size.
+          """,
+          "price" => "usd 139.95"
+        }
+      ]
+      |> Enum.map_join("\n", &Jason.encode!/1)
+
+    assert {:ok, _} = Documents.import_documents(coll_name, body, action: "create")
+
+    update =
+      %{
+        "price" => "5.25"
+      }
+      |> Jason.encode!()
+
+    assert {:ok, %Documents{num_deleted: nil, num_updated: num_updated}} =
+             Documents.update_documents(coll_name, update, filter_by: "shoes_id:>=0")
+
+    assert num_updated > 0
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
@@ -67,7 +202,7 @@ defmodule DocumentsTest do
       ]
       |> Enum.map_join("\n", &Jason.encode!/1)
 
-    assert {:ok, _} = Documents.import_documents(coll_name, body)
+    assert {:ok, _} = Documents.import_documents(coll_name, body, action: "create")
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
@@ -227,5 +362,11 @@ defmodule DocumentsTest do
 
     assert {:ok, %SearchOverride{}} =
              Documents.upsert_search_override(coll_name, "customize-apple", body)
+  end
+
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "field" do
+    assert [num_deleted: :integer] = Documents.__fields__(:delete_documents_200_json_resp)
+    assert [num_updated: :integer] = Documents.__fields__(:update_documents_200_json_resp)
   end
 end
