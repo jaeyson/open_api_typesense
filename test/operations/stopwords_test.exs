@@ -1,6 +1,5 @@
 defmodule StopwordsTest do
   use ExUnit.Case, async: true
-  doctest OpenApiTypesense.Stopwords
 
   alias OpenApiTypesense.Stopwords
   alias OpenApiTypesense.StopwordsSetSchema
@@ -19,15 +18,15 @@ defmodule StopwordsTest do
     end)
   end
 
-  @tag ["27.1": true, "26.0": true]
+  @tag ["27.1": true, "26.0": true, "0.25.2": false]
   test "success: list stopwords sets" do
     assert {:ok, %StopwordsSetsRetrieveAllSchema{stopwords: stopwords}} =
              Stopwords.retrieve_stopwords_sets()
 
-    assert stopwords > 0
+    assert length(stopwords) >= 0
   end
 
-  @tag ["27.1": true, "26.0": true]
+  @tag ["27.1": true, "26.0": true, "0.25.2": false]
   test "success: add stopwords" do
     set_id = "stopword_set_countries"
 
@@ -36,11 +35,12 @@ defmodule StopwordsTest do
         "stopwords" => ["Germany", "France", "Italy", "United States"],
         "locale" => "en"
       }
+      |> Jason.encode!()
 
     assert {:ok, %StopwordsSetSchema{id: ^set_id}} = Stopwords.upsert_stopwords_set(set_id, body)
   end
 
-  @tag ["27.1": true, "26.0": true]
+  @tag ["27.1": true, "26.0": true, "0.25.2": false]
   test "success: retreive specific stopwords set" do
     set_id = "stopword_set_names"
 
@@ -49,14 +49,15 @@ defmodule StopwordsTest do
         "stopwords" => ["Bustin Jieber", "Pelvis Presly", "Tinus Lorvalds", "Britney Smears"],
         "locale" => "en"
       }
+      |> Jason.encode!()
 
     assert {:ok, %StopwordsSetSchema{id: ^set_id}} = Stopwords.upsert_stopwords_set(set_id, body)
 
-    assert {:ok, %OpenApiTypesense.StopwordsSetRetrieveSchema{stopwords: %{id: ^set_id}}} =
+    assert {:ok, %StopwordsSetRetrieveSchema{stopwords: %{id: ^set_id}}} =
              Stopwords.retrieve_stopwords_set(set_id)
   end
 
-  @tag ["27.1": true, "26.0": true]
+  @tag ["27.1": true, "26.0": true, "0.25.2": false]
   test "success: delete specific stopwords set" do
     set_id = "stopword_set_companies"
 
@@ -65,12 +66,13 @@ defmodule StopwordsTest do
         "stopwords" => ["Loca Cola", "Burgler King", "Buttweiser", "Lowcoste"],
         "locale" => "en"
       }
+      |> Jason.encode!()
 
     assert {:ok, %StopwordsSetSchema{id: ^set_id}} = Stopwords.upsert_stopwords_set(set_id, body)
     assert {:ok, %Stopwords{id: ^set_id}} = Stopwords.delete_stopwords_set(set_id)
   end
 
-  @tag ["27.1": true, "26.0": true]
+  @tag ["27.1": true, "26.0": true, "0.25.2": false]
   test "field" do
     assert [id: {:string, :generic}] = Stopwords.__fields__(:delete_stopwords_set_200_json_resp)
   end

@@ -1,6 +1,5 @@
 defmodule AnalyticsTest do
   use ExUnit.Case, async: true
-  doctest OpenApiTypesense.Analytics
 
   alias OpenApiTypesense.Analytics
   alias OpenApiTypesense.AnalyticsRulesRetrieveSchema

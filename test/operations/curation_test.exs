@@ -1,6 +1,5 @@
 defmodule CurationTest do
   use ExUnit.Case, async: true
-  doctest OpenApiTypesense.Curation
 
   alias OpenApiTypesense.Collections
   alias OpenApiTypesense.CollectionResponse
@@ -27,7 +26,12 @@ defmodule CurationTest do
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "success: list collection overrides", %{schema: schema} do
     name = schema.name
-    assert {:ok, %CollectionResponse{name: ^name}} = Collections.create_collection(schema)
+
+    assert {:ok, %CollectionResponse{name: ^name}} =
+             schema
+             |> Jason.encode!()
+             |> Collections.create_collection()
+
     assert {:ok, %SearchOverridesResponse{overrides: []}} == Curation.get_search_overrides(name)
   end
 end

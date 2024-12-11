@@ -5,11 +5,12 @@ defmodule OpenApiTypesense.Client do
   """
 
   alias OpenApiTypesense.Connection
+  alias OpenApiTypesense.ApiResponse
 
   @typedoc since: "0.2.0"
   @type response() ::
           {:ok, any()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
+          | {:error, ApiResponse.t()}
           | {:error, String.t()}
           | :error
 
@@ -107,13 +108,13 @@ defmodule OpenApiTypesense.Client do
         host: conn.host,
         port: conn.port,
         path: opts[:url],
-        query: URI.encode_query(opts[:query] || %{})
+        query: URI.encode_query(opts[:opts] || [])
       }
 
     {_req, resp} =
       [
         method: opts[:method] || :get,
-        body: Jason.encode!(opts[:body] || nil),
+        body: opts[:body],
         url: url,
         retry: retry,
         max_retries: max_retries,
@@ -156,15 +157,34 @@ defmodule OpenApiTypesense.Client do
     resp =
       values
       |> Enum.map(fn {module, _func_name} ->
-        if is_map(module),
-          do: struct(body, module)
+        if is_list(body) do
+          Enum.map(body, fn single_body ->
+            struct(module, single_body)
+          end)
+        else
+          struct(module, body)
+        end
       end)
-      |> case do
-        [nil] -> []
-        resp -> resp
-      end
+      |> List.flatten()
 
     {status, resp}
+  end
+
+  defp parse_values(code, {module, _func_name} = _values, body) when module == :string do
+    status = if code in 200..299, do: :ok, else: :error
+
+    case status do
+      :ok ->
+        resp =
+          body
+          |> String.splitter("\n")
+          |> Enum.map(&Jason.decode!/1)
+
+        {status, resp}
+
+      :error ->
+        {status, struct(ApiResponse, message: Jason.decode!(body)["error"])}
+    end
   end
 
   defp parse_values(code, {module, _func_name} = _values, body) do

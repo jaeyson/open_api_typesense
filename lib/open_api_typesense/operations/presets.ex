@@ -12,13 +12,13 @@ defmodule OpenApiTypesense.Presets do
 
   Permanently deletes a preset, given it's name.
   """
-  @spec delete_preset(String.t(), keyword) ::
+  @spec delete_preset(Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.PresetDeleteSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_preset(presetId, opts \\ []) do
+  def delete_preset(conn \\ Connection.new(), presetId, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [presetId: presetId],
       call: {OpenApiTypesense.Presets, :delete_preset},
       url: "/presets/#{presetId}",
@@ -56,12 +56,12 @@ defmodule OpenApiTypesense.Presets do
 
   Retrieve the details of a preset, given it's name.
   """
-  @spec retrieve_preset(String.t(), keyword) ::
+  @spec retrieve_preset(Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_preset(presetId, opts \\ []) do
+  def retrieve_preset(conn \\ Connection.new(), presetId, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [presetId: presetId],
       call: {OpenApiTypesense.Presets, :retrieve_preset},
       url: "/presets/#{presetId}",
@@ -79,12 +79,17 @@ defmodule OpenApiTypesense.Presets do
 
   Create or update an existing preset.
   """
-  @spec upsert_preset(String.t(), OpenApiTypesense.PresetUpsertSchema.t(), keyword) ::
+  @spec upsert_preset(
+          Connection.t(),
+          String.t(),
+          OpenApiTypesense.PresetUpsertSchema.t(),
+          keyword
+        ) ::
           {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_preset(presetId, body, opts \\ []) do
+  def upsert_preset(conn \\ Connection.new(), presetId, body, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [presetId: presetId, body: body],
       call: {OpenApiTypesense.Presets, :upsert_preset},
       url: "/presets/#{presetId}",

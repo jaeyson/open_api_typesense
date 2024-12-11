@@ -1,6 +1,5 @@
 defmodule KeysTest do
   use ExUnit.Case, async: true
-  doctest OpenApiTypesense.Keys
 
   alias OpenApiTypesense.ApiKey
   alias OpenApiTypesense.ApiKeysResponse
@@ -8,16 +7,6 @@ defmodule KeysTest do
   alias OpenApiTypesense.Keys
 
   setup_all do
-    schema = %{
-      name: "companies",
-      fields: [
-        %{name: "company_name", type: "string"},
-        %{name: "companies_id", type: "int32"},
-        %{name: "country", type: "string", facet: true}
-      ],
-      default_sorting_field: "companies_id"
-    }
-
     api_key_schema = %{
       actions: ["documents:search"],
       collections: ["companies"],
@@ -38,7 +27,10 @@ defmodule KeysTest do
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "success: get a specific key", %{api_key_schema: api_key_schema} do
-    assert {:ok, api_key} = Keys.create_key(api_key_schema)
+    assert {:ok, api_key} =
+             api_key_schema
+             |> Jason.encode!()
+             |> Keys.create_key()
 
     key_id = api_key.id
 
@@ -48,12 +40,15 @@ defmodule KeysTest do
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "success: list API keys" do
     {:ok, %ApiKeysResponse{keys: keys}} = Keys.get_keys()
-    assert keys > 0
+    assert length(keys) >= 0
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "success: delete an API key", %{api_key_schema: api_key_schema} do
-    assert {:ok, api_key} = Keys.create_key(api_key_schema)
+    assert {:ok, api_key} =
+             api_key_schema
+             |> Jason.encode!()
+             |> Keys.create_key()
 
     key_id = api_key.id
 
@@ -62,7 +57,10 @@ defmodule KeysTest do
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "success: create an search-only API key", %{api_key_schema: api_key_schema} do
-    assert {:ok, %ApiKey{}} = Keys.create_key(api_key_schema)
+    assert {:ok, %ApiKey{}} =
+             api_key_schema
+             |> Jason.encode!()
+             |> Keys.create_key()
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
@@ -71,6 +69,7 @@ defmodule KeysTest do
       api_key_schema
       |> Map.put(:actions, ["*"])
       |> Map.put(:collections, ["*"])
+      |> Jason.encode!()
 
     assert {:ok, %ApiKey{}} = Keys.create_key(body)
   end

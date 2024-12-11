@@ -3,6 +3,8 @@ defmodule OpenApiTypesense.Conversations do
   Provides API endpoints related to conversations
   """
 
+  alias OpenApiTypesense.Connection
+
   @default_client OpenApiTypesense.Client
 
   @doc """
@@ -36,17 +38,20 @@ defmodule OpenApiTypesense.Conversations do
 
   Delete a conversation model
   """
-  @spec delete_conversation_model(String.t(), keyword) ::
+  @spec delete_conversation_model(Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
-  def delete_conversation_model(modelId, opts \\ []) do
+  def delete_conversation_model(conn \\ Connection.new(), modelId, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [modelId: modelId],
       call: {OpenApiTypesense.Conversations, :delete_conversation_model},
       url: "/conversations/models/#{modelId}",
       method: :delete,
-      response: [{200, {OpenApiTypesense.ConversationModelSchema, :t}}],
+      response: [
+        {200, {OpenApiTypesense.ConversationModelSchema, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -56,12 +61,12 @@ defmodule OpenApiTypesense.Conversations do
 
   Retrieve all conversation models
   """
-  @spec retrieve_all_conversation_models(keyword) ::
+  @spec retrieve_all_conversation_models(Connection.t(), keyword) ::
           {:ok, [OpenApiTypesense.ConversationModelSchema.t()]} | :error
-  def retrieve_all_conversation_models(opts \\ []) do
+  def retrieve_all_conversation_models(conn \\ Connection.new(), opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Conversations, :retrieve_all_conversation_models},
       url: "/conversations/models",
@@ -76,17 +81,20 @@ defmodule OpenApiTypesense.Conversations do
 
   Retrieve a conversation model
   """
-  @spec retrieve_conversation_model(String.t(), keyword) ::
+  @spec retrieve_conversation_model(Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
-  def retrieve_conversation_model(modelId, opts \\ []) do
+  def retrieve_conversation_model(conn \\ Connection.new(), modelId, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [modelId: modelId],
       call: {OpenApiTypesense.Conversations, :retrieve_conversation_model},
       url: "/conversations/models/#{modelId}",
       method: :get,
-      response: [{200, {OpenApiTypesense.ConversationModelSchema, :t}}],
+      response: [
+        {200, {OpenApiTypesense.ConversationModelSchema, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -97,14 +105,15 @@ defmodule OpenApiTypesense.Conversations do
   Update a conversation model
   """
   @spec update_conversation_model(
+          Connection.t(),
           String.t(),
           OpenApiTypesense.ConversationModelUpdateSchema.t(),
           keyword
         ) :: {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
-  def update_conversation_model(modelId, body, opts \\ []) do
+  def update_conversation_model(conn \\ Connection.new(), modelId, body, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [modelId: modelId, body: body],
       call: {OpenApiTypesense.Conversations, :update_conversation_model},
       url: "/conversations/models/#{modelId}",

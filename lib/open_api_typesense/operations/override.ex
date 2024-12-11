@@ -22,7 +22,10 @@ defmodule OpenApiTypesense.Override do
       call: {OpenApiTypesense.Override, :get_search_override},
       url: "/collections/#{collectionName}/overrides/#{overrideId}",
       method: :get,
-      response: [{200, {OpenApiTypesense.SearchOverride, :t}}],
+      response: [
+        {200, {OpenApiTypesense.SearchOverride, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end

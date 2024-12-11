@@ -10,13 +10,13 @@ defmodule OpenApiTypesense.Curation do
   @doc """
   Delete an override associated with a collection
   """
-  @spec delete_search_override(String.t(), String.t(), keyword) ::
+  @spec delete_search_override(Connection.t(), String.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_search_override(collectionName, overrideId, opts \\ []) do
+  def delete_search_override(conn \\ Connection.new(), collectionName, overrideId, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName, overrideId: overrideId],
       call: {OpenApiTypesense.Curation, :delete_search_override},
       url: "/collections/#{collectionName}/overrides/#{overrideId}",
@@ -53,16 +53,23 @@ defmodule OpenApiTypesense.Curation do
   Create or update an override to promote certain documents over others. Using overrides, you can include or exclude specific documents for a given query.
   """
   @spec upsert_search_override(
+          Connection.t(),
           String.t(),
           String.t(),
           OpenApiTypesense.SearchOverrideSchema.t(),
           keyword
         ) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_search_override(collectionName, overrideId, body, opts \\ []) do
+  def upsert_search_override(
+        conn \\ Connection.new(),
+        collectionName,
+        overrideId,
+        body,
+        opts \\ []
+      ) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName, overrideId: overrideId, body: body],
       call: {OpenApiTypesense.Curation, :upsert_search_override},
       url: "/collections/#{collectionName}/overrides/#{overrideId}",

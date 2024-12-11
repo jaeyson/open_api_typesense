@@ -3,6 +3,8 @@ defmodule OpenApiTypesense.Documents do
   Provides API endpoints related to documents
   """
 
+  alias OpenApiTypesense.Connection
+
   defstruct [:num_deleted, :num_updated]
 
   @default_client OpenApiTypesense.Client
@@ -12,12 +14,12 @@ defmodule OpenApiTypesense.Documents do
 
   Delete an individual document from a collection by using its ID.
   """
-  @spec delete_document(String.t(), String.t(), keyword) ::
+  @spec delete_document(Connection.t(), String.t(), String.t(), keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_document(collectionName, documentId, opts \\ []) do
+  def delete_document(conn \\ Connection.new(), collectionName, documentId, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName, documentId: documentId],
       call: {OpenApiTypesense.Documents, :delete_document},
       url: "/collections/#{collectionName}/documents/#{documentId}",
@@ -42,10 +44,16 @@ defmodule OpenApiTypesense.Documents do
   @spec delete_documents(String.t(), keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_documents(collectionName, opts \\ []) do
+    delete_documents(Connection.new(), collectionName, opts)
+  end
+
+  @spec delete_documents(Connection.t(), String.t(), keyword) ::
+          {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def delete_documents(conn, collectionName, opts) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:deleteDocumentsParameters])
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName],
       call: {OpenApiTypesense.Documents, :delete_documents},
       url: "/collections/#{collectionName}/documents",
@@ -53,7 +61,8 @@ defmodule OpenApiTypesense.Documents do
       query: query,
       response: [
         {200, {OpenApiTypesense.Documents, :delete_documents_200_json_resp}},
-        {404, {OpenApiTypesense.ApiResponse, :t}}
+        {404, {OpenApiTypesense.ApiResponse, :t}},
+        {400, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })
@@ -62,13 +71,13 @@ defmodule OpenApiTypesense.Documents do
   @doc """
   Delete an override associated with a collection
   """
-  @spec delete_search_override(String.t(), String.t(), keyword) ::
+  @spec delete_search_override(Connection.t(), String.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_search_override(collectionName, overrideId, opts \\ []) do
+  def delete_search_override(conn \\ Connection.new(), collectionName, overrideId, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName, overrideId: overrideId],
       call: {OpenApiTypesense.Documents, :delete_search_override},
       url: "/collections/#{collectionName}/overrides/#{overrideId}",
@@ -91,13 +100,13 @@ defmodule OpenApiTypesense.Documents do
     * `exportDocumentsParameters`
 
   """
-  @spec export_documents(String.t(), keyword) ::
+  @spec export_documents(Connection.t(), String.t(), keyword) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def export_documents(collectionName, opts \\ []) do
+  def export_documents(conn \\ Connection.new(), collectionName, opts \\ []) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:exportDocumentsParameters])
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName],
       call: {OpenApiTypesense.Documents, :export_documents},
       url: "/collections/#{collectionName}/documents/export",
@@ -113,12 +122,12 @@ defmodule OpenApiTypesense.Documents do
 
   Fetch an individual document from a collection by using its ID.
   """
-  @spec get_document(String.t(), String.t(), keyword) ::
+  @spec get_document(Connection.t(), String.t(), String.t(), keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_document(collectionName, documentId, opts \\ []) do
+  def get_document(conn \\ Connection.new(), collectionName, documentId, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName, documentId: documentId],
       call: {OpenApiTypesense.Documents, :get_document},
       url: "/collections/#{collectionName}/documents/#{documentId}",
@@ -133,17 +142,20 @@ defmodule OpenApiTypesense.Documents do
 
   Retrieve the details of a search override, given its id.
   """
-  @spec get_search_override(String.t(), String.t(), keyword) ::
+  @spec get_search_override(Connection.t(), String.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | :error
-  def get_search_override(collectionName, overrideId, opts \\ []) do
+  def get_search_override(conn \\ Connection.new(), collectionName, overrideId, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName, overrideId: overrideId],
       call: {OpenApiTypesense.Documents, :get_search_override},
       url: "/collections/#{collectionName}/overrides/#{overrideId}",
       method: :get,
-      response: [{200, {OpenApiTypesense.SearchOverride, :t}}],
+      response: [
+        {200, {OpenApiTypesense.SearchOverride, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -151,17 +163,20 @@ defmodule OpenApiTypesense.Documents do
   @doc """
   List all collection overrides
   """
-  @spec get_search_overrides(String.t(), keyword) ::
+  @spec get_search_overrides(Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
-  def get_search_overrides(collectionName, opts \\ []) do
+  def get_search_overrides(conn \\ Connection.new(), collectionName, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName],
       call: {OpenApiTypesense.Documents, :get_search_overrides},
       url: "/collections/#{collectionName}/overrides",
       method: :get,
-      response: [{200, {OpenApiTypesense.SearchOverridesResponse, :t}}],
+      response: [
+        {200, {OpenApiTypesense.SearchOverridesResponse, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -176,13 +191,13 @@ defmodule OpenApiTypesense.Documents do
     * `importDocumentsParameters`
 
   """
-  @spec import_documents(String.t(), String.t(), keyword) ::
+  @spec import_documents(Connection.t(), String.t(), String.t(), keyword) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def import_documents(collectionName, body, opts \\ []) do
+  def import_documents(conn \\ Connection.new(), collectionName, body, opts \\ []) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:importDocumentsParameters])
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName, body: body],
       call: {OpenApiTypesense.Documents, :import_documents},
       url: "/collections/#{collectionName}/documents/import",
@@ -210,13 +225,13 @@ defmodule OpenApiTypesense.Documents do
     * `dirty_values`: Dealing with Dirty Data
 
   """
-  @spec index_document(String.t(), map, keyword) ::
+  @spec index_document(Connection.t(), String.t(), map, keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def index_document(collectionName, body, opts \\ []) do
+  def index_document(conn \\ Connection.new(), collectionName, body, opts \\ []) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:action, :dirty_values])
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName, body: body],
       call: {OpenApiTypesense.Documents, :index_document},
       url: "/collections/#{collectionName}/documents",
@@ -239,14 +254,14 @@ defmodule OpenApiTypesense.Documents do
     * `multiSearchParameters`
 
   """
-  @spec multi_search(OpenApiTypesense.MultiSearchSearchesParameter.t(), keyword) ::
+  @spec multi_search(Connection.t(), OpenApiTypesense.MultiSearchSearchesParameter.t(), keyword) ::
           {:ok, OpenApiTypesense.MultiSearchResult.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def multi_search(body, opts \\ []) do
+  def multi_search(conn \\ Connection.new(), body, opts \\ []) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:multiSearchParameters])
 
-    client.request(%{
+    client.request(conn, %{
       args: [body: body],
       call: {OpenApiTypesense.Documents, :multi_search},
       url: "/multi_search",
@@ -272,13 +287,13 @@ defmodule OpenApiTypesense.Documents do
     * `searchParameters`
 
   """
-  @spec search_collection(String.t(), keyword) ::
+  @spec search_collection(Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.SearchResult.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def search_collection(collectionName, opts \\ []) do
+  def search_collection(conn \\ Connection.new(), collectionName, opts \\ []) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:searchParameters])
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName],
       call: {OpenApiTypesense.Documents, :search_collection},
       url: "/collections/#{collectionName}/documents/search",
@@ -303,13 +318,13 @@ defmodule OpenApiTypesense.Documents do
     * `dirty_values`: Dealing with Dirty Data
 
   """
-  @spec update_document(String.t(), String.t(), map, keyword) ::
+  @spec update_document(Connection.t(), String.t(), String.t(), map, keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def update_document(collectionName, documentId, body, opts \\ []) do
+  def update_document(conn \\ Connection.new(), collectionName, documentId, body, opts \\ []) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:dirty_values])
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName, documentId: documentId, body: body],
       call: {OpenApiTypesense.Documents, :update_document},
       url: "/collections/#{collectionName}/documents/#{documentId}",
@@ -334,13 +349,13 @@ defmodule OpenApiTypesense.Documents do
     * `updateDocumentsParameters`
 
   """
-  @spec update_documents(String.t(), map, keyword) ::
+  @spec update_documents(Connection.t(), String.t(), map, keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def update_documents(collectionName, body, opts \\ []) do
+  def update_documents(conn \\ Connection.new(), collectionName, body, opts \\ []) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:updateDocumentsParameters])
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName, body: body],
       call: {OpenApiTypesense.Documents, :update_documents},
       url: "/collections/#{collectionName}/documents",
@@ -363,16 +378,23 @@ defmodule OpenApiTypesense.Documents do
   Create or update an override to promote certain documents over others. Using overrides, you can include or exclude specific documents for a given query.
   """
   @spec upsert_search_override(
+          Connection.t(),
           String.t(),
           String.t(),
           OpenApiTypesense.SearchOverrideSchema.t(),
           keyword
         ) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_search_override(collectionName, overrideId, body, opts \\ []) do
+  def upsert_search_override(
+        conn \\ Connection.new(),
+        collectionName,
+        overrideId,
+        body,
+        opts \\ []
+      ) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [collectionName: collectionName, overrideId: overrideId, body: body],
       call: {OpenApiTypesense.Documents, :upsert_search_override},
       url: "/collections/#{collectionName}/overrides/#{overrideId}",

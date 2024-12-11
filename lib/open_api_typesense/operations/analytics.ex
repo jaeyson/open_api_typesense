@@ -12,13 +12,17 @@ defmodule OpenApiTypesense.Analytics do
 
   Sending events for analytics e.g rank search results based on popularity.
   """
-  @spec create_analytics_event(OpenApiTypesense.AnalyticsEventCreateSchema.t(), keyword) ::
+  @spec create_analytics_event(
+          Connection.t(),
+          OpenApiTypesense.AnalyticsEventCreateSchema.t(),
+          keyword
+        ) ::
           {:ok, OpenApiTypesense.AnalyticsEventCreateResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def create_analytics_event(body, opts \\ []) do
+  def create_analytics_event(conn \\ Connection.new(), body, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [body: body],
       call: {OpenApiTypesense.Analytics, :create_analytics_event},
       url: "/analytics/events",
@@ -38,13 +42,13 @@ defmodule OpenApiTypesense.Analytics do
 
   When an analytics rule is created, we give it a name and describe the type, the source collections and the destination collection.
   """
-  @spec create_analytics_rule(OpenApiTypesense.AnalyticsRuleSchema.t(), keyword) ::
+  @spec create_analytics_rule(Connection.t(), OpenApiTypesense.AnalyticsRuleSchema.t(), keyword) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def create_analytics_rule(body, opts \\ []) do
+  def create_analytics_rule(conn \\ Connection.new(), body, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [body: body],
       call: {OpenApiTypesense.Analytics, :create_analytics_rule},
       url: "/analytics/rules",
@@ -132,13 +136,18 @@ defmodule OpenApiTypesense.Analytics do
 
   Upserts an analytics rule with the given name.
   """
-  @spec upsert_analytics_rule(String.t(), OpenApiTypesense.AnalyticsRuleUpsertSchema.t(), keyword) ::
+  @spec upsert_analytics_rule(
+          Connection.t(),
+          String.t(),
+          OpenApiTypesense.AnalyticsRuleUpsertSchema.t(),
+          keyword
+        ) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_analytics_rule(ruleName, body, opts \\ []) do
+  def upsert_analytics_rule(conn \\ Connection.new(), ruleName, body, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [ruleName: ruleName, body: body],
       call: {OpenApiTypesense.Analytics, :upsert_analytics_rule},
       url: "/analytics/rules/#{ruleName}",
