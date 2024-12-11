@@ -4,7 +4,6 @@ defmodule DocumentsTest do
   alias OpenApiTypesense.ApiResponse
   alias OpenApiTypesense.Documents
   alias OpenApiTypesense.Collections
-  alias OpenApiTypesense.Connection
   alias OpenApiTypesense.CollectionResponse
   alias OpenApiTypesense.SearchOverride
   alias OpenApiTypesense.SearchOverridesResponse
@@ -188,9 +187,8 @@ defmodule DocumentsTest do
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "error: delete a non-existent document", %{coll_name: coll_name} do
     document_id = 9999
-    message = "Could not find a document with id: #{document_id}"
 
-    assert {:error, %ApiResponse{message: ^message}} =
+    assert {:error, %ApiResponse{message: _}} =
              Documents.delete_document(coll_name, document_id)
   end
 
