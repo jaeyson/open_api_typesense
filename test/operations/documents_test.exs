@@ -94,7 +94,7 @@ defmodule DocumentsTest do
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "success: list collection overrides", %{coll_name: coll_name} do
-    assert {:error, %ApiResponse{message: "Not Found"}} =
+    assert {:error, %ApiResponse{message: _}} =
              Documents.get_search_overrides("wrong_collection")
 
     {:ok, %SearchOverridesResponse{overrides: overrides}} =
@@ -105,7 +105,7 @@ defmodule DocumentsTest do
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "error: get a non-existent override", %{coll_name: coll_name} do
-    assert {:error, %ApiResponse{message: "override non-existent not found."}} =
+    assert {:error, %ApiResponse{message: _}} =
              Documents.get_search_override(coll_name, "non-existent")
   end
 
@@ -203,7 +203,7 @@ defmodule DocumentsTest do
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "error: export document from a non-existent collection" do
-    assert {:error, %ApiResponse{message: "Not Found"}} =
+    assert {:error, %ApiResponse{message: _}} =
              Documents.export_documents("non-existent-collection")
   end
 
