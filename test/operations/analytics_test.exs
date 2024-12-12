@@ -162,31 +162,8 @@ defmodule AnalyticsTest do
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: create analytics rule" do
-    name = "product_queries_aggregation"
-
-    body =
-      %{
-        "name" => name,
-        "type" => "popular_queries",
-        "params" => %{
-          "source" => %{
-            "collections" => ["products"]
-          },
-          "destination" => %{
-            "collection" => "product_queries"
-          },
-          "limit" => 1_000
-        }
-      }
-      |> Jason.encode_to_iodata!()
-
-    assert {:ok, %AnalyticsRuleSchema{name: ^name}} = Analytics.create_analytics_rule(body)
-  end
-
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "success: create analytics rule and event" do
-    name = "product_downloads"
+    name = "product_popularity"
 
     body =
       %{
@@ -196,12 +173,12 @@ defmodule AnalyticsTest do
           "source" => %{
             "collections" => ["products"],
             "events" => [
-              %{"type" => "click", "weight" => 1, "name" => "products_downloads_event"}
+              %{"type" => "click", "weight" => 1, "name" => "products_click_event"}
             ]
           },
           "destination" => %{
-            "collection" => "product_queries",
-            "counter_field" => "downloads"
+            "collection" => "products",
+            "counter_field" => "popularity"
           }
         }
       }
@@ -210,7 +187,7 @@ defmodule AnalyticsTest do
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} = Analytics.create_analytics_rule(body)
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} = Analytics.retrieve_analytics_rule(name)
 
-    name = "products_downloads_event"
+    name = "products_click_event"
 
     body =
       %{
