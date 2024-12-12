@@ -16,7 +16,7 @@ defmodule PresetsTest do
           ]
         }
       }
-      |> Jason.encode!()
+      |> Jason.encode_to_iodata!()
 
     {:ok, %PresetSchema{}} = Presets.upsert_preset("food_chain_view", body)
 
@@ -49,7 +49,7 @@ defmodule PresetsTest do
           ]
         }
       }
-      |> Jason.encode!()
+      |> Jason.encode_to_iodata!()
 
     assert {:ok, %PresetSchema{name: "restaurant_view"}} =
              Presets.upsert_preset("restaurant_view", body)
@@ -65,7 +65,7 @@ defmodule PresetsTest do
           ]
         }
       }
-      |> Jason.encode!()
+      |> Jason.encode_to_iodata!()
 
     assert {:ok, %PresetSchema{name: "company_view"}} =
              Presets.upsert_preset("company_view", body)

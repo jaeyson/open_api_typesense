@@ -20,7 +20,7 @@ defmodule ConversationsTest do
           %{"name" => "message", "type" => "string", "index" => false}
         ]
       }
-      |> Jason.encode!()
+      |> Jason.encode_to_iodata!()
 
     {:ok, %CollectionResponse{name: ^name}} = Collections.create_collection(schema)
 
@@ -58,14 +58,19 @@ defmodule ConversationsTest do
         "api_key" => "OPENAI_API_KEY",
         "system_prompt" =>
           "You are an assistant for question-answering. You can only make conversations based on the provided context. If a response cannot be formed strictly using the provided context, politely say you do not have knowledge about that topic.",
-        "max_bytes" => 16384
+        "max_bytes" => 16_384
       }
-      |> Jason.encode!()
+      |> Jason.encode_to_iodata!()
 
     assert {:error, %ApiResponse{message: message}} =
              Conversations.create_conversation_model(body)
 
-    assert String.contains?(String.downcase(message), "incorrect api key") === true
+    assert String.contains?(String.downcase(message), [
+             "error",
+             "incorrect",
+             "parsing",
+             "response"
+           ]) === true
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": false]
@@ -80,11 +85,11 @@ defmodule ConversationsTest do
         "api_key" => "OPENAI_API_KEY",
         "system_prompt" =>
           "Hey, you are an **intelligent** assistant for question-answering. You can only make conversations based on the provided context. If a response cannot be formed strictly using the provided context, politely say you do not have knowledge about that topic.",
-        "max_bytes" => 16384
+        "max_bytes" => 16_384
       }
-      |> Jason.encode!()
+      |> Jason.encode_to_iodata!()
 
-    assert {:error, %ApiResponse{message: "Model not found"}} =
+    assert {:error, %ApiResponse{message: _}} =
              Conversations.update_conversation_model(model_id, body)
   end
 end

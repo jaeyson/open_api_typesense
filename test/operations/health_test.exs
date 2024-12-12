@@ -21,7 +21,7 @@ defmodule HealthTest do
   #       scheme: "http"
   #     })
 
-  #   assert Health.health(conn) === {:error, "timeout"}
+  #   assert Health.health(conn, []) === {:error, "timeout"}
   # end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]

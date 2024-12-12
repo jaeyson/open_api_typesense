@@ -29,7 +29,7 @@ defmodule KeysTest do
   test "success: get a specific key", %{api_key_schema: api_key_schema} do
     assert {:ok, api_key} =
              api_key_schema
-             |> Jason.encode!()
+             |> Jason.encode_to_iodata!()
              |> Keys.create_key()
 
     key_id = api_key.id
@@ -47,7 +47,7 @@ defmodule KeysTest do
   test "success: delete an API key", %{api_key_schema: api_key_schema} do
     assert {:ok, api_key} =
              api_key_schema
-             |> Jason.encode!()
+             |> Jason.encode_to_iodata!()
              |> Keys.create_key()
 
     key_id = api_key.id
@@ -59,7 +59,7 @@ defmodule KeysTest do
   test "success: create an search-only API key", %{api_key_schema: api_key_schema} do
     assert {:ok, %ApiKey{}} =
              api_key_schema
-             |> Jason.encode!()
+             |> Jason.encode_to_iodata!()
              |> Keys.create_key()
   end
 
@@ -69,7 +69,7 @@ defmodule KeysTest do
       api_key_schema
       |> Map.put(:actions, ["*"])
       |> Map.put(:collections, ["*"])
-      |> Jason.encode!()
+      |> Jason.encode_to_iodata!()
 
     assert {:ok, %ApiKey{}} = Keys.create_key(body)
   end

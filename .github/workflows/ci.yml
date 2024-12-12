@@ -65,6 +65,7 @@ jobs:
           -p 8108:8108 \
           --name typesense \
           -v /tmp/typesense-data:/data \
+          -v /tmp/typesense-analytics-data:/analytics-data \
           typesense/typesense:${{ matrix.typesense}} \
           --api-key=xyz \
           --data-dir=/data \

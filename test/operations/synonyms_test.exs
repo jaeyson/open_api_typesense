@@ -21,7 +21,7 @@ defmodule SynonymsTest do
 
     {:ok, %CollectionResponse{name: ^collection_name}} =
       schema
-      |> Jason.encode!()
+      |> Jason.encode_to_iodata!()
       |> Collections.create_collection()
 
     on_exit(fn ->
@@ -46,7 +46,7 @@ defmodule SynonymsTest do
         "root" => "hat",
         "synonyms" => ["fedora", "cap", "visor"]
       }
-      |> Jason.encode!()
+      |> Jason.encode_to_iodata!()
 
     synonym_id = "hat-synonyms"
 
@@ -61,7 +61,7 @@ defmodule SynonymsTest do
         "root" => "sweater",
         "synonyms" => ["ribbed", "turtleneck", "v-neck", "half-zip"]
       }
-      |> Jason.encode!()
+      |> Jason.encode_to_iodata!()
 
     synonym_id = "sweater-synonyms"
 
@@ -78,7 +78,7 @@ defmodule SynonymsTest do
         "root" => "t-shirt",
         "synonyms" => ["waffle", "crew neck", "cotton", "tank top", "turtleneck", "mock neck"]
       }
-      |> Jason.encode!()
+      |> Jason.encode_to_iodata!()
 
     synonym_id = "t-shirt-synonyms"
 

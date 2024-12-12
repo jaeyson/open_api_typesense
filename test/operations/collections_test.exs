@@ -32,7 +32,7 @@ defmodule CollectionsTest do
 
     assert {:ok, %CollectionResponse{name: ^name}} =
              schema
-             |> Jason.encode!()
+             |> Jason.encode_to_iodata!()
              |> Collections.create_collection()
   end
 
@@ -56,11 +56,11 @@ defmodule CollectionsTest do
         ],
         default_sorting_field: name <> "_id"
       }
-      |> Jason.encode!()
+      |> Jason.encode_to_iodata!()
 
     assert {:ok, %CollectionResponse{name: ^name}} = Collections.create_collection(schema)
 
-    body = Jason.encode!(%{fields: [%{name: "price", drop: true}]})
+    body = Jason.encode_to_iodata!(%{fields: [%{name: "price", drop: true}]})
 
     assert {:ok, %CollectionUpdateSchema{}} =
              Collections.update_collection(name, body)
@@ -87,7 +87,7 @@ defmodule CollectionsTest do
   test "success: upsert an alias", %{schema: schema, alias_name: alias_name} do
     collection_name = schema.name
 
-    body = Jason.encode!(%{"collection_name" => collection_name})
+    body = Jason.encode_to_iodata!(%{"collection_name" => collection_name})
 
     assert {:ok, %CollectionAlias{collection_name: ^collection_name, name: ^alias_name}} =
              Collections.upsert_alias(alias_name, body)

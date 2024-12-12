@@ -74,7 +74,8 @@ defmodule OpenApiTypesense.Analytics do
       request: [{"application/json", {OpenApiTypesense.AnalyticsRuleSchema, :t}}],
       response: [
         {201, {OpenApiTypesense.AnalyticsRuleSchema, :t}},
-        {400, {OpenApiTypesense.ApiResponse, :t}}
+        {400, {OpenApiTypesense.ApiResponse, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })
