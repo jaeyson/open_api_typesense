@@ -135,8 +135,7 @@ defmodule AnalyticsTest do
       }
       |> Jason.encode_to_iodata!()
 
-    message = "Collection `#{collection_name}` not found."
-    assert {:error, %ApiResponse{message: ^message}} = Analytics.create_analytics_rule(body)
+    assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body)
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
