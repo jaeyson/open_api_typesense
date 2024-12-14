@@ -20,13 +20,14 @@ defmodule OpenApiTypesense.Connection do
   Setting new connection or using the default config.
 
   > #### On using this function {: .info}
-  > Functions e.g. `OpenApiTypesense.Health.health` don't need to explicitly pass this
+  > Functions e.g. `OpenApiTypesense.Health.health/0` don't need to explicitly pass this
   > unless you want to use another connection. Also, `api_key` is hidden when invoking
   > this function.
 
   ## Examples
+
       iex> alias OpenApiTypesense.Connection
-      
+
       iex> conn = Connection.new()
       %OpenApiTypesense.Connection{
         host: "localhost",
@@ -34,19 +35,37 @@ defmodule OpenApiTypesense.Connection do
         scheme: "http",
         ...
       }
+
+      iex> Connection.new(%{})
+      ** (ArgumentError) Missing required fields: [:port, :scheme, :host, :api_key]
+          (open_api_typesense 0.2.0) lib/open_api_typesense/connection.ex:56: OpenApiTypesense.Connection.new/1
+      iex:2: (file)
+
   """
   @doc since: "0.2.0"
   @spec new(connection :: t() | map()) :: %__MODULE__{}
-  def new(connection \\ defaults()) when is_map(connection) do
-    %__MODULE__{
-      host: Map.get(connection, :host),
-      api_key: Map.get(connection, :api_key),
-      port: Map.get(connection, :port),
-      scheme: Map.get(connection, :scheme)
-    }
+
+  def new(connection \\ defaults())
+
+  def new(connection) when is_map(connection) do
+    missing_fields = required_fields() -- Map.keys(connection)
+
+    if missing_fields == [] do
+      struct(__MODULE__, connection)
+    else
+      raise ArgumentError, "Missing required fields: #{inspect(missing_fields)}"
+    end
   end
 
-  @doc since: "0.2.0"
+  def new(_) do
+    raise ArgumentError, "Expected a map for connection options"
+  end
+
+  @spec required_fields :: map()
+  defp required_fields do
+    struct(__MODULE__, %{}) |> Map.drop([:__struct__]) |> Map.keys()
+  end
+
   @spec defaults :: map()
   defp defaults do
     %{
