@@ -9,7 +9,8 @@ defmodule OpenApiTypesense.CollectionSchema do
           fields: [OpenApiTypesense.Field.t()],
           name: String.t(),
           symbols_to_index: [String.t()] | nil,
-          token_separators: [String.t()] | nil
+          token_separators: [String.t()] | nil,
+          voice_query_model: OpenApiTypesense.VoiceQueryModelCollectionConfig.t() | nil
         }
 
   defstruct [
@@ -18,7 +19,8 @@ defmodule OpenApiTypesense.CollectionSchema do
     :fields,
     :name,
     :symbols_to_index,
-    :token_separators
+    :token_separators,
+    :voice_query_model
   ]
 
   @doc false
@@ -32,7 +34,8 @@ defmodule OpenApiTypesense.CollectionSchema do
       fields: [{OpenApiTypesense.Field, :t}],
       name: {:string, :generic},
       symbols_to_index: [string: :generic],
-      token_separators: [string: :generic]
+      token_separators: [string: :generic],
+      voice_query_model: {OpenApiTypesense.VoiceQueryModelCollectionConfig, :t}
     ]
   end
 end

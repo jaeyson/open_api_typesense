@@ -1,18 +1,8 @@
 defmodule OpenApiTypesense do
-  @moduledoc """
-  Documentation for `OpenApiTypesense`.
-  """
+  @moduledoc false
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> OpenApiTypesense.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  @doc false
+  def count_uniq_atom_keys do
+    nil
   end
 end

@@ -3,6 +3,8 @@ defmodule OpenApiTypesense.Keys do
   Provides API endpoints related to keys
   """
 
+  alias OpenApiTypesense.Connection
+
   @default_client OpenApiTypesense.Client
 
   @doc """
@@ -13,9 +15,15 @@ defmodule OpenApiTypesense.Keys do
   @spec create_key(OpenApiTypesense.ApiKeySchema.t(), keyword) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_key(body, opts \\ []) do
+    create_key(Connection.new(), body, opts)
+  end
+
+  @spec create_key(Connection.t(), OpenApiTypesense.ApiKeySchema.t(), keyword) ::
+          {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def create_key(conn, body, opts) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [body: body],
       call: {OpenApiTypesense.Keys, :create_key},
       url: "/keys",
@@ -35,17 +43,25 @@ defmodule OpenApiTypesense.Keys do
   Delete an API key given its ID.
   """
   @spec delete_key(integer, keyword) ::
-          {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_key(keyId, opts \\ []) do
+    delete_key(Connection.new(), keyId, opts)
+  end
+
+  @spec delete_key(Connection.t(), integer, keyword) ::
+          {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
+  def delete_key(conn, keyId, opts) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [keyId: keyId],
       call: {OpenApiTypesense.Keys, :delete_key},
       url: "/keys/#{keyId}",
       method: :delete,
       response: [
-        {200, {OpenApiTypesense.ApiKey, :t}},
+        {200, {OpenApiTypesense.ApiKeyDeleteResponse, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
@@ -61,9 +77,15 @@ defmodule OpenApiTypesense.Keys do
   @spec get_key(integer, keyword) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_key(keyId, opts \\ []) do
+    get_key(Connection.new(), keyId, opts)
+  end
+
+  @spec get_key(Connection.t(), integer, keyword) ::
+          {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def get_key(conn, keyId, opts) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [keyId: keyId],
       call: {OpenApiTypesense.Keys, :get_key},
       url: "/keys/#{keyId}",
@@ -78,9 +100,14 @@ defmodule OpenApiTypesense.Keys do
   """
   @spec get_keys(keyword) :: {:ok, OpenApiTypesense.ApiKeysResponse.t()} | :error
   def get_keys(opts \\ []) do
+    get_keys(Connection.new(), opts)
+  end
+
+  @spec get_keys(Connection.t(), keyword) :: {:ok, OpenApiTypesense.ApiKeysResponse.t()} | :error
+  def get_keys(conn, opts) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Keys, :get_keys},
       url: "/keys",

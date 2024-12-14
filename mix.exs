@@ -2,7 +2,8 @@ defmodule OpenApiTypesense.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/jaeyson/open_api_typesense"
-  @version "0.1.0"
+  @hex_url "https://hexdocs.pm/open_api_typesense"
+  @version "0.2.0"
 
   def project do
     [
@@ -44,7 +45,7 @@ defmodule OpenApiTypesense.MixProject do
       {:req, "~> 0.5"},
       {:excoveralls, "~> 0.18", only: :test},
       {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
-      {:oapi_generator, "~> 0.2", only: :dev, runtime: false}
+      {:oapi_generator, "~> 0.2", only: :dev, runtime: false, optional: true}
     ]
   end
 
@@ -54,7 +55,7 @@ defmodule OpenApiTypesense.MixProject do
       main: "readme",
       source_ref: "v#{@version}",
       source_url: @source_url,
-      canonical: "https://hexdocs.pm/open_api_typesense",
+      canonical: @hex_url,
       formatters: ["html"],
       extras: [
         "CHANGELOG.md",
@@ -70,7 +71,7 @@ defmodule OpenApiTypesense.MixProject do
       licenses: ["MIT"],
       links: %{
         Github: @source_url,
-        Changelog: "https://hexdocs.pm/open_api_typesense/changelog.html"
+        Changelog: "#{@hex_url}/changelog.html"
       }
     ]
   end

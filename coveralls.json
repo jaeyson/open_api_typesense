@@ -1,6 +1,8 @@
 {
   "skip_files": [
     "test",
-    "deps"
+    "deps",
+    "lib/open_api_typesense/schemas",
+    "lib/open_api_typesense.ex"
   ]
 }

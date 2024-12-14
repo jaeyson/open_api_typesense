@@ -11,7 +11,8 @@ defmodule OpenApiTypesense.CollectionResponse do
           name: String.t() | nil,
           num_documents: integer | nil,
           symbols_to_index: [String.t()] | nil,
-          token_separators: [String.t()] | nil
+          token_separators: [String.t()] | nil,
+          voice_query_model: OpenApiTypesense.VoiceQueryModelCollectionConfig.t() | nil
         }
 
   defstruct [
@@ -22,7 +23,8 @@ defmodule OpenApiTypesense.CollectionResponse do
     :name,
     :num_documents,
     :symbols_to_index,
-    :token_separators
+    :token_separators,
+    :voice_query_model
   ]
 
   @doc false
@@ -38,7 +40,8 @@ defmodule OpenApiTypesense.CollectionResponse do
       name: {:string, :generic},
       num_documents: :integer,
       symbols_to_index: [string: :generic],
-      token_separators: [string: :generic]
+      token_separators: [string: :generic],
+      voice_query_model: {OpenApiTypesense.VoiceQueryModelCollectionConfig, :t}
     ]
   end
 end

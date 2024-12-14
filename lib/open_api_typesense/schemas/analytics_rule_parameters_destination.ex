@@ -3,15 +3,15 @@ defmodule OpenApiTypesense.AnalyticsRuleParametersDestination do
   Provides struct and type for a AnalyticsRuleParametersDestination
   """
 
-  @type t :: %__MODULE__{collection: String.t() | nil}
+  @type t :: %__MODULE__{collection: String.t(), counter_field: String.t() | nil}
 
-  defstruct [:collection]
+  defstruct [:collection, :counter_field]
 
   @doc false
   @spec __fields__(atom) :: keyword
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [collection: {:string, :generic}]
+    [collection: {:string, :generic}, counter_field: {:string, :generic}]
   end
 end

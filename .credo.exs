@@ -94,7 +94,7 @@
           #
           ## Readability Checks
           #
-          {Credo.Check.Readability.AliasOrder, []},
+          # {Credo.Check.Readability.AliasOrder, []},
           {Credo.Check.Readability.FunctionNames, []},
           {Credo.Check.Readability.LargeNumbers, []},
           {Credo.Check.Readability.MaxLineLength, [priority: :low, max_length: 120]},
@@ -113,7 +113,7 @@
           {Credo.Check.Readability.TrailingBlankLine, []},
           {Credo.Check.Readability.TrailingWhiteSpace, []},
           {Credo.Check.Readability.UnnecessaryAliasExpansion, []},
-          {Credo.Check.Readability.VariableNames, []},
+          # {Credo.Check.Readability.VariableNames, []}, # needs to raise PR in :oapi_generator
           {Credo.Check.Readability.WithSingleClause, []},
 
           #

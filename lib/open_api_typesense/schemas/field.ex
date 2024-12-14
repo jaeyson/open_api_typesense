@@ -13,9 +13,13 @@ defmodule OpenApiTypesense.Field do
           name: String.t(),
           num_dim: integer | nil,
           optional: boolean | nil,
+          range_index: boolean | nil,
           reference: String.t() | nil,
           sort: boolean | nil,
-          type: String.t()
+          stem: boolean | nil,
+          store: boolean | nil,
+          type: String.t(),
+          vec_dist: String.t() | nil
         }
 
   defstruct [
@@ -28,9 +32,13 @@ defmodule OpenApiTypesense.Field do
     :name,
     :num_dim,
     :optional,
+    :range_index,
     :reference,
     :sort,
-    :type
+    :stem,
+    :store,
+    :type,
+    :vec_dist
   ]
 
   @doc false
@@ -48,9 +56,13 @@ defmodule OpenApiTypesense.Field do
       name: {:string, :generic},
       num_dim: :integer,
       optional: :boolean,
+      range_index: :boolean,
       reference: {:string, :generic},
       sort: :boolean,
-      type: {:string, :generic}
+      stem: :boolean,
+      store: :boolean,
+      type: {:string, :generic},
+      vec_dist: {:string, :generic}
     ]
   end
 end

@@ -4,9 +4,9 @@ defmodule OpenApiTypesense.AnalyticsRuleSchema do
   """
 
   @type t :: %__MODULE__{
-          name: String.t(),
-          params: OpenApiTypesense.AnalyticsRuleParameters.t(),
-          type: String.t()
+          name: String.t() | nil,
+          params: OpenApiTypesense.AnalyticsRuleParameters.t() | nil,
+          type: String.t() | nil
         }
 
   defstruct [:name, :params, :type]
@@ -19,7 +19,7 @@ defmodule OpenApiTypesense.AnalyticsRuleSchema do
     [
       name: {:string, :generic},
       params: {OpenApiTypesense.AnalyticsRuleParameters, :t},
-      type: {:string, :generic}
+      type: {:enum, ["popular_queries", "nohits_queries", "counter"]}
     ]
   end
 end

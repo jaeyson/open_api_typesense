@@ -4,8 +4,10 @@ defmodule OpenApiTypesense.SearchResult do
   """
 
   @type t :: %__MODULE__{
+          conversation: OpenApiTypesense.SearchResultConversation.t() | nil,
           facet_counts: [OpenApiTypesense.FacetCounts.t()] | nil,
           found: integer | nil,
+          found_docs: integer | nil,
           grouped_hits: [OpenApiTypesense.SearchGroupedHit.t()] | nil,
           hits: [OpenApiTypesense.SearchResultHit.t()] | nil,
           out_of: integer | nil,
@@ -16,8 +18,10 @@ defmodule OpenApiTypesense.SearchResult do
         }
 
   defstruct [
+    :conversation,
     :facet_counts,
     :found,
+    :found_docs,
     :grouped_hits,
     :hits,
     :out_of,
@@ -33,8 +37,10 @@ defmodule OpenApiTypesense.SearchResult do
 
   def __fields__(:t) do
     [
+      conversation: {OpenApiTypesense.SearchResultConversation, :t},
       facet_counts: [{OpenApiTypesense.FacetCounts, :t}],
       found: :integer,
+      found_docs: :integer,
       grouped_hits: [{OpenApiTypesense.SearchGroupedHit, :t}],
       hits: [{OpenApiTypesense.SearchResultHit, :t}],
       out_of: :integer,
