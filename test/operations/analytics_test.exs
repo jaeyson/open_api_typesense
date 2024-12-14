@@ -104,7 +104,7 @@ defmodule AnalyticsTest do
     assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body)
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "26.0": true, "0.25.2": false]
   test "success: upsert analytics rule" do
     name = "product_no_hits"
 
@@ -161,9 +161,11 @@ defmodule AnalyticsTest do
     assert length(rules) >= 0
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: create analytics rule and event" do
+  @tag ["27.1": true, "26.0": false, "0.25.2": false]
+  test "success (v27.1): create analytics rule and event" do
     name = "product_popularity"
+
+    event_name = "products_click_event#{System.unique_integer()}"
 
     body =
       %{
@@ -173,7 +175,7 @@ defmodule AnalyticsTest do
           "source" => %{
             "collections" => ["products"],
             "events" => [
-              %{"type" => "click", "weight" => 1, "name" => "products_click_event"}
+              %{"type" => "click", "weight" => 1, "name" => event_name}
             ]
           },
           "destination" => %{
@@ -187,19 +189,22 @@ defmodule AnalyticsTest do
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} = Analytics.create_analytics_rule(body)
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} = Analytics.retrieve_analytics_rule(name)
 
-    name = "products_click_event"
-
     body =
       %{
-        "name" => name,
+        "name" => event_name,
         "type" => "click",
         "data" => %{
+          "q" => "nike_shoes",
           "doc_id" => "2468",
           "user_id" => "9903"
         }
       }
       |> Jason.encode_to_iodata!()
 
+    # Here's the reason why v26.0 is not tested
+    # Docs v26.0: https://typesense.org/docs/26.0/api/analytics-query-suggestions.html#sending-click-events
+    # Problem: the response JSON body is actually {"ok": true
+    # where it is missing a closing curly bracket "}"
     assert {:ok, %AnalyticsEventCreateResponse{ok: true}} = Analytics.create_analytics_event(body)
   end
 end

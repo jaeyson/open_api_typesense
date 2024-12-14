@@ -79,8 +79,8 @@ defmodule OpenApiTypesense.Client do
       {:ok, %OpenApiTypesense.HealthStatus{ok: true}}
   """
   @doc since: "0.2.0"
-  @spec request(Connection.t(), map()) :: response()
-  def request(conn, opts \\ %{}) do
+  @spec request(Connection.t(), list()) :: response()
+  def request(conn, opts \\ []) do
     # Req.Request.append_error_steps and its retry option are used here.
     # options like retry, max_retries, etc. can be found in:
     # https://hexdocs.pm/req/Req.Steps.html#retry/1
@@ -118,6 +118,8 @@ defmodule OpenApiTypesense.Client do
         url: url,
         retry: retry,
         max_retries: max_retries,
+        compress_body: opts[:opts][:compress] || false,
+        cache: opts[:opts][:cache] || false,
         decode_json: [keys: :atoms]
       ]
       |> Req.new()
@@ -145,7 +147,7 @@ defmodule OpenApiTypesense.Client do
     parse_values(code, values, resp.body)
   end
 
-  defp parse_values(code, :map, body) when is_map(body) do
+  defp parse_values(code, :map, body) do
     status = if code in 200..299, do: :ok, else: :error
 
     {status, body}
