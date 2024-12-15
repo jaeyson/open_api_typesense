@@ -23,7 +23,7 @@ def deps do
   [
     {:open_api_typesense, "~> 0.3"}
 
-    # Or from GitHub repository, if you want to latest greatest from main branch
+    # Or from GitHub repository, if you want the latest greatest from main branch
     {:open_api_typesense, git: "https://github.com/jaeyson/open_api_typesense.git"}
   ]
 end
@@ -60,7 +60,7 @@ if config_env() == :prod do # if you'll use this in prod environment
 
 > **Note**: The `options` key can be used to pass additional configuration options such as custom Finch instance or receive timeout settings. You can add any options supported by Req here. For more details check [Req documentation](https://hexdocs.pm/req/Req.Steps.html#run_finch/1-request-options).
 
-> **Note**: If you use this for adding test in your app, you might want to add this in `config/test.exs`:
+> **Note**: If you use this for adding tests in your app, you might want to add this in `config/test.exs`:
 
 For Cloud hosted, you can generate and obtain the credentials from cluster instance admin interface:
 
