@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.3.0 (2024.12.15)
+
+### Changed
+
+* HTTP request construction in `OpenApiTypesense.Client` to include `options`.
+
+### Added
+
+* `options` in config `config/config.exs`.
+* `get_options/0` function in `Client` to fetch the `options` configuration.
+* tests for `get_options/0` in `ClientTest`.
+
 ## 0.2.1 (2024.12.15)
 
 ### Changed

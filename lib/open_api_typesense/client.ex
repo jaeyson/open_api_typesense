@@ -28,6 +28,10 @@ defmodule OpenApiTypesense.Client do
     Application.get_env(:open_api_typesense, :port)
   end
 
+  @doc since: "0.3.0"
+  @spec get_options :: map()
+  def get_options, do: Application.get_env(:open_api_typesense, :options, %{})
+
   @doc """
   Returns the Typesense's API key
 
@@ -56,15 +60,13 @@ defmodule OpenApiTypesense.Client do
   - `:query`: Request query params (defaults to `%{}`).
 
   ## Examples
-      iex> alias OpenApiTypesense.Client
-
-      iex> connection = %OpenApiTypesense.Connection{
+      iex> alias OpenApiTypesense.{Client,Connection}
+      iex> connection = %Connection{
       ...>   host: "localhost",
       ...>   api_key: "some_api_key",
       ...>   port: "8108",
       ...>   scheme: "http"
       ...> }
-
       iex> opts = %{
       ...>   args: [],
       ...>   call: {OpenApiTypesense.Health, :health},
@@ -73,13 +75,12 @@ defmodule OpenApiTypesense.Client do
       ...>   response: [{200, {OpenApiTypesense.HealthStatus, :t}}],
       ...>   opts: opts
       ...> }
-
       iex> Client.request(connection, opts)
       {:ok, %OpenApiTypesense.HealthStatus{ok: true}}
   """
   @doc since: "0.2.0"
-  @spec request(Connection.t(), list()) :: response()
-  def request(conn, opts \\ []) do
+  @spec request(Connection.t(), map()) :: response()
+  def request(conn, opts) do
     # Req.Request.append_error_steps and its retry option are used here.
     # options like retry, max_retries, etc. can be found in:
     # https://hexdocs.pm/req/Req.Steps.html#retry/1
@@ -122,6 +123,7 @@ defmodule OpenApiTypesense.Client do
         decode_json: [keys: :atoms]
       ]
       |> Req.new()
+      |> Req.Request.merge_options(Map.to_list(get_options()))
       |> Req.Request.put_header("x-typesense-api-key", api_key())
       |> Req.Request.run_request()
 
