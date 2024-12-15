@@ -27,19 +27,17 @@ defmodule OpenApiTypesense.Connection do
   ## Examples
 
       iex> alias OpenApiTypesense.Connection
-
-      iex> conn = Connection.new()
+      ...> Connection.new()
       %OpenApiTypesense.Connection{
         host: "localhost",
         port: 8108,
         scheme: "http",
-        ...
+        api_key: "xyz"
       }
 
-      iex> Connection.new(%{})
-      ** (ArgumentError) Missing required fields: [:port, :scheme, :host, :api_key]
-          (open_api_typesense 0.2.0) lib/open_api_typesense/connection.ex:56: OpenApiTypesense.Connection.new/1
-      iex:2: (file)
+      iex> alias OpenApiTypesense.Connection
+      ...> Connection.new(%{})
+      ** (ArgumentError) Missing required fields: [:api_key, :host, :port, :scheme]
 
   """
   @doc since: "0.2.0"
@@ -48,7 +46,7 @@ defmodule OpenApiTypesense.Connection do
   def new(connection \\ defaults())
 
   def new(connection) when is_map(connection) do
-    missing_fields = required_fields() -- Map.keys(connection)
+    missing_fields = Enum.sort(required_fields() -- Map.keys(connection))
 
     if missing_fields == [] do
       struct(__MODULE__, connection)
@@ -61,7 +59,7 @@ defmodule OpenApiTypesense.Connection do
     raise ArgumentError, "Expected a map for connection options"
   end
 
-  @spec required_fields :: map()
+  @spec required_fields :: list(atom())
   defp required_fields do
     struct(__MODULE__, %{}) |> Map.drop([:__struct__]) |> Map.keys()
   end

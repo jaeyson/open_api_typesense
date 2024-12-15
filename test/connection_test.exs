@@ -1,5 +1,6 @@
-defmodule OpenApiTypesense.ConnectionTest do
+defmodule ConnectionTest do
   use ExUnit.Case, async: true
+  doctest OpenApiTypesense.Connection
 
   alias OpenApiTypesense.Connection
 
@@ -32,7 +33,7 @@ defmodule OpenApiTypesense.ConnectionTest do
   end
 
   test "new/1 with empty map raises ArgumentError" do
-    msg = "Missing required fields: [:port, :scheme, :host, :api_key]"
+    msg = "Missing required fields: [:api_key, :host, :port, :scheme]"
     assert_raise ArgumentError, msg, fn -> Connection.new(%{}) end
   end
 

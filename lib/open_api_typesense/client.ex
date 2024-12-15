@@ -46,8 +46,7 @@ defmodule OpenApiTypesense.Client do
 
   > #### On using this function {: .info}
   > Functions e.g. `OpenApiTypesense.Health.health` don't need to explicitly pass
-  > a `connection` unless you want to use custom `connection`. See [`README`](/README.md) for
-  > more details or `OpenApiTypesense.Connection` module.
+  > a `connection` unless you want to use custom `connection`. See [`README`](/README.md) for more details or `OpenApiTypesense.Connection` module.
 
   ## Options
 
