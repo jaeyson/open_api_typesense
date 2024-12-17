@@ -24,7 +24,6 @@ defmodule AnalyticsTest do
         ],
         default_sorting_field: "#{product_name}_id"
       }
-      |> Jason.encode_to_iodata!()
 
     product_queries_name = "product_queries"
 
@@ -37,7 +36,6 @@ defmodule AnalyticsTest do
           %{"name" => "downloads", "type" => "int32", "optional" => true}
         ]
       }
-      |> Jason.encode_to_iodata!()
 
     nohits_queries_name = "no_hits_queries"
 
@@ -49,7 +47,6 @@ defmodule AnalyticsTest do
           %{"name" => "count", "type" => "int32"}
         ]
       }
-      |> Jason.encode_to_iodata!()
 
     [
       product_schema,
@@ -99,7 +96,6 @@ defmodule AnalyticsTest do
           }
         }
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body)
   end
@@ -121,7 +117,6 @@ defmodule AnalyticsTest do
           "limit" => 1_000
         }
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} = Analytics.upsert_analytics_rule(name, body)
   end
@@ -148,7 +143,6 @@ defmodule AnalyticsTest do
           }
         }
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body)
   end
@@ -184,7 +178,6 @@ defmodule AnalyticsTest do
           }
         }
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} = Analytics.create_analytics_rule(body)
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} = Analytics.retrieve_analytics_rule(name)
@@ -199,12 +192,12 @@ defmodule AnalyticsTest do
           "user_id" => "9903"
         }
       }
-      |> Jason.encode_to_iodata!()
 
     # Here's the reason why v26.0 is not tested
     # Docs v26.0: https://typesense.org/docs/26.0/api/analytics-query-suggestions.html#sending-click-events
     # Problem: the response JSON body is actually {"ok": true
     # where it is missing a closing curly bracket "}"
-    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} = Analytics.create_analytics_event(body)
+    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
+             Analytics.create_analytics_event(body, [])
   end
 end

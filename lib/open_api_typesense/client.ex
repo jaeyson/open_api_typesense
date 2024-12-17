@@ -111,10 +111,18 @@ defmodule OpenApiTypesense.Client do
         query: URI.encode_query(opts[:opts] || [])
       }
 
+    encoded_body =
+      if opts[:request] do
+        [content_type] = opts[:request]
+        parse_content_type(content_type, opts[:body])
+      else
+        Jason.encode_to_iodata!(opts[:body])
+      end
+
     {_req, resp} =
       [
         method: opts[:method] || :get,
-        body: opts[:body],
+        body: encoded_body,
         url: url,
         retry: retry,
         max_retries: max_retries,
@@ -129,6 +137,23 @@ defmodule OpenApiTypesense.Client do
 
     parse_resp(resp, opts[:response])
   end
+
+  defp parse_content_type({"application/octet-stream", {:string, :generic}}, body) do
+    Enum.map_join(body, "\n", &Jason.encode_to_iodata!/1)
+  end
+
+  defp parse_content_type({"application/json", _}, body) do
+    Jason.encode_to_iodata!(body)
+  end
+
+  # defp parse_content_type({"application/json", {mod, :t}}, body) do
+  #   # Checks if map keys are atom or string
+  #   if Enum.all?(Map.keys(body), &is_atom/1) do
+  #       Jason.encode_to_iodata!(struct(mod, body))
+  #   else
+  #     Jason.encode_to_iodata!(body)
+  #   end
+  # end
 
   defp parse_resp(%Req.TransportError{} = error, _opts_resp) do
     {:error, Exception.message(error)}

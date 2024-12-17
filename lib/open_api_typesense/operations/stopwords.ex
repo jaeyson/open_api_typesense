@@ -16,15 +16,44 @@ defmodule OpenApiTypesense.Stopwords do
 
   Permanently deletes a stopwords set, given it's name.
   """
-  @spec delete_stopwords_set(String.t(), keyword) ::
+  @spec delete_stopwords_set(String.t()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_stopwords_set(setId, opts \\ []) do
+  def delete_stopwords_set(setId) do
+    delete_stopwords_set(Connection.new(), setId)
+  end
+
+  @doc """
+  Either one of:
+  - `delete_stopwords_set(setId, opts)`
+  - `delete_stopwords_set(%{api_key: xyz, host: ...}, setId)`
+  - `delete_stopwords_set(Connection.new(), setId)`
+  """
+  @spec delete_stopwords_set(map() | Connection.t() | String.t(), String.t() | keyword) ::
+          {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def delete_stopwords_set(setId, opts) when is_binary(setId) do
     delete_stopwords_set(Connection.new(), setId, opts)
   end
 
-  @spec delete_stopwords_set(Connection.t(), String.t(), keyword) ::
+  def delete_stopwords_set(conn, setId) when not is_struct(conn) and is_map(conn) do
+    delete_stopwords_set(Connection.new(conn), setId, [])
+  end
+
+  def delete_stopwords_set(%Connection{} = conn, setId) when is_struct(conn) do
+    delete_stopwords_set(conn, setId, [])
+  end
+
+  @doc """
+  Either one of:
+  - `delete_stopwords_set(%{api_key: xyz, host: ...}, setId, opts)`
+  - `delete_stopwords_set(Connection.new(), setId, opts`)`
+  """
+  @spec delete_stopwords_set(map() | Connection.t(), String.t(), keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_stopwords_set(conn, setId, opts) do
+  def delete_stopwords_set(conn, setId, opts) when not is_struct(conn) and is_map(conn) do
+    delete_stopwords_set(Connection.new(conn), setId, opts)
+  end
+
+  def delete_stopwords_set(%Connection{} = conn, setId, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{

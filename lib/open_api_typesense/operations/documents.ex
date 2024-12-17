@@ -14,15 +14,47 @@ defmodule OpenApiTypesense.Documents do
 
   Delete an individual document from a collection by using its ID.
   """
-  @spec delete_document(String.t(), String.t(), keyword) ::
+  @spec delete_document(String.t(), String.t()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_document(collectionName, documentId, opts \\ []) do
+  def delete_document(collectionName, documentId) do
+    delete_document(Connection.new(), collectionName, documentId, [])
+  end
+
+  @doc """
+  Either one of:
+  - `delete_document(collectionName, documentId, opts)`
+  - `delete_document(%{api_key: xyz, host: ...}, collectionName, documentId)`
+  - `delete_document(Connection.new(), collectionName, documentId)`
+  """
+  @spec delete_document(map() | Connection.t() | String.t(), String.t(), String.t() | keyword) ::
+          {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def delete_document(collectionName, documentId, opts) when is_binary(collectionName) do
     delete_document(Connection.new(), collectionName, documentId, opts)
   end
 
-  @spec delete_document(Connection.t(), String.t(), String.t(), keyword) ::
+  def delete_document(conn, collectionName, documentId)
+      when not is_struct(conn) and is_map(conn) do
+    delete_document(Connection.new(conn), collectionName, documentId, [])
+  end
+
+  def delete_document(%Connection{} = conn, collectionName, documentId) when is_struct(conn) do
+    delete_document(conn, collectionName, documentId, [])
+  end
+
+  @doc """
+  Either one of:
+  - `delete_document(%{api_key: xyz, host: ...}, collectionName, documentId, opts)`
+  - `delete_document(Connection.new(), collectionName, documentId, opts)`
+  """
+  @spec delete_document(map() | Connection.t(), String.t(), String.t(), keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_document(conn, collectionName, documentId, opts) do
+  def delete_document(conn, collectionName, documentId, opts)
+      when not is_struct(conn) and is_map(conn) do
+    delete_document(Connection.new(conn), collectionName, documentId, opts)
+  end
+
+  def delete_document(%Connection{} = conn, collectionName, documentId, opts)
+      when is_struct(conn) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{
@@ -47,15 +79,44 @@ defmodule OpenApiTypesense.Documents do
     * `deleteDocumentsParameters`
 
   """
-  @spec delete_documents(String.t(), keyword) ::
+  @spec delete_documents(String.t()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_documents(collectionName, opts \\ []) do
+  def delete_documents(collectionName) do
+    delete_documents(Connection.new(), collectionName)
+  end
+
+  @doc """
+  Either one of:
+  - `delete_documents(collectionName, opts)`
+  - `delete_documents(%{api_key: xyz, host: ...}, collectionName)`
+  - `delete_documents(Connection.new(), collectionName)`
+  """
+  @spec delete_documents(map() | Connection.t() | String.t(), String.t() | keyword) ::
+          {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def delete_documents(collectionName, opts) when is_binary(collectionName) do
     delete_documents(Connection.new(), collectionName, opts)
   end
 
-  @spec delete_documents(Connection.t(), String.t(), keyword) ::
+  def delete_documents(conn, collectionName) when not is_struct(conn) and is_map(conn) do
+    delete_documents(Connection.new(conn), collectionName, [])
+  end
+
+  def delete_documents(%Connection{} = conn, collectionName) when is_struct(conn) do
+    delete_documents(conn, collectionName, [])
+  end
+
+  @doc """
+  Either one of:
+  - `delete_document(%{api_key: xyz, host: ...}, collectionName, documentId, opts)`
+  - `delete_document(Connection.new(), collectionName, documentId, opts)`
+  """
+  @spec delete_documents(map() | Connection.t(), String.t(), keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_documents(conn, collectionName, opts) do
+  def delete_documents(conn, collectionName, opts) when not is_struct(conn) and is_map(conn) do
+    delete_documents(Connection.new(conn), collectionName, opts)
+  end
+
+  def delete_documents(%Connection{} = conn, collectionName, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:deleteDocumentsParameters])
 
@@ -77,17 +138,55 @@ defmodule OpenApiTypesense.Documents do
   @doc """
   Delete an override associated with a collection
   """
-  @spec delete_search_override(String.t(), String.t(), keyword) ::
+  @spec delete_search_override(String.t(), String.t()) ::
           {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_search_override(collectionName, overrideId, opts \\ []) do
+  def delete_search_override(collectionName, overrideId) do
+    delete_search_override(Connection.new(), collectionName, overrideId)
+  end
+
+  @doc """
+  Either one of:
+  - `delete_documents(collectionName, opts)`
+  - `delete_documents(%{api_key: xyz, host: ...}, collectionName)`
+  - `delete_documents(Connection.new(), collectionName)`
+  """
+  @spec delete_search_override(
+          map() | Connection.t() | String.t(),
+          String.t(),
+          String.t() | keyword
+        ) ::
+          {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
+  def delete_search_override(collectionName, overrideId, opts) when is_binary(collectionName) do
     delete_search_override(Connection.new(), collectionName, overrideId, opts)
   end
 
-  @spec delete_search_override(Connection.t(), String.t(), String.t(), keyword) ::
+  def delete_search_override(conn, collectionName, overrideId)
+      when not is_struct(conn) and is_map(conn) do
+    delete_search_override(Connection.new(conn), collectionName, overrideId, [])
+  end
+
+  def delete_search_override(%Connection{} = conn, collectionName, overrideId)
+      when is_struct(conn) do
+    delete_search_override(conn, collectionName, overrideId, [])
+  end
+
+  @doc """
+  Either one of:
+  - `delete_documents(%{api_key: xyz, host: ...}, collectionName, opts)`
+  - `delete_documents(Connection.new(), collectionName, opts)`
+  """
+  @spec delete_search_override(map() | Connection.t(), String.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_search_override(conn, collectionName, overrideId, opts) do
+  def delete_search_override(conn, collectionName, overrideId, opts)
+      when not is_struct(conn) and is_map(conn) do
+    delete_search_override(Connection.new(conn), collectionName, overrideId, opts)
+  end
+
+  def delete_search_override(%Connection{} = conn, collectionName, overrideId, opts)
+      when is_struct(conn) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{
@@ -113,15 +212,44 @@ defmodule OpenApiTypesense.Documents do
     * `exportDocumentsParameters`
 
   """
-  @spec export_documents(String.t(), keyword) ::
+  @spec export_documents(String.t()) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def export_documents(collectionName, opts \\ []) do
+  def export_documents(collectionName) do
+    export_documents(Connection.new(), collectionName)
+  end
+
+  @doc """
+  Either one of:
+  - `export_documents(collectionName, opts)`
+  - `export_documents(%{api_key: xyz, host: ...}, collectionName)`
+  - `export_documents(Connection.new(), collectionName)`
+  """
+  @spec export_documents(map() | Connection.t() | String.t(), String.t() | keyword) ::
+          {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def export_documents(collectionName, opts) when is_binary(collectionName) do
     export_documents(Connection.new(), collectionName, opts)
   end
 
-  @spec export_documents(Connection.t(), String.t(), keyword) ::
+  def export_documents(conn, collectionName) when not is_struct(conn) and is_map(conn) do
+    export_documents(Connection.new(conn), collectionName, [])
+  end
+
+  def export_documents(%Connection{} = conn, collectionName) when is_struct(conn) do
+    export_documents(conn, collectionName, [])
+  end
+
+  @doc """
+  Either one of:
+  - `export_documents(%{api_key: xyz, host: ...}, collectionName, opts)`
+  - `export_documents(Connection.new(), collectionName, opts)`
+  """
+  @spec export_documents(map() | Connection.t(), String.t(), keyword) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def export_documents(conn, collectionName, opts) do
+  def export_documents(conn, collectionName, opts) when not is_struct(conn) and is_map(conn) do
+    export_documents(Connection.new(conn), collectionName, opts)
+  end
+
+  def export_documents(%Connection{} = conn, collectionName, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:exportDocumentsParameters])
 
@@ -141,15 +269,45 @@ defmodule OpenApiTypesense.Documents do
 
   Fetch an individual document from a collection by using its ID.
   """
-  @spec get_document(String.t(), String.t(), keyword) ::
+  @spec get_document(String.t(), String.t()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_document(collectionName, documentId, opts \\ []) do
+  def get_document(collectionName, documentId) do
+    get_document(Connection.new(), collectionName, documentId)
+  end
+
+  @doc """
+  Either one of:
+  - `get_document(collectionName, documentId, opts)`
+  - `get_document(%{api_key: xyz, host: ...}, collectionName, documentId)`
+  - `get_document(Connection.new(), collectionName, documentId)`
+  """
+  @spec get_document(map() | Connection.t() | String.t(), String.t(), String.t() | keyword) ::
+          {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def get_document(collectionName, documentId, opts) when is_binary(collectionName) do
     get_document(Connection.new(), collectionName, documentId, opts)
   end
 
-  @spec get_document(Connection.t(), String.t(), String.t(), keyword) ::
+  def get_document(conn, collectionName, documentId) when not is_struct(conn) and is_map(conn) do
+    get_document(Connection.new(conn), collectionName, documentId, [])
+  end
+
+  def get_document(%Connection{} = conn, collectionName, documentId) when is_struct(conn) do
+    get_document(conn, collectionName, documentId, [])
+  end
+
+  @doc """
+  Either one of:
+  - `get_document(%{api_key: xyz, host: ...}, collectionName, documentId, opts)`
+  - `get_document(Connection.new(), collectionName, documentId, opts)`
+  """
+  @spec get_document(map() | Connection.t(), String.t(), String.t(), keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_document(conn, collectionName, documentId, opts) do
+  def get_document(conn, collectionName, documentId, opts)
+      when not is_struct(conn) and is_map(conn) do
+    get_document(Connection.new(conn), collectionName, documentId, opts)
+  end
+
+  def get_document(%Connection{} = conn, collectionName, documentId, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{
@@ -167,15 +325,48 @@ defmodule OpenApiTypesense.Documents do
 
   Retrieve the details of a search override, given its id.
   """
-  @spec get_search_override(String.t(), String.t(), keyword) ::
+  @spec get_search_override(String.t(), String.t()) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | :error
-  def get_search_override(collectionName, overrideId, opts \\ []) do
+  def get_search_override(collectionName, overrideId) do
+    get_search_override(Connection.new(), collectionName, overrideId)
+  end
+
+  @doc """
+  Either one of:
+  - `get_search_override(collectionName, overrideId, opts)`
+  - `get_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId)`
+  - `get_search_override(Connection.new(), collectionName, overrideId)`
+  """
+  @spec get_search_override(map() | Connection.t() | String.t(), String.t(), String.t() | keyword) ::
+          {:ok, OpenApiTypesense.SearchOverride.t()} | :error
+  def get_search_override(collectionName, overrideId, opts) when is_binary(collectionName) do
     get_search_override(Connection.new(), collectionName, overrideId, opts)
   end
 
-  @spec get_search_override(Connection.t(), String.t(), String.t(), keyword) ::
+  def get_search_override(conn, collectionName, overrideId)
+      when not is_struct(conn) and is_map(conn) do
+    get_search_override(Connection.new(conn), collectionName, overrideId, [])
+  end
+
+  def get_search_override(%Connection{} = conn, collectionName, overrideId)
+      when is_struct(conn) do
+    get_search_override(conn, collectionName, overrideId, [])
+  end
+
+  @doc """
+  Either one of:
+  - `get_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId, opts)`
+  - `get_search_override(Connection.new(), collectionName, overrideId, opts)`
+  """
+  @spec get_search_override(map() | Connection.t(), String.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | :error
-  def get_search_override(conn, collectionName, overrideId, opts) do
+  def get_search_override(conn, collectionName, overrideId, opts)
+      when not is_struct(conn) and is_map(conn) do
+    get_search_override(Connection.new(conn), collectionName, overrideId, opts)
+  end
+
+  def get_search_override(%Connection{} = conn, collectionName, overrideId, opts)
+      when is_struct(conn) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{
@@ -194,15 +385,45 @@ defmodule OpenApiTypesense.Documents do
   @doc """
   List all collection overrides
   """
-  @spec get_search_overrides(String.t(), keyword) ::
+  @spec get_search_overrides(String.t()) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
-  def get_search_overrides(collectionName, opts \\ []) do
+  def get_search_overrides(collectionName) do
+    get_search_overrides(Connection.new(), collectionName)
+  end
+
+  @doc """
+  Either one of:
+  - `get_search_overrides(collectionName, opts)`
+  - `get_search_overrides(%{api_key: xyz, host: ...}, collectionName)`
+  - `get_search_overrides(Connection.new(), collectionName)`
+  """
+  @spec get_search_overrides(map() | Connection.t() | String.t(), String.t() | keyword) ::
+          {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
+  def get_search_overrides(collectionName, opts) when is_binary(collectionName) do
     get_search_overrides(Connection.new(), collectionName, opts)
   end
 
-  @spec get_search_overrides(Connection.t(), String.t(), keyword) ::
+  def get_search_overrides(conn, collectionName) when not is_struct(conn) and is_map(conn) do
+    get_search_overrides(Connection.new(conn), collectionName, [])
+  end
+
+  def get_search_overrides(%Connection{} = conn, collectionName) when is_struct(conn) do
+    get_search_overrides(conn, collectionName, [])
+  end
+
+  @doc """
+  Either one of:
+  - `get_search_overrides(%{api_key: xyz, host: ...}, collectionName, opts)`
+  - `get_search_overrides(Connection.new(), collectionName, opts)`
+  """
+  @spec get_search_overrides(map() | Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
-  def get_search_overrides(conn, collectionName, opts) do
+  def get_search_overrides(conn, collectionName, opts)
+      when not is_struct(conn) and is_map(conn) do
+    get_search_overrides(Connection.new(conn), collectionName, opts)
+  end
+
+  def get_search_overrides(%Connection{} = conn, collectionName, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{
@@ -228,15 +449,45 @@ defmodule OpenApiTypesense.Documents do
     * `importDocumentsParameters`
 
   """
-  @spec import_documents(String.t(), String.t(), keyword) ::
+  @spec import_documents(String.t(), String.t()) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def import_documents(collectionName, body, opts \\ []) do
+  def import_documents(collectionName, body) do
+    import_documents(Connection.new(), collectionName, body)
+  end
+
+  @doc """
+  Either one of:
+  - `import_documents(collectionName, payload, opts)`
+  - `import_documents(%{api_key: xyz, host: ...}, collectionName, payload)`
+  - `import_documents(Connection.new(), collectionName, payload)`
+  """
+  @spec import_documents(map() | Connection.t() | String.t(), String.t(), String.t() | keyword) ::
+          {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def import_documents(collectionName, body, opts) when is_binary(collectionName) do
     import_documents(Connection.new(), collectionName, body, opts)
   end
 
-  @spec import_documents(Connection.t(), String.t(), String.t(), keyword) ::
+  def import_documents(conn, collectionName, body) when not is_struct(conn) and is_map(conn) do
+    import_documents(Connection.new(conn), collectionName, body, [])
+  end
+
+  def import_documents(%Connection{} = conn, collectionName, body) when is_struct(conn) do
+    import_documents(conn, collectionName, body, [])
+  end
+
+  @doc """
+  Either one of:
+  - `import_documents(%{api_key: xyz, host: ...}, collectionName, payload, opts)`
+  - `import_documents(Connection.new(), collectionName, payload, opts)`
+  """
+  @spec import_documents(map() | Connection.t(), String.t(), String.t(), keyword) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def import_documents(conn, collectionName, body, opts) do
+  def import_documents(conn, collectionName, body, opts)
+      when not is_struct(conn) and is_map(conn) do
+    import_documents(Connection.new(conn), collectionName, body, opts)
+  end
+
+  def import_documents(%Connection{} = conn, collectionName, body, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:importDocumentsParameters])
 
@@ -268,15 +519,45 @@ defmodule OpenApiTypesense.Documents do
     * `dirty_values`: Dealing with Dirty Data
 
   """
-  @spec index_document(String.t(), map, keyword) ::
+  @spec index_document(String.t(), map) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def index_document(collectionName, body, opts \\ []) do
+  def index_document(collectionName, body) do
+    index_document(Connection.new(), collectionName, body)
+  end
+
+  @doc """
+  Either one of:
+  - `index_document(collectionName, payload, opts)`
+  - `index_document(%{api_key: xyz, host: ...}, collectionName, payload)`
+  - `index_document(Connection.new(), collectionName, payload)`
+  """
+  @spec index_document(map() | Connection.t() | String.t(), String.t() | map, map() | keyword) ::
+          {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def index_document(collectionName, body, opts) when is_binary(collectionName) do
     index_document(Connection.new(), collectionName, body, opts)
   end
 
-  @spec index_document(Connection.t(), String.t(), map, keyword) ::
+  def index_document(conn, collectionName, body) when not is_struct(conn) and is_map(conn) do
+    index_document(Connection.new(conn), collectionName, body, [])
+  end
+
+  def index_document(%Connection{} = conn, collectionName, body) when is_struct(conn) do
+    index_document(conn, collectionName, body, [])
+  end
+
+  @doc """
+  Either one of:
+  - `index_document(%{api_key: xyz, host: ...}, collectionName, payload, opts)`
+  - `index_document(Connection.new(), collectionName, payload, opts)`
+  """
+  @spec index_document(map() | Connection.t(), String.t(), map, keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def index_document(conn, collectionName, body, opts) do
+  def index_document(conn, collectionName, body, opts)
+      when not is_struct(conn) and is_map(conn) do
+    index_document(Connection.new(conn), collectionName, body, opts)
+  end
+
+  def index_document(%Connection{} = conn, collectionName, body, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:action, :dirty_values])
 
@@ -303,17 +584,47 @@ defmodule OpenApiTypesense.Documents do
     * `multiSearchParameters`
 
   """
-  @spec multi_search(OpenApiTypesense.MultiSearchSearchesParameter.t(), keyword) ::
+  @spec multi_search(OpenApiTypesense.MultiSearchSearchesParameter.t()) ::
           {:ok, OpenApiTypesense.MultiSearchResult.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def multi_search(body, opts \\ []) do
+  def multi_search(body) do
+    multi_search(Connection.new(), body)
+  end
+
+  @doc """
+  Either one of:
+  - `multi_search(payload, opts)`
+  - `multi_search(%{api_key: xyz, host: ...}, payload)`
+  - `multi_search(Connection.new(), payload)`
+  """
+  @spec multi_search(map() | Connection.t(), map() | keyword) ::
+          {:ok, OpenApiTypesense.MultiSearchResult.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
+  def multi_search(body, opts) when is_list(opts) do
     multi_search(Connection.new(), body, opts)
   end
 
-  @spec multi_search(Connection.t(), OpenApiTypesense.MultiSearchSearchesParameter.t(), keyword) ::
+  def multi_search(conn, body) when not is_struct(conn) and is_map(conn) and is_map(body) do
+    multi_search(Connection.new(conn), body, [])
+  end
+
+  def multi_search(%Connection{} = conn, body) when is_struct(conn) do
+    multi_search(conn, body)
+  end
+
+  @doc """
+  Either one of:
+  - `multi_search(%{api_key: xyz, host: ...}, payload, opts)`
+  - `multi_search(Connection.new(), payload, opts)`
+  """
+  @spec multi_search(map() | Connection.t(), map(), keyword) ::
           {:ok, OpenApiTypesense.MultiSearchResult.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def multi_search(conn, body, opts) do
+  def multi_search(conn, body, opts) when not is_struct(conn) and is_map(conn) do
+    multi_search(Connection.new(conn), body, opts)
+  end
+
+  def multi_search(%Connection{} = conn, body, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:multiSearchParameters])
 
@@ -343,15 +654,44 @@ defmodule OpenApiTypesense.Documents do
     * `searchParameters`
 
   """
-  @spec search_collection(String.t(), keyword) ::
+  @spec search_collection(String.t()) ::
           {:ok, OpenApiTypesense.SearchResult.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def search_collection(collectionName, opts \\ []) do
+  def search_collection(collectionName) do
+    search_collection(Connection.new(), collectionName)
+  end
+
+  @doc """
+  Either one of:
+  - `search_collection(payload, opts)`
+  - `search_collection(%{api_key: xyz, host: ...}, payload)`
+  - `search_collection(Connection.new(), payload)`
+  """
+  @spec search_collection(map() | Connection.t() | String.t(), String.t() | keyword) ::
+          {:ok, OpenApiTypesense.SearchResult.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def search_collection(collectionName, opts) when is_binary(collectionName) do
     search_collection(Connection.new(), collectionName, opts)
   end
 
-  @spec search_collection(Connection.t(), String.t(), keyword) ::
+  def search_collection(conn, collectionName) when not is_struct(conn) and is_map(conn) do
+    search_collection(Connection.new(conn), collectionName, [])
+  end
+
+  def search_collection(%Connection{} = conn, collectionName) when is_struct(conn) do
+    search_collection(conn, collectionName, [])
+  end
+
+  @doc """
+  Either one of:
+  - `search_collection(%{api_key: xyz, host: ...}, payload, opts)`
+  - `search_collection(Connection.new(), payload, opts)`
+  """
+  @spec search_collection(map() | Connection.t(), String.t(), keyword) ::
           {:ok, OpenApiTypesense.SearchResult.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def search_collection(conn, collectionName, opts) do
+  def search_collection(conn, collectionName, opts) when not is_struct(conn) and is_map(conn) do
+    search_collection(Connection.new(conn), collectionName, opts)
+  end
+
+  def search_collection(%Connection{} = conn, collectionName, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:searchParameters])
 
@@ -380,15 +720,53 @@ defmodule OpenApiTypesense.Documents do
     * `dirty_values`: Dealing with Dirty Data
 
   """
-  @spec update_document(String.t(), String.t(), map, keyword) ::
+  @spec update_document(String.t(), String.t(), map) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def update_document(collectionName, documentId, body, opts \\ []) do
+  def update_document(collectionName, documentId, body) do
+    update_document(Connection.new(), collectionName, documentId, body)
+  end
+
+  @doc """
+  Either one of:
+  - `update_document(collectionName, documentId, opts)`
+  - `update_document(%{api_key: xyz, host: ...}, collectionName, documentId)`
+  - `update_document(Connection.new(), collectionName, documentId)`
+  """
+  @spec update_document(
+          map() | Connection.t() | String.t(),
+          String.t(),
+          String.t() | map(),
+          map() | keyword
+        ) ::
+          {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def update_document(collectionName, documentId, body, opts) when is_binary(collectionName) do
     update_document(Connection.new(), collectionName, documentId, body, opts)
   end
 
-  @spec update_document(Connection.t(), String.t(), String.t(), map, keyword) ::
+  def update_document(conn, collectionName, documentId, body)
+      when not is_struct(conn) and is_map(conn) do
+    update_document(Connection.new(conn), collectionName, documentId, body, [])
+  end
+
+  def update_document(%Connection{} = conn, collectionName, documentId, body)
+      when is_struct(conn) do
+    update_document(conn, collectionName, documentId, body, [])
+  end
+
+  @doc """
+  Either one of:
+  - `update_document(%{api_key: xyz, host: ...}, collectionName, documentId, opts)`
+  - `update_document(Connection.new(), collectionName, documentId, opts)`
+  """
+  @spec update_document(map() | Connection.t(), String.t(), String.t(), map, keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def update_document(conn, collectionName, documentId, body, opts) do
+  def update_document(conn, collectionName, documentId, body, opts)
+      when not is_struct(conn) and is_map(conn) do
+    update_document(Connection.new(conn), collectionName, documentId, body, opts)
+  end
+
+  def update_document(%Connection{} = conn, collectionName, documentId, body, opts)
+      when is_struct(conn) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:dirty_values])
 
@@ -417,15 +795,45 @@ defmodule OpenApiTypesense.Documents do
     * `updateDocumentsParameters`
 
   """
-  @spec update_documents(String.t(), map, keyword) ::
+  @spec update_documents(String.t(), map) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def update_documents(collectionName, body, opts \\ []) do
+  def update_documents(collectionName, body) do
+    update_documents(Connection.new(), collectionName, body)
+  end
+
+  @doc """
+  Either one of:
+  - `update_documents(collectionName, payload, opts)`
+  - `update_document(%{api_key: xyz, host: ...}, collectionName, payload)`
+  - `update_document(Connection.new(), collectionName, payload)`
+  """
+  @spec update_documents(map() | Connection.t() | String.t(), String.t() | map(), map() | keyword) ::
+          {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def update_documents(collectionName, body, opts) when is_binary(collectionName) do
     update_documents(Connection.new(), collectionName, body, opts)
   end
 
-  @spec update_documents(Connection.t(), String.t(), map, keyword) ::
+  def update_documents(conn, collectionName, body) when not is_struct(conn) and is_map(conn) do
+    update_documents(Connection.new(conn), collectionName, body, [])
+  end
+
+  def update_documents(%Connection{} = conn, collectionName, body) when is_struct(conn) do
+    update_documents(conn, collectionName, body, [])
+  end
+
+  @doc """
+  Either one of:
+  - `update_documents(%{api_key: xyz, host: ...}, collectionName, payload, opts)`
+  - `update_documents(Connection.new(), collectionName, payload, opts)`
+  """
+  @spec update_documents(map() | Connection.t(), String.t(), map, keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def update_documents(conn, collectionName, body, opts) do
+  def update_documents(conn, collectionName, body, opts)
+      when not is_struct(conn) and is_map(conn) do
+    update_documents(Connection.new(conn), collectionName, body, opts)
+  end
+
+  def update_documents(%Connection{} = conn, collectionName, body, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:updateDocumentsParameters])
 
@@ -451,37 +859,54 @@ defmodule OpenApiTypesense.Documents do
 
   Create or update an override to promote certain documents over others. Using overrides, you can include or exclude specific documents for a given query.
   """
+  @spec upsert_search_override(String.t(), String.t(), map(), keyword) ::
+          {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def upsert_search_override(collectionName, overrideId, body) do
+    upsert_search_override(Connection.new(), collectionName, overrideId, body)
+  end
+
+  @doc """
+  Either one of:
+  - `upsert_search_override(collectionName, overrideId, payload, opts)`
+  - `upsert_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId, payload)`
+  - `upsert_search_override(Connection.new(), collectionName, overrideId, payload)`
+  """
   @spec upsert_search_override(
+          map() | Connection.t() | String.t(),
           String.t(),
-          String.t(),
-          OpenApiTypesense.SearchOverrideSchema.t(),
-          keyword
+          String.t() | map(),
+          map() | keyword
         ) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_search_override(
-        collectionName,
-        overrideId,
-        body,
-        opts \\ []
-      ) do
+  def upsert_search_override(collectionName, overrideId, body, opts)
+      when is_binary(collectionName) do
     upsert_search_override(Connection.new(), collectionName, overrideId, body, opts)
   end
 
-  @spec upsert_search_override(
-          Connection.t(),
-          String.t(),
-          String.t(),
-          OpenApiTypesense.SearchOverrideSchema.t(),
-          keyword
-        ) ::
+  def upsert_search_override(conn, collectionName, overrideId, body)
+      when not is_struct(conn) and is_map(conn) do
+    upsert_search_override(Connection.new(conn), collectionName, overrideId, body, [])
+  end
+
+  def upsert_search_override(%Connection{} = conn, collectionName, overrideId, body)
+      when is_struct(conn) do
+    upsert_search_override(conn, collectionName, overrideId, body, [])
+  end
+
+  @doc """
+  Either one of:
+  - `upsert_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId, payload, opts)`
+  - `upsert_search_override(Connection.new(), collectionName, overrideId, payload, opts)`
+  """
+  @spec upsert_search_override(map() | Connection.t(), String.t(), String.t(), map(), keyword) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_search_override(
-        conn,
-        collectionName,
-        overrideId,
-        body,
-        opts
-      ) do
+  def upsert_search_override(conn, collectionName, overrideId, body, opts)
+      when not is_struct(conn) and is_map(conn) do
+    upsert_search_override(Connection.new(conn), collectionName, overrideId, body, opts)
+  end
+
+  def upsert_search_override(%Connection{} = conn, collectionName, overrideId, body, opts)
+      when is_struct(conn) do
     client = opts[:client] || @default_client
 
     client.request(conn, %{

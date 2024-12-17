@@ -27,10 +27,7 @@ defmodule KeysTest do
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "success: get a specific key", %{api_key_schema: api_key_schema} do
-    assert {:ok, api_key} =
-             api_key_schema
-             |> Jason.encode_to_iodata!()
-             |> Keys.create_key()
+    assert {:ok, api_key} = Keys.create_key(api_key_schema)
 
     key_id = api_key.id
 
@@ -45,10 +42,7 @@ defmodule KeysTest do
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "success: delete an API key", %{api_key_schema: api_key_schema} do
-    assert {:ok, api_key} =
-             api_key_schema
-             |> Jason.encode_to_iodata!()
-             |> Keys.create_key()
+    assert {:ok, api_key} = Keys.create_key(api_key_schema)
 
     key_id = api_key.id
 
@@ -57,10 +51,7 @@ defmodule KeysTest do
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "success: create an search-only API key", %{api_key_schema: api_key_schema} do
-    assert {:ok, %ApiKey{}} =
-             api_key_schema
-             |> Jason.encode_to_iodata!()
-             |> Keys.create_key()
+    assert {:ok, %ApiKey{}} = Keys.create_key(api_key_schema)
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
@@ -69,7 +60,6 @@ defmodule KeysTest do
       api_key_schema
       |> Map.put(:actions, ["*"])
       |> Map.put(:collections, ["*"])
-      |> Jason.encode_to_iodata!()
 
     assert {:ok, %ApiKey{}} = Keys.create_key(body)
   end

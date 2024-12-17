@@ -24,7 +24,6 @@ defmodule DocumentsTest do
         ],
         default_sorting_field: "#{name}_id"
       }
-      |> Jason.encode_to_iodata!()
 
     {:ok, %CollectionResponse{name: ^name}} = Collections.create_collection(schema)
 
@@ -41,7 +40,6 @@ defmodule DocumentsTest do
       %{
         "shoe_type" => "athletic shoes"
       }
-      |> Jason.encode_to_iodata!()
 
     document_id = 9999
     message = "Could not find a document with id: #{document_id}"
@@ -80,7 +78,6 @@ defmodule DocumentsTest do
           "price" => "usd 149.95"
         }
       ]
-      |> Enum.map_join("\n", &Jason.encode_to_iodata!/1)
 
     assert {:ok, _} = Documents.import_documents(coll_name, body)
 
@@ -101,7 +98,6 @@ defmodule DocumentsTest do
         %{"id" => "9981", "price" => "usd 1.00"},
         %{"id" => "9982", "price" => "usd 1.00"}
       ]
-      |> Enum.map_join("\n", &Jason.encode_to_iodata!/1)
 
     assert {:ok, [%{"success" => false}, %{"success" => false}]} =
              Documents.import_documents(coll_name, body, action: "update")
@@ -116,7 +112,6 @@ defmodule DocumentsTest do
           %{collection: "shoes", q: "Adidas"}
         ]
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:ok, %MultiSearchResult{results: results}} =
              Documents.multi_search(body, query_by: "description", enable_analytics: false)
@@ -157,7 +152,6 @@ defmodule DocumentsTest do
           "price" => "usd 139.95"
         }
       ]
-      |> Enum.map_join("\n", &Jason.encode_to_iodata!/1)
 
     assert {:ok, _} = Documents.import_documents(coll_name, body, action: "create")
 
@@ -165,7 +159,6 @@ defmodule DocumentsTest do
       %{
         "price" => "5.25"
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:ok, %Documents{num_deleted: nil, num_updated: num_updated}} =
              Documents.update_documents(coll_name, update, filter_by: "shoes_id:>=0")
@@ -204,7 +197,6 @@ defmodule DocumentsTest do
           "price" => "usd 139.95"
         }
       ]
-      |> Enum.map_join("\n", &Jason.encode_to_iodata!/1)
 
     assert {:ok, _} = Documents.import_documents(coll_name, body, action: "create")
   end
@@ -226,7 +218,6 @@ defmodule DocumentsTest do
         """,
         price: "usd 109.95"
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:ok, %{shoes_id: ^shoes_id}} = Documents.index_document(coll_name, body)
   end
@@ -272,7 +263,6 @@ defmodule DocumentsTest do
         """,
         price: "usd 109.95"
       }
-      |> Jason.encode_to_iodata!()
 
     {:ok, %{id: id}} = Documents.index_document(coll_name, body)
     assert {:ok, %{id: ^id}} = Documents.delete_document(coll_name, id)
@@ -309,7 +299,6 @@ defmodule DocumentsTest do
           "price" => "usd 139.95"
         }
       ]
-      |> Enum.map_join("\n", &Jason.encode_to_iodata!/1)
 
     assert {:ok, _} = Documents.import_documents(coll_name, body)
 
@@ -362,7 +351,6 @@ defmodule DocumentsTest do
           %{"id" => "287"}
         ]
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:ok, %SearchOverride{}} =
              Documents.upsert_search_override(coll_name, "customize-apple", body)
