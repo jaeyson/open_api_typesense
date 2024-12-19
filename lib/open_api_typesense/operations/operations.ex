@@ -14,7 +14,7 @@ defmodule OpenApiTypesense.Operations do
   """
   @spec retrieve_api_stats ::
           {:ok, OpenApiTypesense.APIStatsResponse.t()} | :error
-  def retrieve_api_stats() do
+  def retrieve_api_stats do
     retrieve_api_stats(Connection.new())
   end
 

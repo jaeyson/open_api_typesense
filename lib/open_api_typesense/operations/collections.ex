@@ -14,14 +14,13 @@ defmodule OpenApiTypesense.Collections do
 
   ## Example
       iex> schema = %{
-      ...>   "name" => "companies",
+      ...>   "name" => "houses",
       ...>   "fields" => [
-      ...>     %{"name" => "company_name", "type" => "string"},
-      ...>     %{"name" => "companies_id", "type" => "int32"},
-      ...>     %{"name" => "country", "type" => "string", "facet" => true}
+      ...>     %{"name" => "house_type", "type" => "string"},
+      ...>     %{"name" => "houses_id", "type" => "int32"},
+      ...>     %{"name" => "description", "type" => "string"},
       ...>   ],
-      ...>   "default_sorting_field" => "companies_id",
-      ...>   "wtf" => 123
+      ...>   "default_sorting_field" => "houses_id",
       ...> }
       iex> OpenApiTypesense.Collections.create_collection(schema)
 
@@ -266,7 +265,7 @@ defmodule OpenApiTypesense.Collections do
   List all aliases and the corresponding collections that they map to.
   """
   @spec get_aliases :: {:ok, OpenApiTypesense.CollectionAliasesResponse.t()} | :error
-  def get_aliases() do
+  def get_aliases do
     get_aliases(Connection.new())
   end
 
