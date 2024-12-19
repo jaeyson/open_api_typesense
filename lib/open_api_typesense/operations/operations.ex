@@ -24,7 +24,7 @@ defmodule OpenApiTypesense.Operations do
   - `retrieve_api_stats(%{api_key: xyz, host: ...})`
   - `retrieve_api_stats(Connection.new())`
   """
-  @spec retrieve_api_stats(map() | Connection.t() | keyword) ::
+  @spec retrieve_api_stats(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.APIStatsResponse.t()} | :error
   def retrieve_api_stats(opts) when is_list(opts) do
     retrieve_api_stats(Connection.new(), opts)
@@ -43,7 +43,7 @@ defmodule OpenApiTypesense.Operations do
   - `retrieve_api_stats(%{api_key: xyz, host: ...}, opts)`
   - `retrieve_api_stats(Connection.new(), opts)`
   """
-  @spec retrieve_api_stats(map() | Connection.t(), keyword) ::
+  @spec retrieve_api_stats(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.APIStatsResponse.t()} | :error
   def retrieve_api_stats(conn, opts) when not is_struct(conn) and is_map(conn) do
     retrieve_api_stats(Connection.new(conn), opts)
@@ -78,7 +78,7 @@ defmodule OpenApiTypesense.Operations do
   - `retrieve_metrics(%{api_key: xyz, host: ...})`
   - `retrieve_metrics(Connection.new())`
   """
-  @spec retrieve_metrics(map() | Connection.t() | keyword) :: {:ok, map} | :error
+  @spec retrieve_metrics(map() | Connection.t() | keyword()) :: {:ok, map} | :error
   def retrieve_metrics(opts) when is_list(opts) do
     retrieve_metrics(Connection.new(), opts)
   end
@@ -96,7 +96,7 @@ defmodule OpenApiTypesense.Operations do
   - `retrieve_metrics(%{api_key: xyz, host: ...}, opts)`
   - `retrieve_metrics(Connection.new(), opts)`
   """
-  @spec retrieve_metrics(map() | Connection.t(), keyword) :: {:ok, map} | :error
+  @spec retrieve_metrics(map() | Connection.t(), keyword()) :: {:ok, map} | :error
   def retrieve_metrics(conn, opts) when not is_struct(conn) and is_map(conn) do
     retrieve_metrics(Connection.new(conn), opts)
   end
@@ -124,7 +124,7 @@ defmodule OpenApiTypesense.Operations do
     * `snapshot_path`: The directory on the server where the snapshot should be saved.
 
   """
-  @spec take_snapshot(keyword) :: {:ok, OpenApiTypesense.SuccessStatus.t()} | :error
+  @spec take_snapshot(keyword()) :: {:ok, OpenApiTypesense.SuccessStatus.t()} | :error
   def take_snapshot(opts) do
     take_snapshot(Connection.new(), opts)
   end
@@ -134,7 +134,7 @@ defmodule OpenApiTypesense.Operations do
   - `take_snapshot(%{api_key: xyz, host: ...}, opts)`
   - `take_snapshot(Connection.new(), opts)`
   """
-  @spec take_snapshot(map() | Connection.t(), keyword) ::
+  @spec take_snapshot(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | :error
   def take_snapshot(conn, opts) when not is_struct(conn) and is_map(conn) do
     take_snapshot(Connection.new(conn), opts)
@@ -171,7 +171,7 @@ defmodule OpenApiTypesense.Operations do
   - `vote(%{api_key: xyz, host: ...})`
   - `vote(Connection.new())`
   """
-  @spec vote(map() | Connection.t() | keyword) ::
+  @spec vote(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | :error
   def vote(opts) when is_list(opts) do
     vote(Connection.new(), opts)
@@ -190,7 +190,7 @@ defmodule OpenApiTypesense.Operations do
   - `vote(%{api_key: xyz, host: ...}, opts)`
   - `vote(Connection.new(), opts)`
   """
-  @spec vote(map() | Connection.t(), keyword) ::
+  @spec vote(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | :error
   def vote(conn, opts) when not is_struct(conn) and is_map(conn) do
     vote(Connection.new(conn), opts)

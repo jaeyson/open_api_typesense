@@ -9,8 +9,12 @@ defmodule CollectionsTest do
   alias OpenApiTypesense.CollectionResponse
   alias OpenApiTypesense.Collections
   alias OpenApiTypesense.CollectionUpdateSchema
+  alias OpenApiTypesense.Connection
 
   setup_all do
+    conn = Connection.new()
+    map_conn = %{api_key: "xyz", host: "localhost", port: 8108, scheme: "http"}
+
     schema = %{
       "name" => "companies",
       "fields" => [
@@ -25,24 +29,38 @@ defmodule CollectionsTest do
       Collections.delete_collection(schema["name"])
     end)
 
-    %{schema: schema, alias_name: "foo_bar"}
+    %{schema: schema, alias_name: "foo_bar", conn: conn, map_conn: map_conn}
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: create a collection", %{schema: schema} do
+  test "success: create a collection", %{schema: schema, conn: conn, map_conn: map_conn} do
     name = schema["name"]
 
     assert {:ok, %CollectionResponse{name: ^name}} = Collections.create_collection(schema)
+    assert {:error, %ApiResponse{message: _}} = Collections.create_collection(schema, [])
+    assert {:error, %ApiResponse{message: _}} = Collections.create_collection(conn, schema)
+    assert {:error, %ApiResponse{message: _}} = Collections.create_collection(conn, schema, [])
+    assert {:error, %ApiResponse{message: _}} = Collections.create_collection(map_conn, schema)
+
+    assert {:error, %ApiResponse{message: _}} =
+             Collections.create_collection(map_conn, schema, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: list collections" do
-    {:ok, collections} = Collections.get_collections()
+  test "success: list collections", %{conn: conn, map_conn: map_conn} do
+    assert {:ok, collections} = Collections.get_collections()
     assert length(collections) >= 0
+
+    opts = [exclude_fields: "fields", limit: 1]
+    assert {:ok, _} = Collections.get_collections(opts)
+    assert {:ok, _} = Collections.get_collections(conn)
+    assert {:ok, _} = Collections.get_collections(map_conn)
+    assert {:ok, _} = Collections.get_collections(conn, opts)
+    assert {:ok, _} = Collections.get_collections(map_conn, limit: 1)
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: update an existing collection" do
+  test "success: update an existing collection", %{conn: conn, map_conn: map_conn} do
     name = "burgers"
 
     schema =
@@ -63,44 +81,97 @@ defmodule CollectionsTest do
     assert {:ok, %CollectionUpdateSchema{}} =
              Collections.update_collection(name, body)
 
+    assert {:error, %ApiResponse{message: _}} = Collections.update_collection(name, body, [])
+    assert {:error, %ApiResponse{message: _}} = Collections.update_collection(conn, name, body)
+
+    assert {:error, %ApiResponse{message: _}} =
+             Collections.update_collection(map_conn, name, body)
+
+    assert {:error, %ApiResponse{message: _}} =
+             Collections.update_collection(conn, name, body, [])
+
+    assert {:error, %ApiResponse{message: _}} =
+             Collections.update_collection(map_conn, name, body, [])
+
     Collections.delete_collection(name)
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: list empty aliases", %{alias_name: alias_name} do
-    Collections.delete_alias(alias_name)
+  test "success: list empty aliases", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %CollectionAliasesResponse{aliases: aliases}} = Collections.get_aliases()
     assert length(aliases) >= 0
+    assert {:ok, _} = Collections.get_aliases([])
+    assert {:ok, _} = Collections.get_aliases(conn)
+    assert {:ok, _} = Collections.get_aliases(map_conn)
+    assert {:ok, _} = Collections.get_aliases(conn, [])
+    assert {:ok, _} = Collections.get_aliases(map_conn, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: delete a missing collection" do
+  test "success: delete a missing collection", %{conn: conn, map_conn: map_conn} do
     assert Collections.delete_collection("non-existing-collection") ==
              {:error,
               %ApiResponse{
                 message: "No collection with name `non-existing-collection` found."
               }}
+
+    assert {:error, %ApiResponse{message: _}} = Collections.delete_collection("xyz", [])
+    assert {:error, %ApiResponse{message: _}} = Collections.delete_collection(conn, "xyz")
+    assert {:error, %ApiResponse{message: _}} = Collections.delete_collection(map_conn, "xyz")
+    assert {:error, %ApiResponse{message: _}} = Collections.delete_collection(conn, "xyz", [])
+    assert {:error, %ApiResponse{message: _}} = Collections.delete_collection(map_conn, "xyz", [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: upsert an alias", %{schema: schema, alias_name: alias_name} do
+  test "success: upsert an alias", %{
+    schema: schema,
+    alias_name: alias_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     collection_name = schema["name"]
 
     body = %{"collection_name" => collection_name}
 
     assert {:ok, %CollectionAlias{collection_name: ^collection_name, name: ^alias_name}} =
              Collections.upsert_alias(alias_name, body)
+
+    assert {:ok, %CollectionAlias{}} = Collections.upsert_alias(alias_name, body, [])
+    assert {:ok, %CollectionAlias{}} = Collections.upsert_alias(conn, alias_name, body)
+    assert {:ok, %CollectionAlias{}} = Collections.upsert_alias(map_conn, alias_name, body)
+    assert {:ok, %CollectionAlias{}} = Collections.upsert_alias(conn, alias_name, body, [])
+    assert {:ok, %CollectionAlias{}} = Collections.upsert_alias(map_conn, alias_name, body, [])
+
+    assert {:ok, %CollectionAlias{name: ^alias_name}} = Collections.delete_alias(alias_name)
+    assert {:error, %ApiResponse{message: _}} = Collections.delete_alias(alias_name, [])
+    assert {:error, %ApiResponse{message: _}} = Collections.delete_alias(conn, alias_name)
+    assert {:error, %ApiResponse{message: _}} = Collections.delete_alias(map_conn, alias_name)
+    assert {:error, %ApiResponse{message: _}} = Collections.delete_alias(conn, alias_name, [])
+    assert {:error, %ApiResponse{message: _}} = Collections.delete_alias(map_conn, alias_name, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: get a non-existing alias" do
+  test "error: get a non-existing alias", %{conn: conn, map_conn: map_conn} do
     assert Collections.get_alias("non-existing-alias") ==
              {:error, %ApiResponse{message: "Not Found"}}
+
+    assert {:error, %ApiResponse{message: _}} = Collections.get_alias("xyz", [])
+    assert {:error, %ApiResponse{message: _}} = Collections.get_alias(conn, "xyz")
+    assert {:error, %ApiResponse{message: _}} = Collections.get_alias(map_conn, "xyz")
+    assert {:error, %ApiResponse{message: _}} = Collections.get_alias(conn, "xyz", [])
+    assert {:error, %ApiResponse{message: _}} = Collections.get_alias(map_conn, "xyz", [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: get a non-existing collection" do
+  test "error: get a non-existing collection", %{conn: conn, map_conn: map_conn} do
     assert Collections.get_collection("non-existing-collection") ==
              {:error, %ApiResponse{message: "Not Found"}}
+
+    assert {:error, %ApiResponse{message: _}} = Collections.get_collection("xyz")
+    assert {:error, %ApiResponse{message: _}} = Collections.get_collection("xyz", [])
+    assert {:error, %ApiResponse{message: _}} = Collections.get_collection(conn, "xyz")
+    assert {:error, %ApiResponse{message: _}} = Collections.get_collection(map_conn, "xyz")
+    assert {:error, %ApiResponse{message: _}} = Collections.get_collection(conn, "xyz", [])
+    assert {:error, %ApiResponse{message: _}} = Collections.get_collection(map_conn, "xyz", [])
   end
 end

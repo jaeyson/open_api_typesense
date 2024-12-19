@@ -28,7 +28,7 @@ defmodule OpenApiTypesense.Stopwords do
   - `delete_stopwords_set(%{api_key: xyz, host: ...}, setId)`
   - `delete_stopwords_set(Connection.new(), setId)`
   """
-  @spec delete_stopwords_set(map() | Connection.t() | String.t(), String.t() | keyword) ::
+  @spec delete_stopwords_set(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_stopwords_set(setId, opts) when is_binary(setId) do
     delete_stopwords_set(Connection.new(), setId, opts)
@@ -47,7 +47,7 @@ defmodule OpenApiTypesense.Stopwords do
   - `delete_stopwords_set(%{api_key: xyz, host: ...}, setId, opts)`
   - `delete_stopwords_set(Connection.new(), setId, opts)`
   """
-  @spec delete_stopwords_set(map() | Connection.t(), String.t(), keyword) ::
+  @spec delete_stopwords_set(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_stopwords_set(conn, setId, opts) when not is_struct(conn) and is_map(conn) do
     delete_stopwords_set(Connection.new(conn), setId, opts)
@@ -74,14 +74,14 @@ defmodule OpenApiTypesense.Stopwords do
 
   Retrieve the details of a stopwords set, given it's name.
   """
-  @spec retrieve_stopwords_set(String.t(), keyword) ::
+  @spec retrieve_stopwords_set(String.t(), keyword()) ::
           {:ok, OpenApiTypesense.StopwordsSetRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_stopwords_set(setId, opts \\ []) do
     retrieve_stopwords_set(Connection.new(), setId, opts)
   end
 
-  @spec retrieve_stopwords_set(Connection.t(), String.t(), keyword) ::
+  @spec retrieve_stopwords_set(Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.StopwordsSetRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_stopwords_set(conn, setId, opts) do
@@ -105,13 +105,13 @@ defmodule OpenApiTypesense.Stopwords do
 
   Retrieve the details of all stopwords sets
   """
-  @spec retrieve_stopwords_sets(keyword) ::
+  @spec retrieve_stopwords_sets(keyword()) ::
           {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()} | :error
   def retrieve_stopwords_sets(opts \\ []) do
     retrieve_stopwords_sets(Connection.new(), opts)
   end
 
-  @spec retrieve_stopwords_sets(Connection.t(), keyword) ::
+  @spec retrieve_stopwords_sets(Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()} | :error
   def retrieve_stopwords_sets(conn, opts) do
     client = opts[:client] || @default_client

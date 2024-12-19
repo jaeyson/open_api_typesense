@@ -25,7 +25,7 @@ defmodule OpenApiTypesense.Conversations do
   - `create_conversation_model(%{api_key: xyz, host: ...}, body)`
   - `create_conversation_model(Connection.new(), body)`
   """
-  @spec create_conversation_model(map() | Connection.t(), map() | keyword) ::
+  @spec create_conversation_model(map() | Connection.t(), map() | keyword()) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_conversation_model(body, opts) when is_list(opts) do
@@ -46,7 +46,7 @@ defmodule OpenApiTypesense.Conversations do
   - `create_conversation_model(%{api_key: xyz, host: ...}, body, opts)`
   - `create_conversation_model(Connection.new(), body, opts)`
   """
-  @spec create_conversation_model(map() | Connection.t(), map(), keyword) ::
+  @spec create_conversation_model(map() | Connection.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_conversation_model(conn, body, opts) when not is_struct(conn) and is_map(conn) do
@@ -88,7 +88,7 @@ defmodule OpenApiTypesense.Conversations do
   - `delete_conversation_model(%{api_key: xyz, host: ...}, modelId)`
   - `delete_conversation_model(Connection.new(), modelId)`
   """
-  @spec delete_conversation_model(map() | Connection.t(), String.t(), String.t() | keyword) ::
+  @spec delete_conversation_model(map() | Connection.t(), String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
   def delete_conversation_model(modelId, opts) when is_binary(modelId) do
     delete_conversation_model(Connection.new(), modelId, opts)
@@ -107,7 +107,7 @@ defmodule OpenApiTypesense.Conversations do
   - `delete_conversation_model(%{api_key: xyz, host: ...}, modelId, opts)`
   - `delete_conversation_model(Connection.new(), modelId, opts)`
   """
-  @spec delete_conversation_model(map() | Connection.t(), String.t(), keyword) ::
+  @spec delete_conversation_model(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
   def delete_conversation_model(conn, modelId, opts) when not is_struct(conn) and is_map(conn) do
     delete_conversation_model(Connection.new(conn), modelId, opts)
@@ -146,7 +146,7 @@ defmodule OpenApiTypesense.Conversations do
   - `retrieve_all_conversation_models(%{api_key: xyz, host: ...})`
   - `retrieve_all_conversation_models(Connection.new())`
   """
-  @spec retrieve_all_conversation_models(map() | Connection.t() | keyword) ::
+  @spec retrieve_all_conversation_models(map() | Connection.t() | keyword()) ::
           {:ok, [OpenApiTypesense.ConversationModelSchema.t()]} | :error
   def retrieve_all_conversation_models(opts) when is_list(opts) do
     retrieve_all_conversation_models(Connection.new(), opts)
@@ -165,7 +165,7 @@ defmodule OpenApiTypesense.Conversations do
   - `retrieve_all_conversation_models(%{api_key: xyz, host: ...}, opts)`
   - `retrieve_all_conversation_models(Connection.new(), opts)`
   """
-  @spec retrieve_all_conversation_models(map() | Connection.t(), keyword) ::
+  @spec retrieve_all_conversation_models(map() | Connection.t(), keyword()) ::
           {:ok, [OpenApiTypesense.ConversationModelSchema.t()]} | :error
   def retrieve_all_conversation_models(conn, opts) when not is_struct(conn) and is_map(conn) do
     retrieve_all_conversation_models(Connection.new(conn), opts)
@@ -201,7 +201,7 @@ defmodule OpenApiTypesense.Conversations do
   - `retrieve_conversation_model(%{api_key: xyz, host: ...}, modelId)`
   - `retrieve_conversation_model(Connection.new(), modelId)`
   """
-  @spec retrieve_conversation_model(map() | Connection.t() | String.t(), String.t() | keyword) ::
+  @spec retrieve_conversation_model(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
   def retrieve_conversation_model(modelId, opts) when is_binary(modelId) do
     retrieve_conversation_model(Connection.new(), modelId, opts)
@@ -220,7 +220,7 @@ defmodule OpenApiTypesense.Conversations do
   - `retrieve_conversation_model(%{api_key: xyz, host: ...}, modelId, opts)`
   - `retrieve_conversation_model(Connection.new(), modelId, opts)`
   """
-  @spec retrieve_conversation_model(map() | Connection.t(), String.t(), keyword) ::
+  @spec retrieve_conversation_model(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
   def retrieve_conversation_model(conn, modelId, opts)
       when not is_struct(conn) and is_map(conn) do
@@ -282,7 +282,7 @@ defmodule OpenApiTypesense.Conversations do
   - `update_conversation_model(%{api_key: xyz, host: ...}, modelId, body, opts)`
   - `update_conversation_model(Connection.new(), modelId, body, opts)`
   """
-  @spec update_conversation_model(map() | Connection.t(), String.t(), map(), keyword) ::
+  @spec update_conversation_model(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
   def update_conversation_model(conn, modelId, body, opts)
       when not is_struct(conn) and is_map(conn) do

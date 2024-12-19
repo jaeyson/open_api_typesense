@@ -24,7 +24,7 @@ defmodule OpenApiTypesense.Keys do
   - `create_key(%{api_key: xyz, host: ...}, payload)`
   - `create_key(Connection.new(), payload)`
   """
-  @spec create_key(map() | Connection.t(), map() | keyword) ::
+  @spec create_key(map() | Connection.t(), map() | keyword()) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_key(body, opts) when is_list(opts) do
     create_key(Connection.new(), body, opts)
@@ -43,7 +43,7 @@ defmodule OpenApiTypesense.Keys do
   - `create_key(%{api_key: xyz, host: ...}, payload, opts)`
   - `create_key(Connection.new(), payload, opts)`
   """
-  @spec create_key(map() | Connection.t(), OpenApiTypesense.ApiKeySchema.t(), keyword) ::
+  @spec create_key(map() | Connection.t(), OpenApiTypesense.ApiKeySchema.t(), keyword()) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_key(conn, body, opts) when not is_struct(conn) and is_map(conn) do
     create_key(Connection.new(conn), body, opts)
@@ -84,7 +84,7 @@ defmodule OpenApiTypesense.Keys do
   - `delete_key(%{api_key: xyz, host: ...}, keyId)`
   - `delete_key(Connection.new(), keyId)`
   """
-  @spec delete_key(map() | Connection.t() | integer, integer | keyword) ::
+  @spec delete_key(map() | Connection.t() | integer, integer | keyword()) ::
           {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_key(keyId, opts) when is_integer(keyId) do
@@ -104,14 +104,14 @@ defmodule OpenApiTypesense.Keys do
   - `delete_key(%{api_key: xyz, host: ...}, keyId, opts)`
   - `delete_key(Connection.new(), keyId, opts)`
   """
-  @spec delete_key(map() | Connection.t(), integer, keyword) ::
+  @spec delete_key(map() | Connection.t(), integer, keyword()) ::
           {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_key(conn, keyId, opts) when not is_struct(conn) and is_map(conn) do
     delete_key(Connection.new(conn), keyId, opts)
   end
 
-  @spec delete_key(Connection.t(), integer, keyword) ::
+  @spec delete_key(Connection.t(), integer, keyword()) ::
           {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_key(%Connection{} = conn, keyId, opts) when is_struct(conn) do
@@ -148,7 +148,7 @@ defmodule OpenApiTypesense.Keys do
   - `get_key(%{api_key: xyz, host: ...}, keyId)`
   - `get_key(Connection.new(), keyId)`
   """
-  @spec get_key(map() | Connection.t() | integer, keyword) ::
+  @spec get_key(map() | Connection.t() | integer, keyword()) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_key(keyId, opts) when is_integer(keyId) do
     get_key(Connection.new(), keyId, opts)
@@ -167,7 +167,7 @@ defmodule OpenApiTypesense.Keys do
   - `get_key(%{api_key: xyz, host: ...}, keyId, opts)`
   - `get_key(Connection.new(), keyId, opts)`
   """
-  @spec get_key(map() | Connection.t(), integer, keyword) ::
+  @spec get_key(map() | Connection.t(), integer, keyword()) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_key(conn, keyId, opts) when not is_struct(conn) and is_map(conn) do
     get_key(Connection.new(conn), keyId, opts)
@@ -200,7 +200,7 @@ defmodule OpenApiTypesense.Keys do
   - `get_keys(%{api_key: xyz, host: ...})`
   - `get_keys(Connection.new())`
   """
-  @spec get_keys(map() | Connection.t() | keyword) ::
+  @spec get_keys(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.ApiKeysResponse.t()} | :error
   def get_keys(opts) when is_list(opts) do
     get_keys(Connection.new(), opts)
@@ -219,7 +219,7 @@ defmodule OpenApiTypesense.Keys do
   - `get_keys(%{api_key: xyz, host: ...}, opts)`
   - `get_keys(Connection.new(), opts)`
   """
-  @spec get_keys(map() | Connection.t(), keyword) ::
+  @spec get_keys(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.ApiKeysResponse.t()} | :error
   def get_keys(conn, opts) when not is_struct(conn) and is_map(conn) do
     get_keys(Connection.new(conn), opts)

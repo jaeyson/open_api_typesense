@@ -25,7 +25,7 @@ defmodule OpenApiTypesense.Debug do
   - `debug(%{api_key: xyz, host: ...})`
   - `debug(Connection.new())`
   """
-  @spec debug(map() | Connection.t() | keyword) :: {:ok, map} | :error
+  @spec debug(map() | Connection.t() | keyword()) :: {:ok, map} | :error
   def debug(opts) when is_list(opts) do
     debug(Connection.new(), opts)
   end
@@ -43,12 +43,12 @@ defmodule OpenApiTypesense.Debug do
   - `debug(%{api_key: xyz, host: ...}, opts)`
   - `debug(Connection.new(), opts)`
   """
-  @spec debug(map() | Connection.t(), keyword) :: {:ok, map} | :error
+  @spec debug(map() | Connection.t(), keyword()) :: {:ok, map} | :error
   def debug(conn, opts) when not is_struct(conn) and is_map(conn) do
     debug(Connection.new(conn), opts)
   end
 
-  @spec debug(Connection.t(), keyword) :: {:ok, map} | :error
+  @spec debug(Connection.t(), keyword()) :: {:ok, map} | :error
   def debug(%Connection{} = conn, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
 

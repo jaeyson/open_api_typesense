@@ -108,7 +108,7 @@ defmodule OpenApiTypesense.Client do
         host: conn.host,
         port: conn.port,
         path: opts[:url],
-        query: URI.encode_query(opts[:opts] || [])
+        query: URI.encode_query(opts[:query] || [])
       }
 
     encoded_body =

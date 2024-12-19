@@ -10,14 +10,14 @@ defmodule OpenApiTypesense.Synonyms do
   @doc """
   Delete a synonym associated with a collection
   """
-  @spec delete_search_synonym(String.t(), String.t(), keyword) ::
+  @spec delete_search_synonym(String.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchSynonymDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_search_synonym(collectionName, synonymId, opts \\ []) do
     delete_search_synonym(Connection.new(), collectionName, synonymId, opts)
   end
 
-  @spec delete_search_synonym(Connection.t(), String.t(), String.t(), keyword) ::
+  @spec delete_search_synonym(Connection.t(), String.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchSynonymDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_search_synonym(conn, collectionName, synonymId, opts) do
@@ -41,13 +41,13 @@ defmodule OpenApiTypesense.Synonyms do
 
   Retrieve the details of a search synonym, given its id.
   """
-  @spec get_search_synonym(String.t(), String.t(), keyword) ::
+  @spec get_search_synonym(String.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchSynonym.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_synonym(collectionName, synonymId, opts \\ []) do
     get_search_synonym(Connection.new(), collectionName, synonymId, opts)
   end
 
-  @spec get_search_synonym(Connection.t(), String.t(), String.t(), keyword) ::
+  @spec get_search_synonym(Connection.t(), String.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchSynonym.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_synonym(conn, collectionName, synonymId, opts) do
     client = opts[:client] || @default_client
@@ -68,14 +68,14 @@ defmodule OpenApiTypesense.Synonyms do
   @doc """
   List all collection synonyms
   """
-  @spec get_search_synonyms(String.t(), keyword) ::
+  @spec get_search_synonyms(String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchSynonymsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_synonyms(collectionName, opts \\ []) do
     get_search_synonyms(Connection.new(), collectionName, opts)
   end
 
-  @spec get_search_synonyms(Connection.t(), String.t(), keyword) ::
+  @spec get_search_synonyms(Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchSynonymsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_synonyms(conn, collectionName, opts) do
