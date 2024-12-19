@@ -5,12 +5,16 @@ defmodule DocumentsTest do
   alias OpenApiTypesense.Documents
   alias OpenApiTypesense.Collections
   alias OpenApiTypesense.CollectionResponse
+  alias OpenApiTypesense.Connection
   alias OpenApiTypesense.MultiSearchResult
   alias OpenApiTypesense.SearchOverride
   alias OpenApiTypesense.SearchOverridesResponse
   alias OpenApiTypesense.SearchResult
 
   setup_all do
+    conn = Connection.new()
+    map_conn = %{api_key: "xyz", host: "localhost", port: 8108, scheme: "http"}
+
     name = "shoes"
 
     schema =
@@ -31,11 +35,15 @@ defmodule DocumentsTest do
       {:ok, %CollectionResponse{name: ^name}} = Collections.delete_collection(name)
     end)
 
-    %{coll_name: name}
+    %{coll_name: name, conn: conn, map_conn: map_conn}
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: update a non-existent document", %{coll_name: coll_name} do
+  test "error: update a non-existent document", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     body =
       %{
         "shoe_type" => "athletic shoes"
@@ -44,12 +52,20 @@ defmodule DocumentsTest do
     document_id = 9999
     message = "Could not find a document with id: #{document_id}"
 
+    opts = [dirty_values: "coerce_or_reject"]
+
     assert {:error, %ApiResponse{message: ^message}} =
              Documents.update_document(coll_name, document_id, body)
+
+    assert {:error, _} = Documents.update_document(coll_name, document_id, body, opts)
+    assert {:error, _} = Documents.update_document(conn, coll_name, document_id, body)
+    assert {:error, _} = Documents.update_document(map_conn, coll_name, document_id, body)
+    assert {:error, _} = Documents.update_document(conn, coll_name, document_id, body, opts)
+    assert {:error, _} = Documents.update_document(map_conn, coll_name, document_id, body, opts)
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: search a document", %{coll_name: coll_name} do
+  test "success: search a document", %{coll_name: coll_name, conn: conn, map_conn: map_conn} do
     body =
       [
         %{
@@ -81,48 +97,71 @@ defmodule DocumentsTest do
 
     assert {:ok, _} = Documents.import_documents(coll_name, body)
 
-    assert {:ok, %SearchResult{hits: hits}} =
-             Documents.search_collection(coll_name,
-               q: "sheepskin",
-               query_by: "description",
-               enable_analytics: false
-             )
+    opts = [q: "sheepskin", query_by: "description", enable_analytics: false]
+    assert {:ok, %SearchResult{hits: hits}} = Documents.search(coll_name, opts)
 
     assert length(hits) === 2
+
+    assert {:ok, _} = Documents.search(coll_name, opts)
+    assert {:ok, _} = Documents.search(conn, coll_name, opts)
+    assert {:ok, _} = Documents.search(map_conn, coll_name, opts)
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: update non-existent documents", %{coll_name: coll_name} do
+  test "error: update non-existent documents", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     body =
       [
         %{"id" => "9981", "price" => "usd 1.00"},
         %{"id" => "9982", "price" => "usd 1.00"}
       ]
 
+    opts = [action: "update", importDocumentsParameters: %{batch_size: 100}]
+
     assert {:ok, [%{"success" => false}, %{"success" => false}]} =
-             Documents.import_documents(coll_name, body, action: "update")
+             Documents.import_documents(coll_name, body, opts)
+
+    assert {:ok, _} = Documents.import_documents(coll_name, body)
+    assert {:ok, _} = Documents.import_documents(conn, coll_name, body)
+    assert {:ok, _} = Documents.import_documents(map_conn, coll_name, body)
+    assert {:ok, _} = Documents.import_documents(conn, coll_name, body, opts)
+    assert {:ok, _} = Documents.import_documents(map_conn, coll_name, body, opts)
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: multi-search with no documents" do
+  test "error: multi-search with no documents", %{conn: conn, map_conn: map_conn} do
     body =
       %{
         "searches" => [
-          %{collection: "shoes", q: "Nike"},
-          %{collection: "shoes", q: "Adidas"}
+          %{"collection" => "shoes", "q" => "Nike", "query_by" => "description"},
+          %{"collection" => "shoes", "q" => "Adidas", "query_by" => "description"}
         ]
       }
 
-    assert {:ok, %MultiSearchResult{results: results}} =
-             Documents.multi_search(body, query_by: "description", enable_analytics: false)
+    params = [enable_analytics: false]
+    assert {:ok, %MultiSearchResult{results: results}} = Documents.multi_search(body)
 
     [result_one, result_two] = results
+
     assert result_one.found === 0
     assert result_two.found === 0
+
+    assert {:ok, _} = Documents.multi_search(body, params)
+    assert {:ok, _} = Documents.multi_search(conn, body)
+    assert {:ok, _} = Documents.multi_search(map_conn, body)
+    assert {:ok, _} = Documents.multi_search(conn, body, params)
+    assert {:ok, _} = Documents.multi_search(map_conn, body, params)
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: update documents by query", %{coll_name: coll_name} do
+  test "success: update documents by query", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     body =
       [
         %{
@@ -164,6 +203,12 @@ defmodule DocumentsTest do
              Documents.update_documents(coll_name, update, filter_by: "shoes_id:>=0")
 
     assert num_updated > 0
+
+    assert {:ok, _} =
+             Documents.update_documents(conn, coll_name, update, filter_by: "shoes_id:>=0")
+
+    assert {:ok, _} =
+             Documents.update_documents(map_conn, coll_name, update, filter_by: "shoes_id:>=0")
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
@@ -202,7 +247,7 @@ defmodule DocumentsTest do
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: index a document", %{coll_name: coll_name} do
+  test "success: index a document", %{coll_name: coll_name, conn: conn, map_conn: map_conn} do
     shoes_id = 220
 
     body =
@@ -220,29 +265,64 @@ defmodule DocumentsTest do
       }
 
     assert {:ok, %{shoes_id: ^shoes_id}} = Documents.index_document(coll_name, body)
+    assert {:ok, _} = Documents.index_document(coll_name, body, [])
+    assert {:ok, _} = Documents.index_document(conn, coll_name, body)
+    assert {:ok, _} = Documents.index_document(map_conn, coll_name, body)
+    assert {:ok, _} = Documents.index_document(conn, coll_name, body, [])
+    assert {:ok, _} = Documents.index_document(map_conn, coll_name, body, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: list collection overrides", %{coll_name: coll_name} do
+  test "success: list collection overrides", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     assert {:error, %ApiResponse{message: _}} =
              Documents.get_search_overrides("wrong_collection")
 
-    {:ok, %SearchOverridesResponse{overrides: overrides}} =
-      Documents.get_search_overrides(coll_name)
+    assert {:ok, %SearchOverridesResponse{overrides: overrides}} =
+             Documents.get_search_overrides(coll_name)
 
     assert overrides >= 0
+
+    assert {:error, _} = Documents.get_search_overrides("xyz", [])
+    assert {:error, _} = Documents.get_search_overrides(conn, "xyz")
+    assert {:error, _} = Documents.get_search_overrides(map_conn, "xyz")
+    assert {:error, _} = Documents.get_search_overrides(conn, "xyz", [])
+    assert {:error, _} = Documents.get_search_overrides(map_conn, "xyz", [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: get a non-existent override", %{coll_name: coll_name} do
+  test "error: get a non-existent override", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     assert {:error, %ApiResponse{message: _}} =
              Documents.get_search_override(coll_name, "non-existent")
+
+    assert {:error, _} = Documents.get_search_override(coll_name, "xyz", [])
+    assert {:error, _} = Documents.get_search_override(conn, coll_name, "xyz")
+    assert {:error, _} = Documents.get_search_override(map_conn, coll_name, "xyz")
+    assert {:error, _} = Documents.get_search_override(conn, coll_name, "xyz", [])
+    assert {:error, _} = Documents.get_search_override(map_conn, coll_name, "xyz", [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: delete a non-existent override", %{coll_name: coll_name} do
+  test "error: delete a non-existent override", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     assert {:error, %ApiResponse{message: "Could not find that `id`."}} =
              Documents.delete_search_override(coll_name, "non-existent")
+
+    assert {:error, _} = Documents.delete_search_override(coll_name, "xyz", [])
+    assert {:error, _} = Documents.delete_search_override(conn, coll_name, "xyz")
+    assert {:error, _} = Documents.delete_search_override(map_conn, coll_name, "xyz")
+    assert {:error, _} = Documents.delete_search_override(conn, coll_name, "xyz", [])
+    assert {:error, _} = Documents.delete_search_override(map_conn, coll_name, "xyz", [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
@@ -302,37 +382,76 @@ defmodule DocumentsTest do
 
     assert {:ok, _} = Documents.import_documents(coll_name, body)
 
+    opts = [filter_by: "shoes_id:>=0", batch_size: 100]
+
     assert {:ok, %Documents{num_deleted: _, num_updated: nil}} =
-             Documents.delete_documents(coll_name, filter_by: "shoes_id:>=0")
+             Documents.delete_documents(coll_name, opts)
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: delete all documents without filter_by params", %{coll_name: coll_name} do
+  test "error: delete all documents without filter_by params", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     message = "Parameter `filter_by` must be provided."
     assert {:error, %ApiResponse{message: ^message}} = Documents.delete_documents(coll_name)
+    assert {:error, _} = Documents.delete_documents(coll_name, [])
+    assert {:error, _} = Documents.delete_documents(conn, coll_name)
+    assert {:error, _} = Documents.delete_documents(map_conn, coll_name)
+    assert {:error, _} = Documents.delete_documents(conn, coll_name, [])
+    assert {:error, _} = Documents.delete_documents(map_conn, coll_name, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: delete a non-existent document", %{coll_name: coll_name} do
+  test "error: delete a non-existent document", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     document_id = 9999
 
     assert {:error, %ApiResponse{message: _}} =
              Documents.delete_document(coll_name, document_id)
+
+    assert {:error, _} = Documents.delete_document(coll_name, document_id, [])
+    assert {:error, _} = Documents.delete_document(conn, coll_name, document_id)
+    assert {:error, _} = Documents.delete_document(map_conn, coll_name, document_id)
+    assert {:error, _} = Documents.delete_document(conn, coll_name, document_id, [])
+    assert {:error, _} = Documents.delete_document(map_conn, coll_name, document_id, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: get a non-existent document", %{coll_name: coll_name} do
+  test "error: get a non-existent document", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     document_id = 9999
     message = "Could not find a document with id: #{document_id}"
 
     assert {:error, %ApiResponse{message: ^message}} =
              Documents.get_document(coll_name, document_id)
+
+    assert {:error, _} = Documents.get_document(coll_name, document_id, [])
+    assert {:error, _} = Documents.get_document(conn, coll_name, document_id)
+    assert {:error, _} = Documents.get_document(map_conn, coll_name, document_id)
+    assert {:error, _} = Documents.get_document(conn, coll_name, document_id, [])
+    assert {:error, _} = Documents.get_document(map_conn, coll_name, document_id, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: export document from a non-existent collection" do
+  test "error: export document from a non-existent collection", %{conn: conn, map_conn: map_conn} do
+    opts = [exclude_fields: "fields"]
+
     assert {:error, %ApiResponse{message: _}} =
              Documents.export_documents("non-existent-collection")
+
+    assert {:error, _} = Documents.export_documents("xyz", opts)
+    assert {:error, _} = Documents.export_documents(conn, "xyz")
+    assert {:error, _} = Documents.export_documents(map_conn, "xyz")
+    assert {:error, _} = Documents.export_documents(conn, "xyz", opts)
+    assert {:error, _} = Documents.export_documents(map_conn, "xyz", opts)
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]

@@ -7,9 +7,13 @@ defmodule AnalyticsTest do
   alias OpenApiTypesense.ApiResponse
   alias OpenApiTypesense.Collections
   alias OpenApiTypesense.CollectionResponse
+  alias OpenApiTypesense.Connection
   alias OpenApiTypesense.AnalyticsEventCreateResponse
+  alias OpenApiTypesense.AnalyticsRuleDeleteResponse
 
   setup_all do
+    conn = Connection.new()
+    map_conn = %{api_key: "xyz", host: "localhost", port: 8108, scheme: "http"}
     product_name = "products"
 
     product_schema =
@@ -71,11 +75,14 @@ defmodule AnalyticsTest do
       Enum.map(rules, &Analytics.delete_analytics_rule(&1.name))
     end)
 
-    :ok
+    %{conn: conn, map_conn: map_conn}
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: create analytics rule with non-existent collection" do
+  test "error: create analytics rule with non-existent collection", %{
+    conn: conn,
+    map_conn: map_conn
+  } do
     name = "products_missing_query"
     collection_name = "non_existent_collection"
 
@@ -98,10 +105,17 @@ defmodule AnalyticsTest do
       }
 
     assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body)
+    assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body, [])
+    assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(conn, body)
+    assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(conn, body, [])
+    assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(map_conn, body)
+
+    assert {:error, %ApiResponse{message: _}} =
+             Analytics.create_analytics_rule(map_conn, body, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": false]
-  test "success: upsert analytics rule" do
+  test "success: upsert analytics rule", %{conn: conn, map_conn: map_conn} do
     name = "product_no_hits"
 
     body =
@@ -118,7 +132,23 @@ defmodule AnalyticsTest do
         }
       }
 
-    assert {:ok, %AnalyticsRuleSchema{name: ^name}} = Analytics.upsert_analytics_rule(name, body)
+    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+             Analytics.upsert_analytics_rule(name, body)
+
+    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+             Analytics.upsert_analytics_rule(name, body, [])
+
+    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+             Analytics.upsert_analytics_rule(conn, name, body)
+
+    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+             Analytics.upsert_analytics_rule(map_conn, name, body)
+
+    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+             Analytics.upsert_analytics_rule(conn, name, body, [])
+
+    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+             Analytics.upsert_analytics_rule(map_conn, name, body, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
@@ -148,15 +178,30 @@ defmodule AnalyticsTest do
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: list analytics rules" do
+  test "success: list analytics rules", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %AnalyticsRulesRetrieveSchema{rules: rules}} =
              Analytics.retrieve_analytics_rules()
 
     assert length(rules) >= 0
+
+    assert {:ok, %AnalyticsRulesRetrieveSchema{rules: _}} =
+             Analytics.retrieve_analytics_rules([])
+
+    assert {:ok, %AnalyticsRulesRetrieveSchema{rules: _}} =
+             Analytics.retrieve_analytics_rules(conn)
+
+    assert {:ok, %AnalyticsRulesRetrieveSchema{rules: _}} =
+             Analytics.retrieve_analytics_rules(map_conn)
+
+    assert {:ok, %AnalyticsRulesRetrieveSchema{rules: _}} =
+             Analytics.retrieve_analytics_rules(conn, [])
+
+    assert {:ok, %AnalyticsRulesRetrieveSchema{rules: _}} =
+             Analytics.retrieve_analytics_rules(map_conn, [])
   end
 
   @tag ["27.1": true, "26.0": false, "0.25.2": false]
-  test "success (v27.1): create analytics rule and event" do
+  test "success (v27.1): create analytics rule and event", %{conn: conn, map_conn: map_conn} do
     name = "product_popularity"
 
     event_name = "products_click_event#{System.unique_integer()}"
@@ -181,6 +226,19 @@ defmodule AnalyticsTest do
 
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} = Analytics.create_analytics_rule(body)
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} = Analytics.retrieve_analytics_rule(name)
+    assert {:ok, %AnalyticsRuleSchema{name: ^name}} = Analytics.retrieve_analytics_rule(name, [])
+
+    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+             Analytics.retrieve_analytics_rule(conn, name)
+
+    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+             Analytics.retrieve_analytics_rule(conn, name, [])
+
+    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+             Analytics.retrieve_analytics_rule(map_conn, name)
+
+    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+             Analytics.retrieve_analytics_rule(map_conn, name, [])
 
     body =
       %{
@@ -198,6 +256,32 @@ defmodule AnalyticsTest do
     # Problem: the response JSON body is actually {"ok": true
     # where it is missing a closing curly bracket "}"
     assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
+             Analytics.create_analytics_event(body)
+
+    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
              Analytics.create_analytics_event(body, [])
+
+    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
+             Analytics.create_analytics_event(conn, body)
+
+    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
+             Analytics.create_analytics_event(map_conn, body)
+
+    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
+             Analytics.create_analytics_event(conn, body, [])
+
+    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
+             Analytics.create_analytics_event(map_conn, body, [])
+
+    assert {:ok, %AnalyticsRuleDeleteResponse{name: ^name}} =
+             Analytics.delete_analytics_rule(name)
+
+    assert {:error, %ApiResponse{message: _}} = Analytics.delete_analytics_rule(name, [])
+    assert {:error, %ApiResponse{message: _}} = Analytics.delete_analytics_rule(conn, name)
+    assert {:error, %ApiResponse{message: _}} = Analytics.delete_analytics_rule(map_conn, name)
+    assert {:error, %ApiResponse{message: _}} = Analytics.delete_analytics_rule(conn, name, [])
+
+    assert {:error, %ApiResponse{message: _}} =
+             Analytics.delete_analytics_rule(map_conn, name, [])
   end
 end

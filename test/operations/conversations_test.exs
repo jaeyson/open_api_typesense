@@ -4,9 +4,13 @@ defmodule ConversationsTest do
   alias OpenApiTypesense.ApiResponse
   alias OpenApiTypesense.Collections
   alias OpenApiTypesense.CollectionResponse
+  alias OpenApiTypesense.Connection
   alias OpenApiTypesense.Conversations
 
   setup_all do
+    conn = Connection.new()
+    map_conn = %{api_key: "xyz", host: "localhost", port: 8108, scheme: "http"}
+
     name = "conversation_store"
 
     schema =
@@ -27,28 +31,49 @@ defmodule ConversationsTest do
       {:ok, %CollectionResponse{name: ^name}} = Collections.delete_collection(name)
     end)
 
-    :ok
+    %{conn: conn, map_conn: map_conn}
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": false]
-  test "success: list conversation models" do
-    assert {:ok, []} = Conversations.retrieve_all_conversation_models()
+  test "success: list conversation models", %{conn: conn, map_conn: map_conn} do
+    assert {:ok, models} = Conversations.retrieve_all_conversation_models()
+    assert length(models) >= 0
+    assert {:ok, _} = Conversations.retrieve_all_conversation_models([])
+    assert {:ok, _} = Conversations.retrieve_all_conversation_models(conn)
+    assert {:ok, _} = Conversations.retrieve_all_conversation_models(map_conn)
+    assert {:ok, _} = Conversations.retrieve_all_conversation_models(conn, [])
+    assert {:ok, _} = Conversations.retrieve_all_conversation_models(map_conn, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": false]
-  test "error: get a non-existent conversation model" do
+  test "error: get a non-existent conversation model", %{conn: conn, map_conn: map_conn} do
     assert {:error, %ApiResponse{message: "Model not found"}} =
              Conversations.retrieve_conversation_model("non-existent")
+
+    assert {:error, _} = Conversations.retrieve_conversation_model("xyz", [])
+    assert {:error, _} = Conversations.retrieve_conversation_model(conn, "xyz")
+    assert {:error, _} = Conversations.retrieve_conversation_model(map_conn, "xyz")
+    assert {:error, _} = Conversations.retrieve_conversation_model(conn, "xyz", [])
+    assert {:error, _} = Conversations.retrieve_conversation_model(map_conn, "xyz", [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": false]
-  test "success: delete a conversation model" do
+  test "success: delete a conversation model", %{conn: conn, map_conn: map_conn} do
     assert {:error, %ApiResponse{message: "Model not found"}} =
              Conversations.delete_conversation_model("non-existent")
+
+    assert {:error, _} = Conversations.delete_conversation_model("xyz", [])
+    assert {:error, _} = Conversations.delete_conversation_model(conn, "xyz")
+    assert {:error, _} = Conversations.delete_conversation_model(map_conn, "xyz")
+    assert {:error, _} = Conversations.delete_conversation_model(conn, "xyz", [])
+    assert {:error, _} = Conversations.delete_conversation_model(map_conn, "xyz", [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": false]
-  test "error: create a conversation model with incorrect API key" do
+  test "error: create a conversation model with incorrect API key", %{
+    conn: conn,
+    map_conn: map_conn
+  } do
     body =
       %{
         "id" => "conv-model-1",
@@ -69,10 +94,19 @@ defmodule ConversationsTest do
              "parsing",
              "response"
            ]) === true
+
+    assert {:error, _} = Conversations.create_conversation_model(body, [])
+    assert {:error, _} = Conversations.create_conversation_model(conn, body)
+    assert {:error, _} = Conversations.create_conversation_model(map_conn, body)
+    assert {:error, _} = Conversations.create_conversation_model(conn, body, [])
+    assert {:error, _} = Conversations.create_conversation_model(map_conn, body, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": false]
-  test "error: update a conversation model with incorrect API key" do
+  test "error: update a conversation model with incorrect API key", %{
+    conn: conn,
+    map_conn: map_conn
+  } do
     model_id = "conv-model-1"
 
     body =
@@ -88,5 +122,12 @@ defmodule ConversationsTest do
 
     assert {:error, %ApiResponse{message: _}} =
              Conversations.update_conversation_model(model_id, body)
+
+    assert {:error, _} = Conversations.update_conversation_model(model_id, body)
+    assert {:error, _} = Conversations.update_conversation_model(model_id, body, [])
+    assert {:error, _} = Conversations.update_conversation_model(conn, model_id, body)
+    assert {:error, _} = Conversations.update_conversation_model(map_conn, model_id, body)
+    assert {:error, _} = Conversations.update_conversation_model(conn, model_id, body, [])
+    assert {:error, _} = Conversations.update_conversation_model(map_conn, model_id, body, [])
   end
 end

@@ -24,7 +24,11 @@ defmodule OpenApiTypesense.Override do
   - `get_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId)`
   - `get_search_override(Connection.new(), collectionName, overrideId)`
   """
-  @spec get_search_override(map() | Connection.t() | String.t(), String.t(), String.t() | keyword) ::
+  @spec get_search_override(
+          map() | Connection.t() | String.t(),
+          String.t(),
+          String.t() | keyword()
+        ) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | :error
   def get_search_override(collectionName, overrideId, opts) when is_binary(collectionName) do
     get_search_override(Connection.new(), collectionName, overrideId, opts)
@@ -45,7 +49,7 @@ defmodule OpenApiTypesense.Override do
   - `get_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId, opts)`
   - `get_search_override(Connection.new(), collectionName, overrideId, opts)`
   """
-  @spec get_search_override(map() | Connection.t(), String.t(), String.t(), keyword) ::
+  @spec get_search_override(map() | Connection.t(), String.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | :error
   def get_search_override(conn, collectionName, overrideId, opts)
       when not is_struct(conn) and is_map(conn) do

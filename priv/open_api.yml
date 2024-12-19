@@ -82,6 +82,22 @@ paths:
                 x-go-type: "[]*CollectionResponse"
                 items:
                   $ref: "#/components/schemas/CollectionResponse"
+      parameters:
+        - name: limit
+          in: query 
+          description: Limit results in paginating on collection listing.
+          schema:
+            type: string
+        - name: offset
+          in: query 
+          description: Skip a certain number of results and start after that.
+          schema:
+            type: string
+        - name: exclude_fields
+          in: query
+          description: Exclude the field definitions from being returned in the response.
+          schema:
+            type: string
     post:
       tags:
         - collections
@@ -116,6 +132,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+      parameters:
+        - name: src_name
+          in: query 
+          description: Clone an existing collection's schema (documents are not copied), overrides and synonyms. The actual documents in the collection are not copied, so this is primarily useful for creating new collections from an existing reference template.
+          schema:
+            type: string
   /collections/{collectionName}:
     get:
       tags:
@@ -278,14 +300,14 @@ paths:
           required: true
           schema:
             type: string
-        - name: updateDocumentsParameters
+        - name: filter_by
+          required: true
           in: query
+          description:
+            Filter results by a particular value(s) or logical expressions. multiple conditions with &&.
           schema:
-            type: object
-            properties:
-              filter_by:
-                type: string
-                example: "num_employees:>100 && country: [USA, UK]"
+            type: string
+          example: "num_employees:>100 && country: [USA, UK]"
       responses:
         '200':
           description:
@@ -339,24 +361,21 @@ paths:
           required: true
           schema:
             type: string
-        - name: deleteDocumentsParameters
+        - name: batch_size
           in: query
+          description:
+            Batch size parameter controls the number of documents that should be deleted
+            at a time. A larger value will speed up deletions, but will impact performance
+            of other operations running on the server.
           schema:
-            type: object
-            required:
-              - filter_by
-            properties:
-              filter_by:
-                type: string
-                example: "num_employees:>100 && country: [USA, UK]"
-              batch_size:
-                description:
-                  Batch size parameter controls the number of documents that should be deleted
-                  at a time. A larger value will speed up deletions, but will impact performance
-                  of other operations running on the server.
-                type: integer
-              ignore_not_found:
-                type: boolean
+            type: string
+        - name: filter_by
+          in: query
+          description:
+            Filter results by a particular value(s) or logical expressions. multiple conditions with &&.
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Documents successfully deleted
@@ -387,7 +406,7 @@ paths:
         - documents
       summary: Search for documents in a collection
       description: Search for documents in a collection that match the search criteria.
-      operationId: searchCollection
+      operationId: search
       parameters:
         - name: collectionName
           in: path
@@ -698,22 +717,23 @@ paths:
           required: true
           schema:
             type: string
-        - name: exportDocumentsParameters
+        - name: filter_by
           in: query
+          description:
+            Filter conditions for refining your search results. Separate
+            multiple conditions with &&.
           schema:
-            type: object
-            properties:
-              filter_by:
-                description:
-                  Filter conditions for refining your search results. Separate
-                  multiple conditions with &&.
-                type: string
-              include_fields:
-                description: List of fields from the document to include in the search result
-                type: string
-              exclude_fields:
-                description: List of fields from the document to exclude in the search result
-                type: string
+            type: string
+        - name: include_fields
+          in: query
+          description: List of fields from the document to include in the search result
+          schema:
+            type: string
+        - name: exclude_fields
+          in: query
+          description: List of fields from the document to exclude in the search result
+          schema:
+            type: string
 
       responses:
         '200':
@@ -749,28 +769,62 @@ paths:
           required: true
           schema:
             type: string
-        # Do not change the index position of this param
-        - name: importDocumentsParameters
+        - name: batch_size
+          in: query
+          description:
+            Batch size parameter controls the number of documents that should be imported 
+            at a time. A larger value will speed up imports, but will impact performance
+            of other operations running on the server.
+          schema:
+            type: integer
+        - name: return_id
+          in: query
+          description:
+            Returning the id of the imported documents. If you want the
+            import response to return the ingested document's id in the
+            response, you can use the return_id parameter.
+          schema:
+            type: boolean
+        - name: remote_embedding_batch_size
+          description:
+            Max size of each batch that will be sent to remote APIs while
+            importing multiple documents at once. Using lower amount will
+            lower timeout risk, but increase number of requests made. Default is 200.
           in: query
           schema:
-            type: object
-            properties:
-              batch_size:
-                type: integer
-              return_id:
-                type: boolean
-                description:
-                  Returning the id of the imported documents. If you want the
-                  import response to return the ingested document's id in the
-                  response, you can use the return_id parameter.
-              remote_embedding_batch_size:
-                type: integer
-              return_doc:
-                type: boolean
-              action:
-                $ref: "#/components/schemas/IndexAction"
-              dirty_values:
-                $ref: "#/components/schemas/DirtyValues"
+            type: integer
+        - name: remote_embedding_timeout_ms
+          description:
+            How long to wait until an API call to a remote embedding
+            service is considered a timeout during indexing. Default is 60_000 ms
+          in: query
+          schema:
+            type: integer
+        - name: remote_embedding_num_tries
+          description:
+            The number of times to retry an API call to a remote embedding
+            service on failure during indexing. Default is 2.
+          in: query
+          schema:
+            type: integer
+        - name: return_doc
+          description:
+            Returns the entire document back in response.
+          in: query
+          schema:
+            type: boolean
+        - name: action
+          in: query
+          description: Additional action to perform
+          schema:
+            type: string
+            example: upsert
+            $ref: "#/components/schemas/IndexAction"
+        - name: dirty_values
+          in: query
+          description: Dealing with Dirty Data
+          schema:
+            $ref: "#/components/schemas/DirtyValues"
       requestBody:
         description: The json array of documents or the JSONL file to import
         content:
@@ -826,6 +880,18 @@ paths:
           required: true
           schema:
             type: string
+        - name: include_fields
+          in: query
+          description: List of fields that should be present in the returned document.
+          schema:
+            type: string
+            example: "fields"
+        - name: exclude_fields
+          in: query
+          description: List of fields that should not be present in the returned document.
+          schema:
+            type: string
+            example: "fields"
       responses:
         '200':
           description: The document referenced by the ID
@@ -861,6 +927,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: filter_by
+          in: query
+          description: Filter results by a particular value(s) or logical expressions. multiple conditions with &&.
+          schema:
+            type: string
+          example: "companies_id:>=0"
         - name: dirty_values
           in: query
           description: Dealing with Dirty Data
@@ -908,6 +980,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: ignore_not_found
+          description:
+            Ignore the error and treat the deletion as success.
+          in: query
+          schema:
+            type: boolean
       responses:
         '200':
           description: The document referenced by the ID was deleted
@@ -2552,7 +2630,7 @@ components:
 
         filter_by:
           description:
-            Filter conditions for refining youropen api validator search results. Separate
+            Filter conditions for refining your open api validator search results. Separate
             multiple conditions with &&.
           type: string
           example: "num_employees:>100 && country: [USA, UK]"
@@ -3543,7 +3621,7 @@ components:
       enum: [create, update, upsert, emplace]
     DropTokensMode:
       type: string
-      enum: [right_to_left, left_to_right, both_sides:3]
+      enum: [right_to_left, left_to_right, both_sides: 3]
       description: >
         Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document.
         Values: right_to_left (default), left_to_right, both_sides:3
