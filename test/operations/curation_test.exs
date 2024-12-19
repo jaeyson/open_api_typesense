@@ -20,7 +20,6 @@ defmodule CurationTest do
         ],
         default_sorting_field: "#{name}_id"
       }
-      |> Jason.encode_to_iodata!()
 
     {:ok, %CollectionResponse{name: ^name}} = Collections.create_collection(schema)
 
@@ -49,7 +48,6 @@ defmodule CurationTest do
           %{"id" => "287"}
         ]
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:ok, %SearchOverride{id: ^override_id}} =
              Curation.upsert_search_override(schema_name, override_id, body)

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.4.0 (2024.12.17)
+
+### Changed
+
+* Typespecs for each functions
+
 ## 0.3.0 (2024.12.15)
 
 ### Changed

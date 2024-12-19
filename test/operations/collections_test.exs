@@ -1,6 +1,8 @@
 defmodule CollectionsTest do
   use ExUnit.Case, async: true
 
+  doctest OpenApiTypesense.Collections
+
   alias OpenApiTypesense.ApiResponse
   alias OpenApiTypesense.CollectionAlias
   alias OpenApiTypesense.CollectionAliasesResponse
@@ -10,17 +12,17 @@ defmodule CollectionsTest do
 
   setup_all do
     schema = %{
-      name: "companies",
-      fields: [
-        %{name: "company_name", type: "string"},
-        %{name: "companies_id", type: "int32"},
-        %{name: "country", type: "string", facet: true}
+      "name" => "companies",
+      "fields" => [
+        %{"name" => "company_name", "type" => "string"},
+        %{"name" => "companies_id", "type" => "int32"},
+        %{"name" => "country", "type" => "string", "facet" => true}
       ],
-      default_sorting_field: "companies_id"
+      "default_sorting_field" => "companies_id"
     }
 
     on_exit(fn ->
-      Collections.delete_collection(schema.name)
+      Collections.delete_collection(schema["name"])
     end)
 
     %{schema: schema, alias_name: "foo_bar"}
@@ -28,12 +30,9 @@ defmodule CollectionsTest do
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "success: create a collection", %{schema: schema} do
-    name = schema.name
+    name = schema["name"]
 
-    assert {:ok, %CollectionResponse{name: ^name}} =
-             schema
-             |> Jason.encode_to_iodata!()
-             |> Collections.create_collection()
+    assert {:ok, %CollectionResponse{name: ^name}} = Collections.create_collection(schema)
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
@@ -48,19 +47,18 @@ defmodule CollectionsTest do
 
     schema =
       %{
-        name: name,
-        fields: [
-          %{name: "burger_name", type: "string"},
-          %{name: name <> "_id", type: "int32"},
-          %{name: "price", type: "string"}
+        "name" => name,
+        "fields" => [
+          %{"name" => "burger_name", "type" => "string"},
+          %{"name" => name <> "_id", "type" => "int32"},
+          %{"name" => "price", "type" => "string"}
         ],
-        default_sorting_field: name <> "_id"
+        "default_sorting_field" => name <> "_id"
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:ok, %CollectionResponse{name: ^name}} = Collections.create_collection(schema)
 
-    body = Jason.encode_to_iodata!(%{fields: [%{name: "price", drop: true}]})
+    body = %{fields: [%{name: "price", drop: true}]}
 
     assert {:ok, %CollectionUpdateSchema{}} =
              Collections.update_collection(name, body)
@@ -85,9 +83,9 @@ defmodule CollectionsTest do
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "success: upsert an alias", %{schema: schema, alias_name: alias_name} do
-    collection_name = schema.name
+    collection_name = schema["name"]
 
-    body = Jason.encode_to_iodata!(%{"collection_name" => collection_name})
+    body = %{"collection_name" => collection_name}
 
     assert {:ok, %CollectionAlias{collection_name: ^collection_name, name: ^alias_name}} =
              Collections.upsert_alias(alias_name, body)

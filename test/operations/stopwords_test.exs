@@ -35,7 +35,6 @@ defmodule StopwordsTest do
         "stopwords" => ["Germany", "France", "Italy", "United States"],
         "locale" => "en"
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:ok, %StopwordsSetSchema{id: ^set_id}} = Stopwords.upsert_stopwords_set(set_id, body)
   end
@@ -49,7 +48,6 @@ defmodule StopwordsTest do
         "stopwords" => ["Bustin Jieber", "Pelvis Presly", "Tinus Lorvalds", "Britney Smears"],
         "locale" => "en"
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:ok, %StopwordsSetSchema{id: ^set_id}} = Stopwords.upsert_stopwords_set(set_id, body)
 
@@ -66,7 +64,6 @@ defmodule StopwordsTest do
         "stopwords" => ["Loca Cola", "Burgler King", "Buttweiser", "Lowcoste"],
         "locale" => "en"
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:ok, %StopwordsSetSchema{id: ^set_id}} = Stopwords.upsert_stopwords_set(set_id, body)
     assert {:ok, %Stopwords{id: ^set_id}} = Stopwords.delete_stopwords_set(set_id)

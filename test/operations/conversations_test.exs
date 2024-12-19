@@ -20,7 +20,6 @@ defmodule ConversationsTest do
           %{"name" => "message", "type" => "string", "index" => false}
         ]
       }
-      |> Jason.encode_to_iodata!()
 
     {:ok, %CollectionResponse{name: ^name}} = Collections.create_collection(schema)
 
@@ -60,7 +59,6 @@ defmodule ConversationsTest do
           "You are an assistant for question-answering. You can only make conversations based on the provided context. If a response cannot be formed strictly using the provided context, politely say you do not have knowledge about that topic.",
         "max_bytes" => 16_384
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:error, %ApiResponse{message: message}} =
              Conversations.create_conversation_model(body)
@@ -87,7 +85,6 @@ defmodule ConversationsTest do
           "Hey, you are an **intelligent** assistant for question-answering. You can only make conversations based on the provided context. If a response cannot be formed strictly using the provided context, politely say you do not have knowledge about that topic.",
         "max_bytes" => 16_384
       }
-      |> Jason.encode_to_iodata!()
 
     assert {:error, %ApiResponse{message: _}} =
              Conversations.update_conversation_model(model_id, body)
