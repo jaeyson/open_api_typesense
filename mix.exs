@@ -3,7 +3,7 @@ defmodule OpenApiTypesense.MixProject do
 
   @source_url "https://github.com/jaeyson/open_api_typesense"
   @hex_url "https://hexdocs.pm/open_api_typesense"
-  @version "0.4.0"
+  @version "0.4.1"
 
   def project do
     [
@@ -11,6 +11,7 @@ defmodule OpenApiTypesense.MixProject do
       version: @version,
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
+      consolidate_protocols: Mix.env() not in [:dev, :test],
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [

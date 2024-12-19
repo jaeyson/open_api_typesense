@@ -45,7 +45,7 @@ defmodule OpenApiTypesense.Stopwords do
   @doc """
   Either one of:
   - `delete_stopwords_set(%{api_key: xyz, host: ...}, setId, opts)`
-  - `delete_stopwords_set(Connection.new(), setId, opts`)`
+  - `delete_stopwords_set(Connection.new(), setId, opts)`
   """
   @spec delete_stopwords_set(map() | Connection.t(), String.t(), keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}

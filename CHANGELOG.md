@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.4.1 (2024.12.19)
+
+### Changed
+
+* Disable protocol consolidation during dev or test (for `mix docs`).
+
 ## 0.4.0 (2024.12.17)
 
 ### Changed
