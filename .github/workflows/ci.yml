@@ -137,4 +137,4 @@ jobs:
 
       - name: Post test coverage to Coveralls
         run: mix coveralls.github
-        if: ${{ matrix.typesense == env.LATEST_TYPESENSE }} 
+        if: ${{ matrix.lint }} 
