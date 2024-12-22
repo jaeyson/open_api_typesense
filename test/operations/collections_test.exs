@@ -43,6 +43,7 @@ defmodule CollectionsTest do
       ],
       "default_sorting_field" => "vehicles_id"
     }
+    Collections.delete_collection(schema["name"])
 
     assert {:ok, %CollectionResponse{}} = Collections.create_collection(schema)
 
