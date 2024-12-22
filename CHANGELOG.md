@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.4.2 (2024.12.22)
+
+### Added
+
+* More tests for coverage
+* Options for some functions
+* Endpoints, params for `priv/open_api.yml`
+
 ## 0.4.1 (2024.12.19)
 
 ### Changed
