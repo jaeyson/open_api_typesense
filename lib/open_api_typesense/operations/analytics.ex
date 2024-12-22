@@ -25,7 +25,7 @@ defmodule OpenApiTypesense.Analytics do
   - `create_analytics_event(%{api_key: xyz, host: ...}, payload)`
   - `create_analytics_event(Connection.new(), payload)`
   """
-  @spec create_analytics_event(map() | Connection.t(), map() | keyword) ::
+  @spec create_analytics_event(map() | Connection.t(), map() | keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsEventCreateResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_analytics_event(body, opts) when is_list(opts) do
@@ -45,7 +45,7 @@ defmodule OpenApiTypesense.Analytics do
   - `create_analytics_event(%{api_key: xyz, host: ...}, payload, opts)`
   - `create_analytics_event(Connection.new(), payload, opts)`
   """
-  @spec create_analytics_event(map() | Connection.t(), map(), keyword) ::
+  @spec create_analytics_event(map() | Connection.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsEventCreateResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_analytics_event(conn, body, opts) when not is_struct(conn) and is_map(conn) do
@@ -88,7 +88,7 @@ defmodule OpenApiTypesense.Analytics do
   - `create_analytics_rule(%{api_key: xyz, host: ...}, payload)`
   - `create_analytics_rule(Connection.new(), payload)`
   """
-  @spec create_analytics_rule(map() | Connection.t(), map() | keyword) ::
+  @spec create_analytics_rule(map() | Connection.t(), map() | keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_analytics_rule(body, opts) when is_list(opts) do
@@ -108,7 +108,7 @@ defmodule OpenApiTypesense.Analytics do
   - `create_analytics_rule(%{api_key: xyz, host: ...}, payload, opts)`
   - `create_analytics_rule(Connection.new(), payload, opts)`
   """
-  @spec create_analytics_rule(map() | Connection.t(), map(), keyword) ::
+  @spec create_analytics_rule(map() | Connection.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_analytics_rule(conn, body, opts) when not is_struct(conn) and is_map(conn) do
@@ -152,7 +152,7 @@ defmodule OpenApiTypesense.Analytics do
   - `delete_analytics_rule(%{api_key: xyz, host: ...}, ruleName)`
   - `delete_analytics_rule(Connection.new(), ruleName)`
   """
-  @spec delete_analytics_rule(map() | Connection.t() | String.t(), String.t() | keyword) ::
+  @spec delete_analytics_rule(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_analytics_rule(ruleName, opts) when is_binary(ruleName) do
@@ -172,7 +172,7 @@ defmodule OpenApiTypesense.Analytics do
   - `delete_analytics_rule(%{api_key: xyz, host: ...}, ruleName, opts)`
   - `delete_analytics_rule(Connection.new(), ruleName, opts)`
   """
-  @spec delete_analytics_rule(map() | Connection.t(), String.t(), keyword) ::
+  @spec delete_analytics_rule(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_analytics_rule(conn, ruleName, opts) when not is_struct(conn) and is_map(conn) do
@@ -213,7 +213,7 @@ defmodule OpenApiTypesense.Analytics do
   - `retrieve_analytics_rule(%{api_key: xyz, host: ...}, ruleName)`
   - `retrieve_analytics_rule(Connection.new(), ruleName)`
   """
-  @spec retrieve_analytics_rule(map() | Connection.t() | String.t(), String.t() | keyword) ::
+  @spec retrieve_analytics_rule(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_analytics_rule(ruleName, opts) when is_binary(ruleName) do
@@ -233,7 +233,7 @@ defmodule OpenApiTypesense.Analytics do
   - `retrieve_analytics_rule(%{api_key: xyz, host: ...}, ruleName, opts)`
   - `retrieve_analytics_rule(Connection.new(), ruleName, opts)`
   """
-  @spec retrieve_analytics_rule(map() | Connection.t(), String.t(), keyword) ::
+  @spec retrieve_analytics_rule(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_analytics_rule(conn, ruleName, opts) when not is_struct(conn) and is_map(conn) do
@@ -274,7 +274,7 @@ defmodule OpenApiTypesense.Analytics do
   - `retrieve_analytics_rules(%{api_key: xyz, host: ...})`
   - `retrieve_analytics_rules(Connection.new())`
   """
-  @spec retrieve_analytics_rules(map() | Connection.t() | keyword) ::
+  @spec retrieve_analytics_rules(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()} | :error
   def retrieve_analytics_rules(opts) when is_list(opts) do
     retrieve_analytics_rules(Connection.new(), opts)
@@ -293,7 +293,7 @@ defmodule OpenApiTypesense.Analytics do
   - `retrieve_analytics_rules(%{api_key: xyz, host: ...}, opts)`
   - `retrieve_analytics_rules(Connection.new(), opts)`
   """
-  @spec retrieve_analytics_rules(map() | Connection.t(), keyword) ::
+  @spec retrieve_analytics_rules(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()} | :error
   def retrieve_analytics_rules(conn, opts) when not is_struct(conn) and is_map(conn) do
     retrieve_analytics_rules(Connection.new(conn), opts)
@@ -333,7 +333,7 @@ defmodule OpenApiTypesense.Analytics do
   @spec upsert_analytics_rule(
           map() | Connection.t() | String.t(),
           String.t() | map(),
-          map() | keyword
+          map() | keyword()
         ) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -354,7 +354,7 @@ defmodule OpenApiTypesense.Analytics do
   - `upsert_analytics_rule(%{api_key: xyz, host: ...}, ruleName, body, opts)`
   - `upsert_analytics_rule(Connection.new(), ruleName, body, opts)`
   """
-  @spec upsert_analytics_rule(map() | Connection.t(), String.t(), map(), keyword) ::
+  @spec upsert_analytics_rule(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_analytics_rule(conn, ruleName, body, opts)

@@ -4,9 +4,13 @@ defmodule KeysTest do
   alias OpenApiTypesense.ApiKey
   alias OpenApiTypesense.ApiKeysResponse
   alias OpenApiTypesense.ApiKeyDeleteResponse
+  alias OpenApiTypesense.Connection
   alias OpenApiTypesense.Keys
 
   setup_all do
+    conn = Connection.new()
+    map_conn = %{api_key: "xyz", host: "localhost", port: 8108, scheme: "http"}
+
     api_key_schema = %{
       actions: ["documents:search"],
       collections: ["companies"],
@@ -22,36 +26,69 @@ defmodule KeysTest do
       end)
     end)
 
-    %{api_key_schema: api_key_schema}
+    %{api_key_schema: api_key_schema, conn: conn, map_conn: map_conn}
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: get a specific key", %{api_key_schema: api_key_schema} do
+  test "success: get a specific key", %{
+    api_key_schema: api_key_schema,
+    conn: conn,
+    map_conn: map_conn
+  } do
     assert {:ok, api_key} = Keys.create_key(api_key_schema)
 
     key_id = api_key.id
 
     assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(key_id)
+    assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(key_id, [])
+    assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(conn, key_id)
+    assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(map_conn, key_id)
+    assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(conn, key_id, [])
+    assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(map_conn, key_id, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: list API keys" do
+  test "success: list API keys", %{conn: conn, map_conn: map_conn} do
     {:ok, %ApiKeysResponse{keys: keys}} = Keys.get_keys()
     assert length(keys) >= 0
+
+    {:ok, %ApiKeysResponse{}} = Keys.get_keys([])
+    {:ok, %ApiKeysResponse{}} = Keys.get_keys(conn)
+    {:ok, %ApiKeysResponse{}} = Keys.get_keys(map_conn)
+    {:ok, %ApiKeysResponse{}} = Keys.get_keys(conn, [])
+    {:ok, %ApiKeysResponse{}} = Keys.get_keys(map_conn, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: delete an API key", %{api_key_schema: api_key_schema} do
+  test "success: delete an API key", %{
+    api_key_schema: api_key_schema,
+    conn: conn,
+    map_conn: map_conn
+  } do
     assert {:ok, api_key} = Keys.create_key(api_key_schema)
 
     key_id = api_key.id
 
     assert {:ok, %ApiKeyDeleteResponse{id: ^key_id}} = Keys.delete_key(key_id)
+    assert {:error, _} = Keys.delete_key(key_id, [])
+    assert {:error, _} = Keys.delete_key(conn, key_id)
+    assert {:error, _} = Keys.delete_key(map_conn, key_id)
+    assert {:error, _} = Keys.delete_key(conn, key_id, [])
+    assert {:error, _} = Keys.delete_key(map_conn, key_id, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: create an search-only API key", %{api_key_schema: api_key_schema} do
+  test "success: create an search-only API key", %{
+    api_key_schema: api_key_schema,
+    conn: conn,
+    map_conn: map_conn
+  } do
     assert {:ok, %ApiKey{}} = Keys.create_key(api_key_schema)
+    assert {:ok, %ApiKey{}} = Keys.create_key(api_key_schema, [])
+    assert {:ok, %ApiKey{}} = Keys.create_key(conn, api_key_schema)
+    assert {:ok, %ApiKey{}} = Keys.create_key(map_conn, api_key_schema)
+    assert {:ok, %ApiKey{}} = Keys.create_key(conn, api_key_schema, [])
+    assert {:ok, %ApiKey{}} = Keys.create_key(map_conn, api_key_schema, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]

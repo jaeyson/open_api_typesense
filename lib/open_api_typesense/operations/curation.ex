@@ -26,7 +26,7 @@ defmodule OpenApiTypesense.Curation do
   @spec delete_search_override(
           map() | Connection.t() | String.t(),
           String.t(),
-          String.t() | keyword
+          String.t() | keyword()
         ) ::
           {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -49,7 +49,7 @@ defmodule OpenApiTypesense.Curation do
   - `delete_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId, opts)`
   - `delete_search_override(Connection.new(), collectionName, overrideId, opts)`
   """
-  @spec delete_search_override(map() | Connection.t(), String.t(), String.t(), keyword) ::
+  @spec delete_search_override(map() | Connection.t(), String.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_search_override(conn, collectionName, overrideId, opts)
@@ -89,7 +89,7 @@ defmodule OpenApiTypesense.Curation do
   - `get_search_overrides(%{api_key: xyz, host: ...}, collectionName)`
   - `get_search_overrides(Connection.new(), collectionName)`
   """
-  @spec get_search_overrides(map() | Connection.t() | String.t(), String.t() | keyword) ::
+  @spec get_search_overrides(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
   def get_search_overrides(collectionName, opts) when is_binary(collectionName) do
     get_search_overrides(Connection.new(), collectionName, opts)
@@ -108,7 +108,7 @@ defmodule OpenApiTypesense.Curation do
   - `get_search_overrides(%{api_key: xyz, host: ...}, collectionName, opts)`
   - `get_search_overrides(Connection.new(), collectionName, opts)`
   """
-  @spec get_search_overrides(map() | Connection.t(), String.t(), keyword) ::
+  @spec get_search_overrides(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
   def get_search_overrides(conn, collectionName, opts)
       when not is_struct(conn) and is_map(conn) do
@@ -149,7 +149,7 @@ defmodule OpenApiTypesense.Curation do
           map() | Connection.t() | String.t(),
           String.t(),
           String.t() | map(),
-          map() | keyword
+          map() | keyword()
         ) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_search_override(collectionName, overrideId, body, opts)
@@ -172,7 +172,7 @@ defmodule OpenApiTypesense.Curation do
   - `upsert_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId, body, opts)`
   - `upsert_search_override(Connection.new(), collectionName, overrideId, body, opts)`
   """
-  @spec upsert_search_override(map() | Connection.t(), String.t(), String.t(), map(), keyword) ::
+  @spec upsert_search_override(map() | Connection.t(), String.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_search_override(conn, collectionName, overrideId, body, opts)
       when not is_struct(conn) and is_map(conn) do

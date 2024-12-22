@@ -12,6 +12,10 @@ defmodule OpenApiTypesense.Collections do
 
   When a collection is created, we give it a name and describe the fields that will be indexed from the documents added to the collection.
 
+  ## Options
+
+    * `src_name`: Clone an existing collection's schema (documents are not copied), overrides and synonyms. The actual documents in the collection are not copied, so this is primarily useful for creating new collections from an existing reference template.
+
   ## Example
       iex> schema = %{
       ...>   "name" => "houses",
@@ -38,7 +42,7 @@ defmodule OpenApiTypesense.Collections do
   - `create_collection(%{api_key: xyz, host: ...}, schema)`
   - `create_collection(Connection.new(), schema)`
   """
-  @spec create_collection(map() | Connection.t(), map() | keyword) ::
+  @spec create_collection(map() | Connection.t(), map() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_collection(body, opts) when is_list(opts) do
@@ -58,7 +62,7 @@ defmodule OpenApiTypesense.Collections do
   - `create_collection(%{api_key: 123, host: ...}, schema, opts)`
   - `create_collection(Connection.new(), schema, opts)`
   """
-  @spec create_collection(map() | Connection.t(), map(), keyword) ::
+  @spec create_collection(map() | Connection.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_collection(conn, body, opts) when not is_struct(conn) and is_map(conn) do
@@ -67,6 +71,7 @@ defmodule OpenApiTypesense.Collections do
 
   def create_collection(%Connection{} = conn, body, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
+    query = Keyword.take(opts, [:src_name])
 
     client.request(conn, %{
       args: [body: body],
@@ -74,6 +79,7 @@ defmodule OpenApiTypesense.Collections do
       url: "/collections",
       body: body,
       method: :post,
+      query: query,
       request: [{"application/json", {OpenApiTypesense.CollectionSchema, :t}}],
       response: [
         {201, {OpenApiTypesense.CollectionResponse, :t}},
@@ -99,7 +105,7 @@ defmodule OpenApiTypesense.Collections do
   - `delete_alias(%{api_key: 123, host: ...}, aliasName)`
   - `delete_alias(Connection.new(), aliasName)`
   """
-  @spec delete_alias(String.t() | map() | Connection.t(), String.t() | keyword) ::
+  @spec delete_alias(String.t() | map() | Connection.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_alias(aliasName, opts) when is_binary(aliasName) do
     delete_alias(Connection.new(), aliasName, opts)
@@ -118,7 +124,7 @@ defmodule OpenApiTypesense.Collections do
   - `delete_alias(%{api_key: 123, host: ...}, aliasName, opts)`
   - `delete_alias(Connection.new(), aliasName, opts)`
   """
-  @spec delete_alias(map() | Connection.t(), String.t(), keyword) ::
+  @spec delete_alias(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_alias(conn, aliasName, opts) when not is_struct(conn) and is_map(conn) do
     delete_alias(Connection.new(conn), aliasName, opts)
@@ -158,7 +164,7 @@ defmodule OpenApiTypesense.Collections do
   - `delete_collection(%{api_key: 123, host: ...}, collectionName)`
   - `delete_collection(Connection.new(), collectionName)`
   """
-  @spec delete_collection(String.t() | map() | Connection.t(), String.t() | keyword) ::
+  @spec delete_collection(String.t() | map() | Connection.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_collection(collectionName, opts) when is_binary(collectionName) do
@@ -178,7 +184,7 @@ defmodule OpenApiTypesense.Collections do
   - `delete_collection(%{api_key: 123, host: ...}, collectionName, opts)`
   - `delete_collection(Connection.new(), collectionName, opts)`
   """
-  @spec delete_collection(map() | Connection.t(), String.t(), keyword) ::
+  @spec delete_collection(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_collection(conn, collectionName, opts) when not is_struct(conn) and is_map(conn) do
@@ -218,7 +224,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_alias(%{api_key: 123, host: ...}, aliasName)`
   - `get_alias(Connection.new(), aliasName)`
   """
-  @spec get_alias(String.t() | map() | Connection.t(), String.t() | keyword) ::
+  @spec get_alias(String.t() | map() | Connection.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_alias(aliasName, opts) when is_binary(aliasName) do
     get_alias(Connection.new(), aliasName, opts)
@@ -237,7 +243,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_alias(%{api_key: 123, host: ...}, aliasName, opts)`
   - `get_alias(Connection.new(), aliasName, opts)`
   """
-  @spec get_alias(map() | Connection.t(), String.t(), keyword) ::
+  @spec get_alias(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_alias(conn, aliasName, opts) when not is_struct(conn) and is_map(conn) do
     get_alias(Connection.new(conn), aliasName, opts)
@@ -275,7 +281,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_aliases(%{api_key: 123, host: ...})`
   - `get_aliases(Connection.new())`
   """
-  @spec get_aliases(map() | Connection.t() | keyword) ::
+  @spec get_aliases(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionAliasesResponse.t()} | :error
   def get_aliases(opts) when is_list(opts) do
     get_aliases(Connection.new(), opts)
@@ -294,7 +300,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_aliases(%{api_key: 123, host: ...}, opts)`
   - `get_aliases(Connection.new(), opts)`
   """
-  @spec get_aliases(map() | Connection.t(), keyword) ::
+  @spec get_aliases(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionAliasesResponse.t()} | :error
   def get_aliases(conn, opts) when not is_struct(conn) and is_map(conn) do
     get_aliases(Connection.new(conn), opts)
@@ -331,7 +337,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_collection(%{api_key: 123, host: ...}, collectionName)`
   - `get_collection(Connection.new(), collectionName)`
   """
-  @spec get_collection(map() | Connection.t() | String.t(), String.t() | keyword) ::
+  @spec get_collection(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_collection(collectionName, opts) when is_binary(collectionName) do
@@ -351,7 +357,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_collection(%{api_key: 123, host: ...}, collectionName, opts)`
   - `get_collection(Connection.new(), collectionName, opts)`
   """
-  @spec get_collection(map() | Connection.t(), String.t(), keyword) ::
+  @spec get_collection(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_collection(conn, collectionName, opts) when not is_struct(conn) and is_map(conn) do
@@ -379,16 +385,23 @@ defmodule OpenApiTypesense.Collections do
 
   Returns a summary of all your collections. The collections are returned sorted by creation date, with the most recent collections appearing first.
 
-  - `get_collections()`
-  - `get_collections(Connection.new())`
-  - `get_collections(%{api_key: xyz, host: ...})`
-  - `get_collections(exclude_fields: "fields")`
-  - `get_collections(conn, limit: 10)` where conn is `%Connection{}` or `%{...}`
+  ## Options
+
+    * `limit`: Limit results in paginating on collection listing.
+    * `offset`: Skip a certain number of results and start after that.
+    * `exclude_fields`: Exclude the field definitions from being returned in the response.
+
   """
   @spec get_collections :: {:ok, [OpenApiTypesense.CollectionResponse.t()]} | :error
   def get_collections, do: get_collections(Connection.new())
 
-  @spec get_collections(map() | Connection.t() | keyword) ::
+  @doc """
+  Either one of:
+  - `get_collections(Connection.new())`
+  - `get_collections(%{api_key: xyz, host: ...})`
+  - `get_collections(exclude_fields: "fields", limit: 10)`
+  """
+  @spec get_collections(map() | Connection.t() | keyword()) ::
           {:ok, [OpenApiTypesense.CollectionResponse.t()]} | :error
   def get_collections(opts) when is_list(opts) do
     get_collections(Connection.new(), opts)
@@ -407,7 +420,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_collections(%{api_key: 123, host: ...}, opts)`
   - `get_collections(Connection.new(), opts)`
   """
-  @spec get_collections(map() | Connection.t(), keyword) ::
+  @spec get_collections(map() | Connection.t(), keyword()) ::
           {:ok, [OpenApiTypesense.CollectionResponse.t()]} | :error
   def get_collections(conn, opts) when not is_struct(conn) do
     get_collections(Connection.new(conn), opts)
@@ -415,12 +428,14 @@ defmodule OpenApiTypesense.Collections do
 
   def get_collections(%Connection{} = conn, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
+    query = Keyword.take(opts, [:exclude_fields, :limit, :offset])
 
     client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Collections, :get_collections},
       url: "/collections",
       method: :get,
+      query: query,
       response: [{200, [{OpenApiTypesense.CollectionResponse, :t}]}],
       opts: opts
     })
@@ -444,7 +459,7 @@ defmodule OpenApiTypesense.Collections do
   - `update_collection(%{api_key: 123, host: ...}, collectionName, body)`
   - `update_collection(Connection.new(), collectionName, body)`
   """
-  @spec update_collection(map() | Connection.t(), String.t() | map(), map() | keyword) ::
+  @spec update_collection(map() | Connection.t(), String.t() | map(), map() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionUpdateSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_collection(collectionName, body, opts) when is_binary(collectionName) do
@@ -464,7 +479,7 @@ defmodule OpenApiTypesense.Collections do
   - `update_collection(%{api_key: 123, host: ...}, collectionName, body, opts)`
   - `update_collection(Connection.new(), collectionName, body, opts)`
   """
-  @spec update_collection(map() | Connection.t(), String.t(), map(), keyword) ::
+  @spec update_collection(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionUpdateSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_collection(conn, collectionName, body, opts)
@@ -513,7 +528,7 @@ defmodule OpenApiTypesense.Collections do
   - `upsert_alias(Connection.new(), aliasName, body)`
   - `upsert_alias(aliasName, body, opts)`
   """
-  @spec upsert_alias(map() | Connection.t(), String.t(), map() | keyword) ::
+  @spec upsert_alias(map() | Connection.t(), String.t(), map() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_alias(aliasName, body, opts) when is_binary(aliasName) do
     upsert_alias(Connection.new(), aliasName, body, opts)
@@ -532,7 +547,7 @@ defmodule OpenApiTypesense.Collections do
   - `upsert_alias(%{api_key: 123, host: ...}, aliasName, body, opts)`
   - `upsert_alias(Connection.new(), aliasName, body, opts)`
   """
-  @spec upsert_alias(map() | Connection.t(), String.t(), map(), keyword) ::
+  @spec upsert_alias(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_alias(conn, aliasName, body, opts) when not is_struct(conn) and is_map(conn) do
     upsert_alias(Connection.new(conn), aliasName, body, opts)

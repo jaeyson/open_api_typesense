@@ -14,7 +14,7 @@ defmodule OpenApiTypesense.Health do
   """
 
   @spec health :: {:ok, OpenApiTypesense.HealthStatus.t()} | :error
-  def health, do: health(Connection.new(), [])
+  def health, do: health(Connection.new())
 
   @doc """
   Either one of:
@@ -22,7 +22,7 @@ defmodule OpenApiTypesense.Health do
   - `health(%{api_key: xyz, host: ...})`
   - `health(Connection.new())`
   """
-  @spec health(Connection.t() | map() | keyword) ::
+  @spec health(Connection.t() | map() | keyword()) ::
           {:ok, OpenApiTypesense.HealthStatus.t()} | :error
   def health(%Connection{} = conn) when is_struct(conn) do
     health(conn, [])
@@ -41,7 +41,7 @@ defmodule OpenApiTypesense.Health do
   - `health(%{api_key: xyz, host: ...}, opts)`
   - `health(Connection.new(), opts)`
   """
-  @spec health(map() | Connection.t(), keyword) ::
+  @spec health(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.HealthStatus.t()} | :error
   def health(conn, opts) when not is_struct(conn) and is_map(conn) do
     health(Connection.new(conn), opts)
