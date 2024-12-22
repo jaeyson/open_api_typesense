@@ -90,15 +90,6 @@ jobs:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
 
-      - name: Install Dependencies
-        run: |
-          mix local.rebar --if-missing
-          mix local.hex --if-missing
-          mix deps.get
-
-      - name: Compile
-        run: mix compile
-
       - name: Cache dependencies/builds
         uses: actions/cache@v4
         with:
@@ -108,6 +99,15 @@ jobs:
           key: ${{ runner.os }}-typesense-${{ matrix.typesense}}-${{ matrix.otp}}-${{ matrix.elixir}}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-typesense-${{ matrix.typesense}}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-
+
+      - name: Install Dependencies
+        run: |
+          mix local.rebar --if-missing
+          mix local.hex --if-missing
+          mix deps.get
+
+      - name: Compile
+        run: mix compile
 
       - name: Find unused dependencies
         run: mix deps.unlock --check-unused
