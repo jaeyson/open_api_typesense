@@ -33,6 +33,26 @@ defmodule CollectionsTest do
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "success: clone a collection schema" do
+    schema = %{
+      "name" => "tables",
+      "fields" => [
+        %{"name" => "table_name", "type" => "string"},
+        %{"name" => "tables_id", "type" => "int32"},
+        %{"name" => "description", "type" => "string"}
+      ],
+      "default_sorting_field" => "tables_id"
+    }
+
+    assert {:ok, %CollectionResponse{}} = Collections.create_collection(schema)
+
+    payload = %{"name" => "new_collection"}
+
+    assert {:ok, %CollectionResponse{}} =
+             Collections.create_collection(payload, src_name: schema["name"])
+  end
+
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "success: create a collection", %{schema: schema, conn: conn, map_conn: map_conn} do
     name = schema["name"]
 

@@ -399,8 +399,6 @@ defmodule OpenApiTypesense.Collections do
   Either one of:
   - `get_collections(Connection.new())`
   - `get_collections(%{api_key: xyz, host: ...})`
-  - `get_collections(Connection.new(), opts)`
-  - `get_collections(%{api_key: xyz, host: ...}, opts)`
   - `get_collections(exclude_fields: "fields", limit: 10)`
   """
   @spec get_collections(map() | Connection.t() | keyword()) ::

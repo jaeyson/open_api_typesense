@@ -12,7 +12,7 @@ defmodule OpenApiTypesense.Keys do
 
   Create an API Key with fine-grain access control. You can restrict access on both a per-collection and per-action level. The generated key is returned only during creation. You want to store this key carefully in a secure place.
   """
-  @spec create_key(OpenApiTypesense.ApiKeySchema.t()) ::
+  @spec create_key(map()) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_key(body) do
     create_key(Connection.new(), body)
@@ -43,7 +43,7 @@ defmodule OpenApiTypesense.Keys do
   - `create_key(%{api_key: xyz, host: ...}, payload, opts)`
   - `create_key(Connection.new(), payload, opts)`
   """
-  @spec create_key(map() | Connection.t(), OpenApiTypesense.ApiKeySchema.t(), keyword()) ::
+  @spec create_key(map() | Connection.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_key(conn, body, opts) when not is_struct(conn) and is_map(conn) do
     create_key(Connection.new(conn), body, opts)
@@ -71,7 +71,7 @@ defmodule OpenApiTypesense.Keys do
   @doc """
   Delete an API key given its ID.
   """
-  @spec delete_key(integer) ::
+  @spec delete_key(integer()) ::
           {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_key(keyId) do
@@ -84,7 +84,7 @@ defmodule OpenApiTypesense.Keys do
   - `delete_key(%{api_key: xyz, host: ...}, keyId)`
   - `delete_key(Connection.new(), keyId)`
   """
-  @spec delete_key(map() | Connection.t() | integer, integer | keyword()) ::
+  @spec delete_key(map() | Connection.t() | integer(), integer() | keyword()) ::
           {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_key(keyId, opts) when is_integer(keyId) do
@@ -104,14 +104,14 @@ defmodule OpenApiTypesense.Keys do
   - `delete_key(%{api_key: xyz, host: ...}, keyId, opts)`
   - `delete_key(Connection.new(), keyId, opts)`
   """
-  @spec delete_key(map() | Connection.t(), integer, keyword()) ::
+  @spec delete_key(map() | Connection.t(), integer(), keyword()) ::
           {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_key(conn, keyId, opts) when not is_struct(conn) and is_map(conn) do
     delete_key(Connection.new(conn), keyId, opts)
   end
 
-  @spec delete_key(Connection.t(), integer, keyword()) ::
+  @spec delete_key(Connection.t(), integer(), keyword()) ::
           {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_key(%Connection{} = conn, keyId, opts) when is_struct(conn) do
@@ -136,7 +136,7 @@ defmodule OpenApiTypesense.Keys do
 
   Retrieve (metadata about) a key. Only the key prefix is returned when you retrieve a key. Due to security reasons, only the create endpoint returns the full API key.
   """
-  @spec get_key(integer) ::
+  @spec get_key(integer()) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_key(keyId) do
     get_key(Connection.new(), keyId)
@@ -148,7 +148,7 @@ defmodule OpenApiTypesense.Keys do
   - `get_key(%{api_key: xyz, host: ...}, keyId)`
   - `get_key(Connection.new(), keyId)`
   """
-  @spec get_key(map() | Connection.t() | integer, keyword()) ::
+  @spec get_key(map() | Connection.t() | integer(), keyword()) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_key(keyId, opts) when is_integer(keyId) do
     get_key(Connection.new(), keyId, opts)
@@ -167,7 +167,7 @@ defmodule OpenApiTypesense.Keys do
   - `get_key(%{api_key: xyz, host: ...}, keyId, opts)`
   - `get_key(Connection.new(), keyId, opts)`
   """
-  @spec get_key(map() | Connection.t(), integer, keyword()) ::
+  @spec get_key(map() | Connection.t(), integer(), keyword()) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_key(conn, keyId, opts) when not is_struct(conn) and is_map(conn) do
     get_key(Connection.new(conn), keyId, opts)

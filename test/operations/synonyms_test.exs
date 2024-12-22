@@ -4,10 +4,14 @@ defmodule SynonymsTest do
   alias OpenApiTypesense.Synonyms
   alias OpenApiTypesense.Collections
   alias OpenApiTypesense.CollectionResponse
+  alias OpenApiTypesense.Connection
   alias OpenApiTypesense.SearchSynonym
   alias OpenApiTypesense.SearchSynonymsResponse
 
   setup_all do
+    conn = Connection.new()
+    map_conn = %{api_key: "xyz", host: "localhost", port: 8108, scheme: "http"}
+
     schema = %{
       name: "clothes",
       fields: [
@@ -25,19 +29,33 @@ defmodule SynonymsTest do
       {:ok, _} = Collections.delete_collection(collection_name)
     end)
 
-    %{coll_name: collection_name}
+    %{coll_name: collection_name, conn: conn, map_conn: map_conn}
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: list collection synonyms", %{coll_name: coll_name} do
+  test "success: list collection synonyms", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     assert {:ok, %SearchSynonymsResponse{synonyms: synonyms}} =
              Synonyms.get_search_synonyms(coll_name)
 
     assert length(synonyms) >= 0
+
+    assert {:ok, _} = Synonyms.get_search_synonyms(coll_name, [])
+    assert {:ok, _} = Synonyms.get_search_synonyms(conn, coll_name)
+    assert {:ok, _} = Synonyms.get_search_synonyms(map_conn, coll_name)
+    assert {:ok, _} = Synonyms.get_search_synonyms(conn, coll_name, [])
+    assert {:ok, _} = Synonyms.get_search_synonyms(map_conn, coll_name, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: upsert a collection synonym", %{coll_name: coll_name} do
+  test "success: upsert a collection synonym", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     body =
       %{
         "root" => "hat",
@@ -46,12 +64,22 @@ defmodule SynonymsTest do
 
     synonym_id = "hat-synonyms"
 
-    {:ok, syn} = Synonyms.upsert_search_synonym(coll_name, synonym_id, body)
+    assert {:ok, syn} = Synonyms.upsert_search_synonym(coll_name, synonym_id, body)
     assert synonym_id === syn.id
+
+    assert {:ok, _} = Synonyms.upsert_search_synonym(coll_name, synonym_id, body, [])
+    assert {:ok, _} = Synonyms.upsert_search_synonym(conn, coll_name, synonym_id, body)
+    assert {:ok, _} = Synonyms.upsert_search_synonym(map_conn, coll_name, synonym_id, body)
+    assert {:ok, _} = Synonyms.upsert_search_synonym(conn, coll_name, synonym_id, body, [])
+    assert {:ok, _} = Synonyms.upsert_search_synonym(map_conn, coll_name, synonym_id, body, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: delete a collection synonym", %{coll_name: coll_name} do
+  test "success: delete a collection synonym", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     body =
       %{
         "root" => "sweater",
@@ -64,10 +92,19 @@ defmodule SynonymsTest do
              Synonyms.upsert_search_synonym(coll_name, synonym_id, body)
 
     assert {:ok, %{id: ^synonym_id}} = Synonyms.delete_search_synonym(coll_name, synonym_id)
+    assert {:error, _} = Synonyms.delete_search_synonym(coll_name, synonym_id, [])
+    assert {:error, _} = Synonyms.delete_search_synonym(conn, coll_name, synonym_id)
+    assert {:error, _} = Synonyms.delete_search_synonym(map_conn, coll_name, synonym_id)
+    assert {:error, _} = Synonyms.delete_search_synonym(conn, coll_name, synonym_id, [])
+    assert {:error, _} = Synonyms.delete_search_synonym(map_conn, coll_name, synonym_id, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: get a collection synonym", %{coll_name: coll_name} do
+  test "success: get a collection synonym", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     body =
       %{
         "root" => "t-shirt",
@@ -81,5 +118,11 @@ defmodule SynonymsTest do
 
     assert {:ok, %SearchSynonym{id: ^synonym_id}} =
              Synonyms.get_search_synonym(coll_name, synonym_id)
+
+    assert {:ok, _} = Synonyms.get_search_synonym(coll_name, synonym_id, [])
+    assert {:ok, _} = Synonyms.get_search_synonym(conn, coll_name, synonym_id)
+    assert {:ok, _} = Synonyms.get_search_synonym(map_conn, coll_name, synonym_id)
+    assert {:ok, _} = Synonyms.get_search_synonym(conn, coll_name, synonym_id, [])
+    assert {:ok, _} = Synonyms.get_search_synonym(map_conn, coll_name, synonym_id, [])
   end
 end

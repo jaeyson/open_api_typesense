@@ -263,7 +263,7 @@ defmodule OpenApiTypesense.Conversations do
   @spec update_conversation_model(
           map() | Connection.t() | String.t(),
           String.t() | map(),
-          map() | keyword
+          map() | keyword()
         ) :: {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
   def update_conversation_model(modelId, body, opts) when is_binary(modelId) do
     update_conversation_model(Connection.new(), modelId, body, opts)

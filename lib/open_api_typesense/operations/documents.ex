@@ -74,7 +74,7 @@ defmodule OpenApiTypesense.Documents do
     })
   end
 
-  @type delete_documents_200_json_resp :: %{num_deleted: integer}
+  @type delete_documents_200_json_resp :: %{num_deleted: integer()}
 
   @doc """
   Delete a bunch of documents
@@ -559,7 +559,7 @@ defmodule OpenApiTypesense.Documents do
     * `dirty_values`: Dealing with Dirty Data
 
   """
-  @spec index_document(String.t(), map) ::
+  @spec index_document(String.t(), map()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def index_document(collectionName, body) do
     index_document(Connection.new(), collectionName, body)
@@ -571,7 +571,7 @@ defmodule OpenApiTypesense.Documents do
   - `index_document(%{api_key: xyz, host: ...}, collectionName, payload)`
   - `index_document(Connection.new(), collectionName, payload)`
   """
-  @spec index_document(map() | Connection.t() | String.t(), String.t() | map, map() | keyword()) ::
+  @spec index_document(map() | Connection.t() | String.t(), String.t() | map(), map() | keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def index_document(collectionName, body, opts) when is_binary(collectionName) do
     index_document(Connection.new(), collectionName, body, opts)
@@ -590,7 +590,7 @@ defmodule OpenApiTypesense.Documents do
   - `index_document(%{api_key: xyz, host: ...}, collectionName, payload, opts)`
   - `index_document(Connection.new(), collectionName, payload, opts)`
   """
-  @spec index_document(map() | Connection.t(), String.t(), map, keyword()) ::
+  @spec index_document(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def index_document(conn, collectionName, body, opts)
       when not is_struct(conn) and is_map(conn) do
@@ -754,7 +754,7 @@ defmodule OpenApiTypesense.Documents do
     * `dirty_values`: Dealing with Dirty Data
 
   """
-  @spec update_document(String.t(), String.t(), map) ::
+  @spec update_document(String.t(), String.t(), map()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_document(collectionName, documentId, body) do
     update_document(Connection.new(), collectionName, documentId, body)
@@ -792,7 +792,7 @@ defmodule OpenApiTypesense.Documents do
   - `update_document(%{api_key: xyz, host: ...}, collectionName, documentId, opts)`
   - `update_document(Connection.new(), collectionName, documentId, opts)`
   """
-  @spec update_document(map() | Connection.t(), String.t(), String.t(), map, keyword()) ::
+  @spec update_document(map() | Connection.t(), String.t(), String.t(), map(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_document(conn, collectionName, documentId, body, opts)
       when not is_struct(conn) and is_map(conn) do
@@ -817,7 +817,7 @@ defmodule OpenApiTypesense.Documents do
     })
   end
 
-  @type update_documents_200_json_resp :: %{num_updated: integer}
+  @type update_documents_200_json_resp :: %{num_updated: integer()}
 
   @doc """
   Update documents with conditional query
@@ -827,6 +827,7 @@ defmodule OpenApiTypesense.Documents do
   ## Options
 
     * `filter_by`: Filter results by a particular value(s) or logical expressions. multiple conditions with &&.
+    * `action`: Additional action to perform
 
   Either one of:
   - `update_documents(collectionName, payload, opts)`
@@ -834,13 +835,13 @@ defmodule OpenApiTypesense.Documents do
   - `update_documents(Connection.new(), collectionName, payload, opts)`
 
   """
-  @spec update_documents(String.t(), String.t(), keyword()) ::
+  @spec update_documents(String.t(), map(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_documents(collectionName, body, opts) when is_binary(collectionName) do
     update_documents(Connection.new(), collectionName, body, opts)
   end
 
-  @spec update_documents(map() | Connection.t(), String.t(), map, keyword()) ::
+  @spec update_documents(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_documents(conn, collectionName, body, opts)
       when not is_struct(conn) and is_map(conn) do
@@ -849,7 +850,7 @@ defmodule OpenApiTypesense.Documents do
 
   def update_documents(%Connection{} = conn, collectionName, body, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
-    query = Keyword.take(opts, [:filter_by])
+    query = Keyword.take(opts, [:action, :filter_by])
 
     client.request(conn, %{
       args: [collectionName: collectionName, body: body],
@@ -889,7 +890,7 @@ defmodule OpenApiTypesense.Documents do
           map() | Connection.t() | String.t(),
           String.t(),
           String.t() | map(),
-          map() | keyword
+          map() | keyword()
         ) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_search_override(collectionName, overrideId, body, opts)
@@ -939,7 +940,7 @@ defmodule OpenApiTypesense.Documents do
   end
 
   @doc false
-  @spec __fields__(atom) :: keyword()
+  @spec __fields__(atom()) :: keyword()
   def __fields__(:delete_documents_200_json_resp) do
     [num_deleted: :integer]
   end

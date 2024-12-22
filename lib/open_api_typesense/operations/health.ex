@@ -14,7 +14,7 @@ defmodule OpenApiTypesense.Health do
   """
 
   @spec health :: {:ok, OpenApiTypesense.HealthStatus.t()} | :error
-  def health, do: health(Connection.new(), [])
+  def health, do: health(Connection.new())
 
   @doc """
   Either one of:

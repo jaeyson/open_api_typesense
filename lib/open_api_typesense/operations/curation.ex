@@ -26,7 +26,7 @@ defmodule OpenApiTypesense.Curation do
   @spec delete_search_override(
           map() | Connection.t() | String.t(),
           String.t(),
-          String.t() | keyword
+          String.t() | keyword()
         ) ::
           {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -149,7 +149,7 @@ defmodule OpenApiTypesense.Curation do
           map() | Connection.t() | String.t(),
           String.t(),
           String.t() | map(),
-          map() | keyword
+          map() | keyword()
         ) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_search_override(collectionName, overrideId, body, opts)

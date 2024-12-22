@@ -333,7 +333,7 @@ defmodule OpenApiTypesense.Analytics do
   @spec upsert_analytics_rule(
           map() | Connection.t() | String.t(),
           String.t() | map(),
-          map() | keyword
+          map() | keyword()
         ) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}

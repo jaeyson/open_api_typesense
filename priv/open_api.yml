@@ -308,6 +308,13 @@ paths:
           schema:
             type: string
           example: "num_employees:>100 && country: [USA, UK]"
+        - name: action
+          in: query
+          description: Additional action to perform
+          schema:
+            type: string
+            example: upsert
+            $ref: "#/components/schemas/IndexAction"
       responses:
         '200':
           description:
@@ -1418,6 +1425,59 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessStatus"
+  /operations/db/compact:
+    post:
+      tags:
+        - operations
+      summary: Compaction of the underlying RocksDB database
+      description:
+        Typesense uses RocksDB to store your documents on the disk. If you do frequent writes or updates, you could benefit from running a compaction of the underlying RocksDB database. This could reduce the size of the database and decrease read latency.
+        While the database will not block during this operation, we recommend running it during off-peak hours.
+      operationId: compact 
+      responses:
+        '200':
+          description: Compacting the database
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessStatus"
+  /operations/cache/clear:
+    post:
+      tags:
+        - operations
+      summary: Clears the cache
+      description:
+        Responses of search requests that are sent with use_cache parameter are cached in a LRU cache. Clears cache completely.
+      operationId: clearCache
+      responses:
+        '200':
+          description: Cache cleared
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessStatus"
+  /config:
+    post:
+      tags:
+        - operations
+      summary: Enable logging of requests that take over a defined threshold of time.
+      description:
+        Slow requests are logged to the primary log file, with the prefix SLOW REQUEST.
+        Default is -1 which disables slow request logging.
+      operationId: config
+      requestBody:
+        description: Define threshold in ms for logging of requests
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfigSchema"
+      responses:
+        '201':
+          description: Updated slow request log
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessStatus"
   /multi_search:
     post:
       operationId: multiSearch
@@ -2069,6 +2129,14 @@ components:
         model_name:
           type: string
           example: "ts/whisper/base.en"
+    ConfigSchema:
+      type: object
+      required:
+        - log_slow_requests_time_ms
+      properties:
+        log_slow_requests_time_ms:
+          type: integer
+          description: Enable logging of requests that take over a defined threshold of time in ms.
     CollectionAliasSchema:
       type: object
       required:
@@ -3621,7 +3689,7 @@ components:
       enum: [create, update, upsert, emplace]
     DropTokensMode:
       type: string
-      enum: [right_to_left, left_to_right, both_sides: 3]
+      enum: [right_to_left, left_to_right, both_sides:3]
       description: >
         Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document.
         Values: right_to_left (default), left_to_right, both_sides:3

@@ -455,7 +455,11 @@ defmodule DocumentsTest do
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: upsert a search override", %{coll_name: coll_name} do
+  test "success: upsert a search override", %{
+    coll_name: coll_name,
+    conn: conn,
+    map_conn: map_conn
+  } do
     body =
       %{
         "rule" => %{
@@ -473,6 +477,18 @@ defmodule DocumentsTest do
 
     assert {:ok, %SearchOverride{}} =
              Documents.upsert_search_override(coll_name, "customize-apple", body)
+
+    assert {:ok, _} = Documents.upsert_search_override(coll_name, "customize-apple", body, [])
+    assert {:ok, _} = Documents.upsert_search_override(conn, coll_name, "customize-apple", body)
+
+    assert {:ok, _} =
+             Documents.upsert_search_override(map_conn, coll_name, "customize-apple", body)
+
+    assert {:ok, _} =
+             Documents.upsert_search_override(conn, coll_name, "customize-apple", body, [])
+
+    assert {:ok, _} =
+             Documents.upsert_search_override(map_conn, coll_name, "customize-apple", body, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
