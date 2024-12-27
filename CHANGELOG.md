@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.4.3 (2024.12.27)
+
+### Changed
+
+* Formatting `open_api.yml` file.
+* Bump `ex_doc`
+* Typo in `:oapi_generator` config for dev environment.
+
 ## 0.4.2 (2024.12.22)
 
 ### Added
