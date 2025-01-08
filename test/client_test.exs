@@ -64,25 +64,10 @@ defmodule ClientTest do
     end
   end
 
-  setup_all do
-    map_conn = %{
-      api_key: "xyz",
-      host: "192.168.254.2",
-      port: 8108,
-      scheme: "http",
-      client: CustomClient
-    }
-
-    conn = OpenApiTypesense.Connection.new(map_conn)
-
-    Application.put_env(:open_api_typesense, :client, CustomClient)
-
+  setup do
     on_exit(fn ->
       Application.delete_env(:open_api_typesense, :options)
-      Application.delete_env(:open_api_typesense, :client)
     end)
-
-    %{conn: conn, map_conn: map_conn}
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
@@ -107,8 +92,21 @@ defmodule ClientTest do
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "use another HTTP client", %{conn: conn, map_conn: map_conn} do
+  test "use another HTTP client" do
+    map_conn = %{
+      api_key: "xyz",
+      host: "localhost",
+      port: 8108,
+      scheme: "http",
+      client: CustomClient
+    }
+
+    conn = OpenApiTypesense.Connection.new(map_conn)
+
+    Application.put_env(:open_api_typesense, :client, CustomClient)
+
     assert CustomClient == Application.get_env(:open_api_typesense, :client)
+
     assert {:ok, %{"ok" => true}} == OpenApiTypesense.Health.health()
     assert {:ok, %{"ok" => true}} == OpenApiTypesense.Health.health([])
     assert {:ok, %{"ok" => true}} == OpenApiTypesense.Health.health(conn)
