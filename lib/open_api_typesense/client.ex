@@ -140,7 +140,6 @@ defmodule OpenApiTypesense.Client do
     parse_resp(resp, opts[:response])
   end
 
-  @spec encode_body(keyword()) :: iodata() | no_return()
   defp encode_body(opts) do
     if opts[:request] do
       [content_type] = opts[:request]
@@ -150,7 +149,6 @@ defmodule OpenApiTypesense.Client do
     end
   end
 
-  @spec parse_content_type({String.t(), tuple()}, map()) :: iodata() | no_return()
   defp parse_content_type({"application/octet-stream", {:string, :generic}}, body) do
     Enum.map_join(body, "\n", &Jason.encode_to_iodata!/1)
   end
@@ -168,7 +166,6 @@ defmodule OpenApiTypesense.Client do
   #   end
   # end
 
-  @spec parse_resp(struct(), list()) :: {:ok, any()} | {:error, any()}
   defp parse_resp(%Req.TransportError{} = error, _opts_resp) do
     {:error, Exception.message(error)}
   end

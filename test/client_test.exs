@@ -1,5 +1,5 @@
 defmodule ClientTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   require Logger
 
   defmodule CustomClient do
@@ -65,9 +65,12 @@ defmodule ClientTest do
     end
   end
 
-  setup do
+  setup_all do
+    Application.put_env(:open_api_typesense, :client, CustomClient)
+
     on_exit(fn ->
       Application.delete_env(:open_api_typesense, :options)
+      Application.delete_env(:open_api_typesense, :client)
     end)
   end
 
@@ -103,8 +106,6 @@ defmodule ClientTest do
     }
 
     conn = OpenApiTypesense.Connection.new(map_conn)
-
-    Application.put_env(:open_api_typesense, :client, CustomClient)
 
     assert CustomClient == Application.get_env(:open_api_typesense, :client)
 
