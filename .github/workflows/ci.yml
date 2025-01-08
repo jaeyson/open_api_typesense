@@ -67,10 +67,10 @@ jobs:
 
       - name: Start Typesense
         run: |
-          docker run -id \
-          -p 8108:8108 \
+          docker run \
+          -i -p 8108:8108 \
           --name typesense \
-          --health-cmd "curl http://127.0.0.1:8108/health" \
+          --health-cmd "apt-get update && apt-get install -y curl && curl http://127.0.0.1:8108/health" \
           --health-interval 10s \
           --health-timeout 5s \
           --health-retries 5 \
@@ -83,6 +83,7 @@ jobs:
           --analytics-dir=/analytics-data  \
           --analytics-flush-interval=60 \
           --analytics-minute-rate-limit=100 \
+          --listen-port 8108 \
           --enable-cors
 
       - name: Setup Elixir/OTP
