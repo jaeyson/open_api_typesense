@@ -67,16 +67,16 @@ jobs:
 
       - name: Start Typesense
         run: |
-          docker run -d \
-          -i -p 8108:8108 \
+          docker run -id \
+          -p 8108:8108 \
           --name typesense \
-          --health-cmd "curl http://127.0.0.1:8108/health"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd "curl http://127.0.0.1:8108/health" \
+          --health-interval 10s \
+          --health-timeout 5s \
+          --health-retries 5 \
           -v /tmp/typesense-data:/data \
           -v /tmp/typesense-analytics-data:/analytics-data \
-          typesense/typesense:${{ matrix.typesense}} \
+          typesense/typesense:27.1 \
           --api-key=xyz \
           --data-dir=/data \
           --enable-search-analytics=true \
