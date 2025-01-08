@@ -30,17 +30,12 @@ defmodule OpenApiTypesense.Synonyms do
         ) ::
           {:ok, OpenApiTypesense.SearchSynonymDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_search_synonym(collectionName, synonymId, opts) when is_binary(collectionName) do
+  def delete_search_synonym(collectionName, synonymId, opts)
+      when is_list(opts) and is_binary(collectionName) do
     delete_search_synonym(Connection.new(), collectionName, synonymId, opts)
   end
 
-  def delete_search_synonym(conn, collectionName, synonymId)
-      when not is_struct(conn) and is_map(conn) do
-    delete_search_synonym(Connection.new(conn), collectionName, synonymId, [])
-  end
-
-  def delete_search_synonym(%Connection{} = conn, collectionName, synonymId)
-      when is_struct(conn) do
+  def delete_search_synonym(conn, collectionName, synonymId) do
     delete_search_synonym(conn, collectionName, synonymId, [])
   end
 
@@ -102,16 +97,12 @@ defmodule OpenApiTypesense.Synonyms do
           String.t() | keyword()
         ) ::
           {:ok, OpenApiTypesense.SearchSynonym.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_search_synonym(collectionName, synonymId, opts) when is_binary(collectionName) do
+  def get_search_synonym(collectionName, synonymId, opts)
+      when is_list(opts) and is_binary(collectionName) do
     get_search_synonym(Connection.new(), collectionName, synonymId, opts)
   end
 
-  def get_search_synonym(conn, collectionName, synonymId)
-      when not is_struct(conn) and is_map(conn) do
-    get_search_synonym(Connection.new(conn), collectionName, synonymId, [])
-  end
-
-  def get_search_synonym(%Connection{} = conn, collectionName, synonymId) when is_struct(conn) do
+  def get_search_synonym(conn, collectionName, synonymId) do
     get_search_synonym(conn, collectionName, synonymId, [])
   end
 
@@ -163,15 +154,12 @@ defmodule OpenApiTypesense.Synonyms do
   @spec get_search_synonyms(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchSynonymsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_search_synonyms(collectionName, opts) when is_binary(collectionName) do
+  def get_search_synonyms(collectionName, opts)
+      when is_list(opts) and is_binary(collectionName) do
     get_search_synonyms(Connection.new(), collectionName, opts)
   end
 
-  def get_search_synonyms(conn, collectionName) when not is_struct(conn) and is_map(conn) do
-    get_search_synonyms(Connection.new(conn), collectionName, [])
-  end
-
-  def get_search_synonyms(%Connection{} = conn, collectionName) when is_struct(conn) do
+  def get_search_synonyms(conn, collectionName) do
     get_search_synonyms(conn, collectionName, [])
   end
 
@@ -228,17 +216,11 @@ defmodule OpenApiTypesense.Synonyms do
         ) ::
           {:ok, OpenApiTypesense.SearchSynonym.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_search_synonym(collectionName, synonymId, body, opts)
-      when is_binary(collectionName) do
+      when is_list(opts) and is_binary(collectionName) do
     upsert_search_synonym(Connection.new(), collectionName, synonymId, body, opts)
   end
 
-  def upsert_search_synonym(conn, collectionName, synonymId, body)
-      when not is_struct(conn) and is_map(conn) do
-    upsert_search_synonym(Connection.new(conn), collectionName, synonymId, body, [])
-  end
-
-  def upsert_search_synonym(%Connection{} = conn, collectionName, synonymId, body)
-      when is_struct(conn) do
+  def upsert_search_synonym(conn, collectionName, synonymId, body) do
     upsert_search_synonym(conn, collectionName, synonymId, body, [])
   end
 

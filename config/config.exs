@@ -8,7 +8,7 @@ if Mix.env() in [:dev, :test] do
     scheme: "http"
 end
 
-if Mix.env() == :dev do
+if config_env() in [:dev] do
   config :oapi_generator,
     default: [
       output: [

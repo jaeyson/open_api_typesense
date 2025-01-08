@@ -1,19 +1,22 @@
 defmodule OpenApiTypesense.Connection do
   @moduledoc since: "0.2.0"
+
   @moduledoc """
   Fetches credentials either from application env or map.
   """
+
   alias OpenApiTypesense.Client
 
   @derive {Inspect, except: [:api_key]}
-  defstruct [:host, :api_key, :port, :scheme]
+  defstruct [:host, :api_key, :port, :scheme, :client]
 
   @typedoc since: "0.2.0"
   @type t() :: %{
           host: binary() | nil,
           api_key: binary() | nil,
           port: non_neg_integer() | nil,
-          scheme: binary() | nil
+          scheme: binary() | nil,
+          client: list() | nil
         }
 
   @doc """
@@ -41,10 +44,11 @@ defmodule OpenApiTypesense.Connection do
 
   """
   @doc since: "0.2.0"
-  @spec new(connection :: t() | map()) :: %__MODULE__{}
-
+  @spec new :: %__MODULE__{}
   def new, do: new(defaults())
 
+  @doc since: "0.2.0"
+  @spec new(t() | map()) :: %__MODULE__{}
   def new(connection) when is_map(connection) do
     missing_fields = Enum.sort(required_fields() -- Map.keys(connection))
 
@@ -61,7 +65,15 @@ defmodule OpenApiTypesense.Connection do
 
   @spec required_fields :: list(atom())
   defp required_fields do
-    struct(__MODULE__, %{}) |> Map.drop([:__struct__]) |> Map.keys()
+    # Dropping :client key in order to make it optional
+    # since a user might just use the default client (Req).
+    # User needs explicitly pass :client in order to use
+    # another HTTP client. See README.
+    __MODULE__
+    |> struct(%{})
+    |> Map.drop([:__struct__])
+    |> Map.drop([:client])
+    |> Map.keys()
   end
 
   @spec defaults :: map()
@@ -70,7 +82,8 @@ defmodule OpenApiTypesense.Connection do
       host: Client.get_host(),
       api_key: Client.api_key(),
       port: Client.get_port(),
-      scheme: Client.get_scheme()
+      scheme: Client.get_scheme(),
+      client: Client.get_client()
     }
   end
 end

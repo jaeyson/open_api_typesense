@@ -3,7 +3,7 @@ defmodule OpenApiTypesense.MixProject do
 
   @source_url "https://github.com/jaeyson/open_api_typesense"
   @hex_url "https://hexdocs.pm/open_api_typesense"
-  @version "0.4.3"
+  @version "0.5.0"
 
   def project do
     [
@@ -61,7 +61,8 @@ defmodule OpenApiTypesense.MixProject do
       extras: [
         "CHANGELOG.md",
         "README.md": [title: "Overview"],
-        "LICENSE.md": [title: "License"]
+        "LICENSE.md": [title: "License"],
+        "guides/custom_http_client.md": [title: "Custom HTTP Client"]
       ],
       nest_modules_by_prefix: [
         OpenApiTypesense

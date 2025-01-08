@@ -30,11 +30,7 @@ defmodule OpenApiTypesense.Operations do
     retrieve_api_stats(Connection.new(), opts)
   end
 
-  def retrieve_api_stats(conn) when not is_struct(conn) and is_map(conn) do
-    retrieve_api_stats(Connection.new(conn), [])
-  end
-
-  def retrieve_api_stats(%Connection{} = conn) when is_struct(conn) do
+  def retrieve_api_stats(conn) do
     retrieve_api_stats(conn, [])
   end
 
@@ -83,11 +79,7 @@ defmodule OpenApiTypesense.Operations do
     retrieve_metrics(Connection.new(), opts)
   end
 
-  def retrieve_metrics(conn) when not is_struct(conn) and is_map(conn) do
-    retrieve_metrics(Connection.new(conn), [])
-  end
-
-  def retrieve_metrics(%Connection{} = conn) when is_struct(conn) do
+  def retrieve_metrics(conn) do
     retrieve_metrics(conn, [])
   end
 
@@ -177,11 +169,7 @@ defmodule OpenApiTypesense.Operations do
     compact(Connection.new(), opts)
   end
 
-  def compact(conn) when not is_struct(conn) and is_map(conn) do
-    compact(Connection.new(conn), [])
-  end
-
-  def compact(%Connection{} = conn) when is_struct(conn) do
+  def compact(conn) do
     compact(conn, [])
   end
 
@@ -231,11 +219,7 @@ defmodule OpenApiTypesense.Operations do
     clear_cache(Connection.new(), opts)
   end
 
-  def clear_cache(conn) when not is_struct(conn) and is_map(conn) do
-    clear_cache(Connection.new(conn), [])
-  end
-
-  def clear_cache(%Connection{} = conn) when is_struct(conn) do
+  def clear_cache(conn) do
     clear_cache(conn, [])
   end
 
@@ -291,11 +275,7 @@ defmodule OpenApiTypesense.Operations do
     config(Connection.new(), body, opts)
   end
 
-  def config(conn, body) when not is_struct(conn) and is_map(conn) do
-    config(Connection.new(conn), body, [])
-  end
-
-  def config(%Connection{} = conn, body) when is_struct(conn) do
+  def config(conn, body) do
     config(conn, body, [])
   end
 
@@ -347,11 +327,7 @@ defmodule OpenApiTypesense.Operations do
     vote(Connection.new(), opts)
   end
 
-  def vote(conn) when not is_struct(conn) and is_map(conn) do
-    vote(Connection.new(conn), [])
-  end
-
-  def vote(%Connection{} = conn) when is_struct(conn) do
+  def vote(conn) do
     vote(conn, [])
   end
 

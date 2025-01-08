@@ -7,6 +7,11 @@ defmodule OpenApiTypesense.Client do
   alias OpenApiTypesense.Connection
   alias OpenApiTypesense.ApiResponse
 
+  @doc """
+  A callback function for custom HTTP client
+  """
+  @callback request(conn :: map(), params :: keyword()) :: response()
+
   @typedoc since: "0.2.0"
   @type response() ::
           {:ok, any()}
@@ -24,13 +29,11 @@ defmodule OpenApiTypesense.Client do
 
   @doc since: "0.2.0"
   @spec get_port :: non_neg_integer() | nil
-  def get_port do
-    Application.get_env(:open_api_typesense, :port)
-  end
+  def get_port, do: Application.get_env(:open_api_typesense, :port)
 
-  @doc since: "0.3.0"
-  @spec get_options :: map()
-  def get_options, do: Application.get_env(:open_api_typesense, :options, %{})
+  @doc since: "0.5.0"
+  @spec get_client :: keyword() | nil
+  def get_client, do: Application.get_env(:open_api_typesense, :client)
 
   @doc """
   Returns the Typesense's API key
@@ -50,7 +53,8 @@ defmodule OpenApiTypesense.Client do
 
   > #### On using this function {: .info}
   > Functions e.g. `OpenApiTypesense.Health.health` don't need to explicitly pass
-  > a `connection` unless you want to use custom `connection`. See [`README`](/README.md) for more details or `OpenApiTypesense.Connection` module.
+  > a `connection` unless you want to use custom `connection`. See
+  > [`README`](/README.md) for more details or `OpenApiTypesense.Connection` module.
 
   ## Options
 
@@ -60,27 +64,32 @@ defmodule OpenApiTypesense.Client do
   - `:query`: Request query params (defaults to `%{}`).
 
   ## Examples
-      iex> alias OpenApiTypesense.{Client,Connection}
-      iex> connection = %Connection{
+      iex> connection = %OpenApiTypesense.Connection{
       ...>   host: "localhost",
       ...>   api_key: "some_api_key",
       ...>   port: "8108",
       ...>   scheme: "http"
       ...> }
       iex> opts = %{
-      ...>   args: [],
-      ...>   call: {OpenApiTypesense.Health, :health},
       ...>   url: "/health",
-      ...>   method: :get,
-      ...>   response: [{200, {OpenApiTypesense.HealthStatus, :t}}],
-      ...>   opts: opts
+      ...>   method: :get
       ...> }
       iex> Client.request(connection, opts)
       {:ok, %OpenApiTypesense.HealthStatus{ok: true}}
   """
   @doc since: "0.2.0"
-  @spec request(Connection.t(), map()) :: response()
+  @spec request(map() | Connection.t(), map()) :: response()
   def request(conn, opts) do
+    client = Map.get(conn, :client)
+
+    if client do
+      client.request(conn, opts)
+    else
+      default_client(conn, opts)
+    end
+  end
+
+  defp default_client(conn, opts) do
     # Req.Request.append_error_steps and its retry option are used here.
     # options like retry, max_retries, etc. can be found in:
     # https://hexdocs.pm/req/Req.Steps.html#retry/1
@@ -90,7 +99,8 @@ defmodule OpenApiTypesense.Client do
         # disabled in order to cut time in tests
         false
       else
-        :safe_transient
+        # default is :safe_transient
+        opts[:req][:retry] || :safe_transient
       end
 
     max_retries =
@@ -98,8 +108,8 @@ defmodule OpenApiTypesense.Client do
         # disabled in order to cut time in tests
         0
       else
-        # default
-        3
+        # default is 3
+        opts[:req][:max_retries] || 3
       end
 
     url =
@@ -111,31 +121,32 @@ defmodule OpenApiTypesense.Client do
         query: URI.encode_query(opts[:query] || [])
       }
 
-    encoded_body =
-      if opts[:request] do
-        [content_type] = opts[:request]
-        parse_content_type(content_type, opts[:body])
-      else
-        Jason.encode_to_iodata!(opts[:body])
-      end
-
     {_req, resp} =
       [
         method: opts[:method] || :get,
-        body: encoded_body,
+        body: encode_body(opts),
         url: url,
         retry: retry,
         max_retries: max_retries,
-        compress_body: opts[:opts][:compress] || false,
-        cache: opts[:opts][:cache] || false,
+        compress_body: opts[:req][:compress] || false,
+        cache: opts[:req][:cache] || false,
         decode_json: [keys: :atoms]
       ]
       |> Req.new()
-      |> Req.Request.merge_options(Map.to_list(get_options()))
-      |> Req.Request.put_header("x-typesense-api-key", api_key())
+      |> Req.Request.merge_options(Map.to_list(Map.get(conn, :options, %{})))
+      |> Req.Request.put_header("x-typesense-api-key", Map.get(conn, :api_key))
       |> Req.Request.run_request()
 
     parse_resp(resp, opts[:response])
+  end
+
+  defp encode_body(opts) do
+    if opts[:request] do
+      [content_type] = opts[:request]
+      parse_content_type(content_type, opts[:body])
+    else
+      Jason.encode_to_iodata!(opts[:body])
+    end
   end
 
   defp parse_content_type({"application/octet-stream", {:string, :generic}}, body) do
@@ -173,6 +184,12 @@ defmodule OpenApiTypesense.Client do
     parse_values(code, values, resp.body)
   end
 
+  @spec parse_values(
+          non_neg_integer(),
+          atom() | list() | tuple(),
+          map() | String.t() | list()
+        ) ::
+          {:ok, any()} | {:error, any()}
   defp parse_values(code, :map, body) do
     status = if code in 200..299, do: :ok, else: :error
 

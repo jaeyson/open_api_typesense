@@ -29,7 +29,7 @@ defmodule OpenApiTypesense.Health do
   end
 
   def health(conn) when not is_struct(conn) and is_map(conn) do
-    health(Connection.new(conn), [])
+    health(conn, [])
   end
 
   def health(opts) when is_list(opts) do

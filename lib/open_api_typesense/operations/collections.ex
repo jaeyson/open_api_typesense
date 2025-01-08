@@ -49,11 +49,7 @@ defmodule OpenApiTypesense.Collections do
     create_collection(Connection.new(), body, opts)
   end
 
-  def create_collection(conn, body) when not is_struct(conn) and is_map(conn) and is_map(body) do
-    create_collection(Connection.new(conn), body, [])
-  end
-
-  def create_collection(%Connection{} = conn, body) when is_struct(conn) and is_map(body) do
+  def create_collection(conn, body) do
     create_collection(conn, body, [])
   end
 
@@ -107,15 +103,11 @@ defmodule OpenApiTypesense.Collections do
   """
   @spec delete_alias(String.t() | map() | Connection.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_alias(aliasName, opts) when is_binary(aliasName) do
+  def delete_alias(aliasName, opts) when is_list(opts) and is_binary(aliasName) do
     delete_alias(Connection.new(), aliasName, opts)
   end
 
-  def delete_alias(conn, aliasName) when not is_struct(conn) and is_map(conn) do
-    delete_alias(conn, aliasName, [])
-  end
-
-  def delete_alias(%Connection{} = conn, aliasName) when is_struct(conn) do
+  def delete_alias(conn, aliasName) do
     delete_alias(conn, aliasName, [])
   end
 
@@ -167,15 +159,11 @@ defmodule OpenApiTypesense.Collections do
   @spec delete_collection(String.t() | map() | Connection.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_collection(collectionName, opts) when is_binary(collectionName) do
+  def delete_collection(collectionName, opts) when is_list(opts) and is_binary(collectionName) do
     delete_collection(Connection.new(), collectionName, opts)
   end
 
-  def delete_collection(conn, collectionName) when not is_struct(conn) and is_map(conn) do
-    delete_collection(Connection.new(conn), collectionName, [])
-  end
-
-  def delete_collection(%Connection{} = conn, collectionName) when is_struct(conn) do
+  def delete_collection(conn, collectionName) do
     delete_collection(conn, collectionName, [])
   end
 
@@ -226,16 +214,12 @@ defmodule OpenApiTypesense.Collections do
   """
   @spec get_alias(String.t() | map() | Connection.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_alias(aliasName, opts) when is_binary(aliasName) do
+  def get_alias(aliasName, opts) when is_list(opts) and is_binary(aliasName) do
     get_alias(Connection.new(), aliasName, opts)
   end
 
-  def get_alias(conn, aliasName) when not is_struct(conn) and is_map(conn) do
-    get_alias(Connection.new(conn), aliasName, [])
-  end
-
-  def get_alias(%Connection{} = conn, aliasName) when is_struct(conn) do
-    get_alias(Connection.new(), aliasName, [])
+  def get_alias(conn, aliasName) do
+    get_alias(conn, aliasName, [])
   end
 
   @doc """
@@ -287,11 +271,7 @@ defmodule OpenApiTypesense.Collections do
     get_aliases(Connection.new(), opts)
   end
 
-  def get_aliases(conn) when not is_struct(conn) and is_map(conn) do
-    get_aliases(Connection.new(conn), [])
-  end
-
-  def get_aliases(%Connection{} = conn) when is_struct(conn) do
+  def get_aliases(conn) do
     get_aliases(conn, [])
   end
 
@@ -340,15 +320,11 @@ defmodule OpenApiTypesense.Collections do
   @spec get_collection(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_collection(collectionName, opts) when is_binary(collectionName) do
+  def get_collection(collectionName, opts) when is_list(opts) and is_binary(collectionName) do
     get_collection(Connection.new(), collectionName, opts)
   end
 
-  def get_collection(conn, collectionName) when not is_struct(conn) and is_map(conn) do
-    get_collection(Connection.new(conn), collectionName, [])
-  end
-
-  def get_collection(%Connection{} = conn, collectionName) when is_struct(conn) do
+  def get_collection(conn, collectionName) do
     get_collection(conn, collectionName, [])
   end
 
@@ -407,11 +383,7 @@ defmodule OpenApiTypesense.Collections do
     get_collections(Connection.new(), opts)
   end
 
-  def get_collections(conn) when not is_struct(conn) and is_map(conn) do
-    get_collections(Connection.new(conn), [])
-  end
-
-  def get_collections(%Connection{} = conn) when is_struct(conn) do
+  def get_collections(conn) do
     get_collections(conn, [])
   end
 
@@ -462,15 +434,12 @@ defmodule OpenApiTypesense.Collections do
   @spec update_collection(map() | Connection.t(), String.t() | map(), map() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionUpdateSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def update_collection(collectionName, body, opts) when is_binary(collectionName) do
+  def update_collection(collectionName, body, opts)
+      when is_list(opts) and is_binary(collectionName) do
     update_collection(Connection.new(), collectionName, body, opts)
   end
 
-  def update_collection(conn, collectionName, body) when not is_struct(conn) and is_map(conn) do
-    update_collection(Connection.new(conn), collectionName, body, [])
-  end
-
-  def update_collection(%Connection{} = conn, collectionName, body) when is_struct(conn) do
+  def update_collection(conn, collectionName, body) do
     update_collection(conn, collectionName, body, [])
   end
 
@@ -530,15 +499,11 @@ defmodule OpenApiTypesense.Collections do
   """
   @spec upsert_alias(map() | Connection.t(), String.t(), map() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_alias(aliasName, body, opts) when is_binary(aliasName) do
+  def upsert_alias(aliasName, body, opts) when is_list(opts) and is_binary(aliasName) do
     upsert_alias(Connection.new(), aliasName, body, opts)
   end
 
-  def upsert_alias(conn, aliasName, body) when not is_struct(conn) and is_map(conn) do
-    upsert_alias(Connection.new(conn), aliasName, body, [])
-  end
-
-  def upsert_alias(%Connection{} = conn, aliasName, body) when is_struct(conn) do
+  def upsert_alias(conn, aliasName, body) do
     upsert_alias(conn, aliasName, body, [])
   end
 

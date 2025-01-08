@@ -28,16 +28,12 @@ defmodule OpenApiTypesense.Presets do
   @spec delete_preset(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.PresetDeleteSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_preset(presetId, opts) when is_binary(presetId) do
+  def delete_preset(presetId, opts) when is_list(opts) and is_binary(presetId) do
     delete_preset(Connection.new(), presetId, opts)
   end
 
-  def delete_preset(conn, presetId) when not is_struct(conn) and is_map(conn) do
-    delete_preset(Connection.new(conn), presetId, [])
-  end
-
-  def delete_preset(%Connection{} = conn, presetId) when is_struct(conn) do
-    delete_preset(Connection.new(), presetId, [])
+  def delete_preset(conn, presetId) do
+    delete_preset(conn, presetId, [])
   end
 
   @doc """
@@ -94,11 +90,7 @@ defmodule OpenApiTypesense.Presets do
     retrieve_all_presets(Connection.new(), opts)
   end
 
-  def retrieve_all_presets(conn) when not is_struct(conn) and is_map(conn) do
-    retrieve_all_presets(Connection.new(conn), [])
-  end
-
-  def retrieve_all_presets(%Connection{} = conn) when is_struct(conn) do
+  def retrieve_all_presets(conn) do
     retrieve_all_presets(conn, [])
   end
 
@@ -145,15 +137,11 @@ defmodule OpenApiTypesense.Presets do
   """
   @spec retrieve_preset(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_preset(presetId, opts) when is_binary(presetId) do
+  def retrieve_preset(presetId, opts) when is_list(opts) and is_binary(presetId) do
     retrieve_preset(Connection.new(), presetId, opts)
   end
 
-  def retrieve_preset(conn, presetId) when not is_struct(conn) and is_map(conn) do
-    retrieve_preset(Connection.new(conn), presetId, [])
-  end
-
-  def retrieve_preset(%Connection{} = conn, presetId) when is_struct(conn) do
+  def retrieve_preset(conn, presetId) do
     retrieve_preset(conn, presetId, [])
   end
 
@@ -203,15 +191,11 @@ defmodule OpenApiTypesense.Presets do
   """
   @spec upsert_preset(map() | Connection.t() | String.t(), String.t() | map(), map() | keyword()) ::
           {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_preset(presetId, body, opts) when is_binary(presetId) do
+  def upsert_preset(presetId, body, opts) when is_list(opts) and is_binary(presetId) do
     upsert_preset(Connection.new(), presetId, body, opts)
   end
 
-  def upsert_preset(conn, presetId, body) when not is_struct(conn) and is_map(conn) do
-    upsert_preset(Connection.new(conn), presetId, body, [])
-  end
-
-  def upsert_preset(%Connection{} = conn, presetId, body) when is_struct(conn) do
+  def upsert_preset(conn, presetId, body) do
     upsert_preset(conn, presetId, body, [])
   end
 
