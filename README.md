@@ -82,31 +82,45 @@ called `request` that contains 2 args:
 > you can change the name `conn` and/or `params` however you want,
 > since it's just a variable.
 
-Here's a custom client example (`:httpc`) in order to match the usage:
+Here's a custom client example ([`HTTPoison`](https://hexdocs.pm/httpoison/readme.html))
+in order to match the usage:
 
 ```elixir
 defmodule MyApp.CustomClient do
   def request(conn, params) do
-    uri = %URI{
+    url = %URI{
       scheme: conn.scheme,
       host: conn.host,
       port: conn.port,
       path: params.url,
       query: URI.encode_query(params[:query] || %{})
     }
+    |> URI.to_string()
 
-    [{content_type, _schema}] = params.request
+    request = %HTTPoison.Request{method: params.method, url: url}
 
-    request = {
-      URI.to_string(uri),
-      [{~c"x-typesense-api-key", String.to_charlist(conn.api_key)}],
-      String.to_charlist(content_type),
-      Jason.encode!(params.body)
-    }
+    request =
+      if params[:request] do
+        [{content_type, _schema}] = params.request
+        
+        headers = [
+          {"X-TYPESENSE-API-KEY", conn.api_key}
+          {"Content-Type", content_type}
+        ]
 
-    {:ok, {_status, _header, body}} = :httpc.request(params.method, request, [], [])
+        %{request | headers: headers}
+      else
+        request
+      end
 
-    Jason.decode!(body)
+    request =
+      if params[:body] do
+        %{request | body: Jason.encode!(params.body)}
+      else
+        request
+      end
+
+    HTTPoison.request!(request)
   end
 end
 ```
@@ -149,4 +163,3 @@ end
 ```
 
 Check [the examples](./guides/custom_http_client.md) on some HTTP client implementations.
-

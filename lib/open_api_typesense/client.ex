@@ -10,7 +10,7 @@ defmodule OpenApiTypesense.Client do
   @doc """
   A callback function for custom HTTP client
   """
-  @callback request(conn :: map(), params :: keyword()) :: any()
+  @callback request(conn :: map(), params :: keyword()) :: response()
 
   @typedoc since: "0.2.0"
   @type response() ::
@@ -83,7 +83,7 @@ defmodule OpenApiTypesense.Client do
     client = Map.get(conn, :client)
 
     if client do
-      apply(client, :request, [conn, opts])
+      client.request(conn, opts)
     else
       default_client(conn, opts)
     end
@@ -121,18 +121,10 @@ defmodule OpenApiTypesense.Client do
         query: URI.encode_query(opts[:query] || [])
       }
 
-    encoded_body =
-      if opts[:request] do
-        [content_type] = opts[:request]
-        parse_content_type(content_type, opts[:body])
-      else
-        Jason.encode_to_iodata!(opts[:body])
-      end
-
     {_req, resp} =
       [
         method: opts[:method] || :get,
-        body: encoded_body,
+        body: encode_body(opts),
         url: url,
         retry: retry,
         max_retries: max_retries,
@@ -148,6 +140,17 @@ defmodule OpenApiTypesense.Client do
     parse_resp(resp, opts[:response])
   end
 
+  @spec encode_body(keyword()) :: iodata() | no_return()
+  defp encode_body(opts) do
+    if opts[:request] do
+      [content_type] = opts[:request]
+      parse_content_type(content_type, opts[:body])
+    else
+      Jason.encode_to_iodata!(opts[:body])
+    end
+  end
+
+  @spec parse_content_type({String.t(), tuple()}, map()) :: iodata() | no_return()
   defp parse_content_type({"application/octet-stream", {:string, :generic}}, body) do
     Enum.map_join(body, "\n", &Jason.encode_to_iodata!/1)
   end
@@ -165,6 +168,7 @@ defmodule OpenApiTypesense.Client do
   #   end
   # end
 
+  @spec parse_resp(struct(), list()) :: {:ok, any()} | {:error, any()}
   defp parse_resp(%Req.TransportError{} = error, _opts_resp) do
     {:error, Exception.message(error)}
   end
@@ -183,6 +187,12 @@ defmodule OpenApiTypesense.Client do
     parse_values(code, values, resp.body)
   end
 
+  @spec parse_values(
+          non_neg_integer(),
+          atom() | list() | tuple(),
+          map() | String.t() | list()
+        ) ::
+          {:ok, any()} | {:error, any()}
   defp parse_values(code, :map, body) do
     status = if code in 200..299, do: :ok, else: :error
 

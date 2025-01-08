@@ -16,28 +16,66 @@ config :open_api_typesense,
 ## [`:httpc`](https://www.erlang.org/doc/apps/inets/httpc.html)
 
 ```elixir
-defmodule MyApp.CustomClient do
+defmodule CustomClient do
   def request(conn, params) do
-    uri = %URI{
-      scheme: conn.scheme,
-      host: conn.host,
-      port: conn.port,
-      path: params.url,
-      query: URI.encode_query(params[:query] || %{})
-    }
+    uri =
+      %URI{
+        scheme: conn.scheme,
+        host: conn.host,
+        port: conn.port,
+        path: params.url,
+        query: URI.encode_query(params[:query] || %{})
+      }
+      |> URI.to_string()
 
-    [{content_type, _schema}] = params.request
+    headers = [{"x-typesense-api-key", conn.api_key}]
 
-    request = {
-      URI.to_string(uri),
-      [{~c"x-typesense-api-key", String.to_charlist(conn.api_key)}],
-      String.to_charlist(content_type),
-      Jason.encode!(params[:body])
-    }
+    request =
+      if params[:request] do
+        [{content_type, _schema}] = params.request
+        body = Jason.encode!(params[:body] || %{})
 
-    {:ok, {_status, _header, body}} = :httpc.request(params.method, request, [], [])
+        {
+          String.to_charlist(uri),
+          Enum.map(headers, &to_charlist_tuple/1),
+          String.to_charlist(content_type),
+          body
+        }
+      else
+        {
+          String.to_charlist(uri),
+          Enum.map(headers, &to_charlist_tuple/1)
+        }
+      end
 
-    Jason.decode!(body)
+    case :httpc.request(params.method, request, [], []) do
+      {:ok, {{_http_version, status_code, _status_message}, response_headers, body}} ->
+        handle_response(status_code, response_headers, body)
+
+      {:error, reason} ->
+        Logger.error("HTTP request failed: #{inspect(reason)}")
+        {:error, reason}
+    end
+  end
+
+  defp handle_response(status_code, _headers, body) when status_code in 200..299 do
+    case Jason.decode(body) do
+      {:ok, decoded_body} ->
+        {:ok, decoded_body}
+
+      {:error, decode_error} ->
+        Logger.error("Failed to decode JSON response: #{inspect(decode_error)}")
+        {:error, :invalid_json}
+    end
+  end
+
+  defp handle_response(status_code, _headers, body) do
+    Logger.warn("Request failed with status #{status_code} and body: #{body}")
+    {:error, %{status: status_code, body: body}}
+  end
+
+  defp to_charlist_tuple({key, value}) do
+    {String.to_charlist(key), String.to_charlist(value)}
   end
 end
 ```
@@ -56,13 +94,30 @@ defmodule MyApp.CustomClient do
     }
     |> URI.to_string()
 
-    body = Jason.encode!(params[:body])
+    request = %HTTPoison.Request{method: params.method, url: url}
 
-    [{content_type, _schema}] = params.request
+    request =
+      if params[:request] do
+        [{content_type, _schema}] = params.request
 
-    headers = [{"Content-Type", content_type}]
+        headers = [
+          {"X-TYPESENSE-API-KEY", conn.api_key}
+          {"Content-Type", content_type}
+        ]
 
-    HTTPoison.request!(params.method, url, body, headers)
+        %{request | headers: headers}
+      else
+        request
+      end
+
+    request =
+      if params[:body] do
+        %{request | body: Jason.encode!(params.body)}
+      else
+        request
+      end
+
+    HTTPoison.request!(request)
   end
 end
 ```
@@ -81,12 +136,16 @@ defmodule MyApp.CustomClient do
     }
     |> URI.to_string()
 
-    [{content_type, _schema}] = params.request
-
-    headers = [
-      {"x-typesense-api-key", conn.api_key},
-      {"content-type", content_type}
-    ]
+    headers =
+      if params[:request] do
+        [{content_type, _schema}] = params.request
+        [
+          {"x-typesense-api-key", conn.api_key},
+          {"content-type", content_type}
+        ]
+      else
+        [{"x-typesense-api-key", conn.api_key}]
+      end
 
     body = Jason.encode!(params[:body])
 
@@ -120,12 +179,16 @@ defmodule MyApp.CustomClient do
     }
     |> URI.to_string()
 
-    [{content_type, _schema}] = params.request
-
-    headers = [
-      {"x-typesense-api-key", conn.api_key},
-      {"content-type", content_type}
-    ]
+    headers =
+      if params[:request] do
+        [{content_type, _schema}] = params.request
+        [
+          {"x-typesense-api-key", conn.api_key},
+          {"content-type", content_type}
+        ]
+      else
+        [{"x-typesense-api-key", conn.api_key}]
+      end
 
     body = Jason.encode!(params[:body])
 
@@ -222,10 +285,16 @@ defmodule MyApp.CustomClient do
 
     [{content_type, _schema}] = params.request
 
-    headers = [
-      {"x-typesense-api-key", conn.api_key},
-      {"content-type", content_type}
-    ]
+    headers =
+      if params[:request] do
+        [{content_type, _schema}] = params.request
+        [
+          {"x-typesense-api-key", conn.api_key},
+          {"content-type", content_type}
+        ]
+      else
+        [{"x-typesense-api-key", conn.api_key}]
+      end
 
     body = Jason.encode!(params[:body])
 
@@ -285,17 +354,20 @@ defmodule MyApp.CustomClient do
       body: body
     ]
 
-    [{content_type, _schema}] = params.request
+    headers =
+      if params[:request] do
+        [{content_type, _schema}] = params.request
+        [
+          {"x-typesense-api-key", conn.api_key},
+          {"content-type", content_type}
+        ]
+      else
+        [{"x-typesense-api-key", conn.api_key}]
+      end
 
     client =
       Tesla.client([
-        {
-          Tesla.Middleware.Headers,
-          [
-            {"x-typesense-api-key", conn.api_key},
-            {"content-type", content_type}
-          ]
-        },
+        {Tesla.Middleware.Headers, headers},
         Tesla.Middleware.JSON
       ])
 

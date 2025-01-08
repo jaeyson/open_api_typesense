@@ -65,6 +65,10 @@ defmodule OpenApiTypesense.Connection do
 
   @spec required_fields :: list(atom())
   defp required_fields do
+    # Dropping :client key in order to make it optional
+    # since a user might just use the default client (Req).
+    # User needs explicitly pass :client in order to use
+    # another HTTP client. See README.
     __MODULE__
     |> struct(%{})
     |> Map.drop([:__struct__])
