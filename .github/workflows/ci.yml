@@ -57,23 +57,6 @@ jobs:
     services:
       typesense:
         image: typesense/typesense:${{ matrix.typesense }}
-        options: >-
-          --health-cmd "curl http://127.0.0.1:8108/health"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-          --api-key=xyz
-          --data-dir=/data
-          --enable-search-analytics=true
-          --analytics-dir=/analytics-data 
-          --analytics-flush-interval=60
-          --analytics-minute-rate-limit=100
-          --enable-cors
-        ports:
-          - 8108:8108
-        volumes:
-          - typesense-data:/data
-          - typesense-analytics-data:/analytics-data
 
     steps:
       - name: Checkout repo
@@ -81,6 +64,26 @@ jobs:
 
       - name: Check for misspellings
         uses: codespell-project/actions-codespell@v2
+
+      - name: Start Typesense
+        run: |
+          docker run -d \
+          -i -p 8108:8108 \
+          --name typesense \
+          --health-cmd "curl http://127.0.0.1:8108/health"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          -v /tmp/typesense-data:/data \
+          -v /tmp/typesense-analytics-data:/analytics-data \
+          typesense/typesense:${{ matrix.typesense}} \
+          --api-key=xyz \
+          --data-dir=/data \
+          --enable-search-analytics=true \
+          --analytics-dir=/analytics-data  \
+          --analytics-flush-interval=60 \
+          --analytics-minute-rate-limit=100 \
+          --enable-cors
 
       - name: Setup Elixir/OTP
         uses: erlef/setup-beam@v1
