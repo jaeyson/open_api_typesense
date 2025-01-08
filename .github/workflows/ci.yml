@@ -147,7 +147,7 @@ jobs:
         if: ${{ matrix.lint }}
 
       - name: Run tests
-        run: mix test --only ${{ matrix.typesense }}:true --trace test/client_test.exs
+        run: mix test --only ${{ matrix.typesense }}:true --trace
 
       - name: Post test coverage to Coveralls
         run: mix coveralls.github

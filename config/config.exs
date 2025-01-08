@@ -3,7 +3,7 @@ import Config
 if Mix.env() in [:dev, :test] do
   config :open_api_typesense,
     api_key: "xyz",
-    host: "192.168.254.2",
+    host: "localhost",
     port: 8108,
     scheme: "http"
 end
