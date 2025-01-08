@@ -1,5 +1,6 @@
 defmodule ClientTest do
   use ExUnit.Case, async: true
+  require Logger
 
   defmodule CustomClient do
     def request(conn, params) do
