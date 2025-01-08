@@ -3,12 +3,12 @@ import Config
 if Mix.env() in [:dev, :test] do
   config :open_api_typesense,
     api_key: "xyz",
-    host: "localhost",
+    host: "192.168.254.2",
     port: 8108,
     scheme: "http"
 end
 
-if Mix.env() == :dev do
+if config_env() in [:dev] do
   config :oapi_generator,
     default: [
       output: [

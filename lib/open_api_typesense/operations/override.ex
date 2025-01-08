@@ -30,17 +30,12 @@ defmodule OpenApiTypesense.Override do
           String.t() | keyword()
         ) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | :error
-  def get_search_override(collectionName, overrideId, opts) when is_binary(collectionName) do
+  def get_search_override(collectionName, overrideId, opts)
+      when is_list(opts) and is_binary(collectionName) do
     get_search_override(Connection.new(), collectionName, overrideId, opts)
   end
 
-  def get_search_override(conn, collectionName, overrideId)
-      when not is_struct(conn) and is_map(conn) do
-    get_search_override(Connection.new(conn), collectionName, overrideId, [])
-  end
-
-  def get_search_override(%Connection{} = conn, collectionName, overrideId)
-      when is_struct(conn) do
+  def get_search_override(conn, collectionName, overrideId) do
     get_search_override(conn, collectionName, overrideId, [])
   end
 

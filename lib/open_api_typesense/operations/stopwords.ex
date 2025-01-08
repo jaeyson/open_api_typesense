@@ -30,15 +30,11 @@ defmodule OpenApiTypesense.Stopwords do
   """
   @spec delete_stopwords_set(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_stopwords_set(setId, opts) when is_binary(setId) do
+  def delete_stopwords_set(setId, opts) when is_list(opts) and is_binary(setId) do
     delete_stopwords_set(Connection.new(), setId, opts)
   end
 
-  def delete_stopwords_set(conn, setId) when not is_struct(conn) and is_map(conn) do
-    delete_stopwords_set(Connection.new(conn), setId, [])
-  end
-
-  def delete_stopwords_set(%Connection{} = conn, setId) when is_struct(conn) do
+  def delete_stopwords_set(conn, setId) do
     delete_stopwords_set(conn, setId, [])
   end
 
@@ -90,15 +86,11 @@ defmodule OpenApiTypesense.Stopwords do
   @spec retrieve_stopwords_set(map() | Connection.t() | String.t(), keyword()) ::
           {:ok, OpenApiTypesense.StopwordsSetRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_stopwords_set(setId, opts) when is_binary(setId) do
+  def retrieve_stopwords_set(setId, opts) when is_list(opts) and is_binary(setId) do
     retrieve_stopwords_set(Connection.new(), setId, opts)
   end
 
-  def retrieve_stopwords_set(conn, setId) when not is_struct(conn) and is_map(conn) do
-    retrieve_stopwords_set(Connection.new(conn), setId, [])
-  end
-
-  def retrieve_stopwords_set(%Connection{} = conn, setId) when is_struct(conn) do
+  def retrieve_stopwords_set(conn, setId) do
     retrieve_stopwords_set(conn, setId, [])
   end
 
@@ -153,11 +145,7 @@ defmodule OpenApiTypesense.Stopwords do
     retrieve_stopwords_sets(Connection.new(), opts)
   end
 
-  def retrieve_stopwords_sets(conn) when not is_struct(conn) and is_map(conn) do
-    retrieve_stopwords_sets(Connection.new(conn), [])
-  end
-
-  def retrieve_stopwords_sets(%Connection{} = conn) when is_struct(conn) do
+  def retrieve_stopwords_sets(conn) do
     retrieve_stopwords_sets(conn, [])
   end
 
@@ -210,15 +198,11 @@ defmodule OpenApiTypesense.Stopwords do
         ) ::
           {:ok, OpenApiTypesense.StopwordsSetSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_stopwords_set(setId, body, opts) when is_binary(setId) do
+  def upsert_stopwords_set(setId, body, opts) when is_list(opts) and is_binary(setId) do
     upsert_stopwords_set(Connection.new(), setId, body, opts)
   end
 
-  def upsert_stopwords_set(conn, setId, body) when not is_struct(conn) and is_map(conn) do
-    upsert_stopwords_set(Connection.new(conn), setId, body, [])
-  end
-
-  def upsert_stopwords_set(%Connection{} = conn, setId, body) when is_struct(conn) do
+  def upsert_stopwords_set(conn, setId, body) do
     upsert_stopwords_set(conn, setId, body, [])
   end
 

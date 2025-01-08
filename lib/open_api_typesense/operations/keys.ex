@@ -30,11 +30,7 @@ defmodule OpenApiTypesense.Keys do
     create_key(Connection.new(), body, opts)
   end
 
-  def create_key(conn, body) when not is_struct(conn) and is_map(conn) and is_map(body) do
-    create_key(Connection.new(conn), body, [])
-  end
-
-  def create_key(%Connection{} = conn, body) when is_struct(conn) do
+  def create_key(conn, body) do
     create_key(conn, body, [])
   end
 
@@ -87,15 +83,11 @@ defmodule OpenApiTypesense.Keys do
   @spec delete_key(map() | Connection.t() | integer(), integer() | keyword()) ::
           {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_key(keyId, opts) when is_integer(keyId) do
+  def delete_key(keyId, opts) when is_list(opts) and is_integer(keyId) do
     delete_key(Connection.new(), keyId, opts)
   end
 
-  def delete_key(conn, keyId) when not is_struct(conn) and is_map(conn) do
-    delete_key(Connection.new(conn), keyId, [])
-  end
-
-  def delete_key(%Connection{} = conn, keyId) when is_struct(conn) do
+  def delete_key(conn, keyId) do
     delete_key(conn, keyId, [])
   end
 
@@ -150,15 +142,11 @@ defmodule OpenApiTypesense.Keys do
   """
   @spec get_key(map() | Connection.t() | integer(), keyword()) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_key(keyId, opts) when is_integer(keyId) do
+  def get_key(keyId, opts) when is_list(opts) and is_integer(keyId) do
     get_key(Connection.new(), keyId, opts)
   end
 
-  def get_key(conn, keyId) when not is_struct(conn) and is_map(conn) do
-    get_key(Connection.new(conn), keyId, [])
-  end
-
-  def get_key(%Connection{} = conn, keyId) when is_struct(conn) do
+  def get_key(conn, keyId) do
     get_key(conn, keyId, [])
   end
 
@@ -206,11 +194,7 @@ defmodule OpenApiTypesense.Keys do
     get_keys(Connection.new(), opts)
   end
 
-  def get_keys(conn) when not is_struct(conn) and is_map(conn) do
-    get_keys(Connection.new(conn), [])
-  end
-
-  def get_keys(%Connection{} = conn) when is_struct(conn) do
+  def get_keys(conn) do
     get_keys(conn, [])
   end
 

@@ -30,11 +30,7 @@ defmodule OpenApiTypesense.Debug do
     debug(Connection.new(), opts)
   end
 
-  def debug(conn) when not is_struct(conn) and is_map(conn) do
-    debug(Connection.new(conn), [])
-  end
-
-  def debug(%Connection{} = conn) when is_struct(conn) do
+  def debug(conn) do
     debug(conn, [])
   end
 

@@ -32,11 +32,7 @@ defmodule OpenApiTypesense.Analytics do
     create_analytics_event(Connection.new(), body, opts)
   end
 
-  def create_analytics_event(conn, body) when not is_struct(conn) and is_map(conn) do
-    create_analytics_event(Connection.new(conn), body, [])
-  end
-
-  def create_analytics_event(%Connection{} = conn, body) when is_struct(conn) do
+  def create_analytics_event(conn, body) do
     create_analytics_event(conn, body, [])
   end
 
@@ -95,11 +91,7 @@ defmodule OpenApiTypesense.Analytics do
     create_analytics_rule(Connection.new(), body, opts)
   end
 
-  def create_analytics_rule(conn, body) when not is_struct(conn) and is_map(conn) do
-    create_analytics_rule(Connection.new(conn), body, [])
-  end
-
-  def create_analytics_rule(%Connection{} = conn, body) when is_struct(conn) and is_map(body) do
+  def create_analytics_rule(conn, body) do
     create_analytics_rule(conn, body, [])
   end
 
@@ -155,15 +147,11 @@ defmodule OpenApiTypesense.Analytics do
   @spec delete_analytics_rule(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_analytics_rule(ruleName, opts) when is_binary(ruleName) do
+  def delete_analytics_rule(ruleName, opts) when is_list(opts) and is_binary(ruleName) do
     delete_analytics_rule(Connection.new(), ruleName, opts)
   end
 
-  def delete_analytics_rule(conn, ruleName) when not is_struct(conn) and is_map(conn) do
-    delete_analytics_rule(Connection.new(conn), ruleName, [])
-  end
-
-  def delete_analytics_rule(%Connection{} = conn, ruleName) when is_struct(conn) do
+  def delete_analytics_rule(conn, ruleName) do
     delete_analytics_rule(conn, ruleName, [])
   end
 
@@ -216,15 +204,11 @@ defmodule OpenApiTypesense.Analytics do
   @spec retrieve_analytics_rule(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_analytics_rule(ruleName, opts) when is_binary(ruleName) do
+  def retrieve_analytics_rule(ruleName, opts) when is_list(opts) and is_binary(ruleName) do
     retrieve_analytics_rule(Connection.new(), ruleName, opts)
   end
 
-  def retrieve_analytics_rule(conn, ruleName) when not is_struct(conn) and is_map(conn) do
-    retrieve_analytics_rule(Connection.new(conn), ruleName, [])
-  end
-
-  def retrieve_analytics_rule(%Connection{} = conn, ruleName) when is_struct(conn) do
+  def retrieve_analytics_rule(conn, ruleName) do
     retrieve_analytics_rule(conn, ruleName, [])
   end
 
@@ -280,11 +264,7 @@ defmodule OpenApiTypesense.Analytics do
     retrieve_analytics_rules(Connection.new(), opts)
   end
 
-  def retrieve_analytics_rules(conn) when not is_struct(conn) and is_map(conn) do
-    retrieve_analytics_rules(Connection.new(conn), [])
-  end
-
-  def retrieve_analytics_rules(%Connection{} = conn) when is_struct(conn) do
+  def retrieve_analytics_rules(conn) do
     retrieve_analytics_rules(conn, [])
   end
 
@@ -337,15 +317,11 @@ defmodule OpenApiTypesense.Analytics do
         ) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_analytics_rule(ruleName, body, opts) when is_binary(ruleName) do
+  def upsert_analytics_rule(ruleName, body, opts) when is_list(opts) and is_binary(ruleName) do
     upsert_analytics_rule(Connection.new(), ruleName, body, opts)
   end
 
-  def upsert_analytics_rule(conn, ruleName, body) when not is_struct(conn) and is_map(conn) do
-    upsert_analytics_rule(Connection.new(conn), ruleName, body, [])
-  end
-
-  def upsert_analytics_rule(%Connection{} = conn, ruleName, body) when is_struct(conn) do
+  def upsert_analytics_rule(conn, ruleName, body) do
     upsert_analytics_rule(conn, ruleName, body, [])
   end
 

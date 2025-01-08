@@ -32,13 +32,8 @@ defmodule OpenApiTypesense.Conversations do
     create_conversation_model(Connection.new(), body, opts)
   end
 
-  def create_conversation_model(conn, body)
-      when not is_struct(conn) and is_map(conn) and is_map(body) do
-    create_conversation_model(Connection.new(conn), body, [])
-  end
-
-  def create_conversation_model(%Connection{} = conn, body) when is_struct(conn) do
-    create_conversation_model(Connection.new(), body, [])
+  def create_conversation_model(conn, body) do
+    create_conversation_model(conn, body, [])
   end
 
   @doc """
@@ -90,15 +85,11 @@ defmodule OpenApiTypesense.Conversations do
   """
   @spec delete_conversation_model(map() | Connection.t(), String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
-  def delete_conversation_model(modelId, opts) when is_binary(modelId) do
+  def delete_conversation_model(modelId, opts) when is_list(opts) and is_binary(modelId) do
     delete_conversation_model(Connection.new(), modelId, opts)
   end
 
-  def delete_conversation_model(conn, modelId) when not is_struct(conn) and is_map(conn) do
-    delete_conversation_model(Connection.new(conn), modelId, [])
-  end
-
-  def delete_conversation_model(%Connection{} = conn, modelId) when is_struct(conn) do
+  def delete_conversation_model(conn, modelId) do
     delete_conversation_model(conn, modelId, [])
   end
 
@@ -152,11 +143,7 @@ defmodule OpenApiTypesense.Conversations do
     retrieve_all_conversation_models(Connection.new(), opts)
   end
 
-  def retrieve_all_conversation_models(conn) when not is_struct(conn) and is_map(conn) do
-    retrieve_all_conversation_models(Connection.new(conn), [])
-  end
-
-  def retrieve_all_conversation_models(%Connection{} = conn) when is_struct(conn) do
+  def retrieve_all_conversation_models(conn) do
     retrieve_all_conversation_models(conn, [])
   end
 
@@ -203,15 +190,11 @@ defmodule OpenApiTypesense.Conversations do
   """
   @spec retrieve_conversation_model(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
-  def retrieve_conversation_model(modelId, opts) when is_binary(modelId) do
+  def retrieve_conversation_model(modelId, opts) when is_list(opts) and is_binary(modelId) do
     retrieve_conversation_model(Connection.new(), modelId, opts)
   end
 
-  def retrieve_conversation_model(conn, modelId) when not is_struct(conn) and is_map(conn) do
-    retrieve_conversation_model(Connection.new(conn), modelId, [])
-  end
-
-  def retrieve_conversation_model(%Connection{} = conn, modelId) when is_struct(conn) do
+  def retrieve_conversation_model(conn, modelId) do
     retrieve_conversation_model(conn, modelId, [])
   end
 
@@ -265,15 +248,11 @@ defmodule OpenApiTypesense.Conversations do
           String.t() | map(),
           map() | keyword()
         ) :: {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
-  def update_conversation_model(modelId, body, opts) when is_binary(modelId) do
+  def update_conversation_model(modelId, body, opts) when is_list(opts) and is_binary(modelId) do
     update_conversation_model(Connection.new(), modelId, body, opts)
   end
 
-  def update_conversation_model(conn, modelId, body) when not is_struct(conn) and is_map(conn) do
-    update_conversation_model(Connection.new(conn), modelId, body, [])
-  end
-
-  def update_conversation_model(%Connection{} = conn, modelId, body) when is_struct(conn) do
+  def update_conversation_model(conn, modelId, body) do
     update_conversation_model(conn, modelId, body, [])
   end
 

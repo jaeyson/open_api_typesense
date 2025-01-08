@@ -1520,11 +1520,23 @@ paths:
         You can also use this feature to do a federated search across multiple
         collections in a single HTTP request.
       parameters:
-        - name: multiSearchParameters
-          required: true
+        - name: limit_multi_searches
+          required: false
+          description: >-
+            Max number of search requests that can be sent in a multi-search
+            request. Default 50
           in: query
           schema:
-            $ref: '#/components/schemas/MultiSearchParameters'
+            type: string
+        - name: x-typesense-api-key
+          required: false
+          description: >-
+            You can embed a separate search API key for each search within a
+            multi_search request. This is useful when you want to apply different
+            embedded filters for each collection in individual scoped API keys.
+          in: query
+          schema:
+            type: string
       requestBody:
         content:
           application/json:

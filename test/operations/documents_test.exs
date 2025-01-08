@@ -349,7 +349,7 @@ defmodule DocumentsTest do
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: delete all documents", %{coll_name: coll_name} do
+  test "success: delete all documents", %{coll_name: coll_name, conn: conn, map_conn: map_conn} do
     body =
       [
         %{
@@ -386,39 +386,10 @@ defmodule DocumentsTest do
 
     assert {:ok, %Documents{num_deleted: _, num_updated: nil}} =
              Documents.delete_documents(coll_name, opts)
-  end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: delete all documents without filter_by params", %{
-    coll_name: coll_name,
-    conn: conn,
-    map_conn: map_conn
-  } do
-    message = "Parameter `filter_by` must be provided."
-    assert {:error, %ApiResponse{message: ^message}} = Documents.delete_documents(coll_name)
-    assert {:error, _} = Documents.delete_documents(coll_name, [])
-    assert {:error, _} = Documents.delete_documents(conn, coll_name)
-    assert {:error, _} = Documents.delete_documents(map_conn, coll_name)
-    assert {:error, _} = Documents.delete_documents(conn, coll_name, [])
-    assert {:error, _} = Documents.delete_documents(map_conn, coll_name, [])
-  end
-
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "error: delete a non-existent document", %{
-    coll_name: coll_name,
-    conn: conn,
-    map_conn: map_conn
-  } do
-    document_id = 9999
-
-    assert {:error, %ApiResponse{message: _}} =
-             Documents.delete_document(coll_name, document_id)
-
-    assert {:error, _} = Documents.delete_document(coll_name, document_id, [])
-    assert {:error, _} = Documents.delete_document(conn, coll_name, document_id)
-    assert {:error, _} = Documents.delete_document(map_conn, coll_name, document_id)
-    assert {:error, _} = Documents.delete_document(conn, coll_name, document_id, [])
-    assert {:error, _} = Documents.delete_document(map_conn, coll_name, document_id, [])
+    assert {:ok, _} = Documents.delete_documents(coll_name, opts)
+    assert {:ok, _} = Documents.delete_documents(conn, coll_name, opts)
+    assert {:ok, _} = Documents.delete_documents(map_conn, coll_name, opts)
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]

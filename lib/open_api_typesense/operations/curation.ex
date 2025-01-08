@@ -30,17 +30,12 @@ defmodule OpenApiTypesense.Curation do
         ) ::
           {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_search_override(collectionName, overrideId, opts) when is_binary(collectionName) do
+  def delete_search_override(collectionName, overrideId, opts)
+      when is_list(opts) and is_binary(collectionName) do
     delete_search_override(Connection.new(), collectionName, overrideId, opts)
   end
 
-  def delete_search_override(conn, collectionName, overrideId)
-      when not is_struct(conn) and is_map(conn) do
-    delete_search_override(Connection.new(conn), collectionName, overrideId, [])
-  end
-
-  def delete_search_override(%Connection{} = conn, collectionName, overrideId)
-      when is_struct(conn) do
+  def delete_search_override(conn, collectionName, overrideId) do
     delete_search_override(conn, collectionName, overrideId, [])
   end
 
@@ -91,15 +86,12 @@ defmodule OpenApiTypesense.Curation do
   """
   @spec get_search_overrides(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
-  def get_search_overrides(collectionName, opts) when is_binary(collectionName) do
+  def get_search_overrides(collectionName, opts)
+      when is_list(opts) and is_binary(collectionName) do
     get_search_overrides(Connection.new(), collectionName, opts)
   end
 
-  def get_search_overrides(conn, collectionName) when not is_struct(conn) and is_map(conn) do
-    get_search_overrides(Connection.new(conn), collectionName, [])
-  end
-
-  def get_search_overrides(%Connection{} = conn, collectionName) when is_struct(conn) do
+  def get_search_overrides(conn, collectionName) do
     get_search_overrides(conn, collectionName, [])
   end
 
@@ -153,17 +145,11 @@ defmodule OpenApiTypesense.Curation do
         ) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_search_override(collectionName, overrideId, body, opts)
-      when is_binary(collectionName) do
+      when is_list(opts) and is_binary(collectionName) do
     upsert_search_override(Connection.new(), collectionName, overrideId, body, opts)
   end
 
-  def upsert_search_override(conn, collectionName, overrideId, body)
-      when not is_struct(conn) and is_map(conn) do
-    upsert_search_override(Connection.new(conn), collectionName, overrideId, body, [])
-  end
-
-  def upsert_search_override(%Connection{} = conn, collectionName, overrideId, body)
-      when is_struct(conn) do
+  def upsert_search_override(conn, collectionName, overrideId, body) do
     upsert_search_override(conn, collectionName, overrideId, body, [])
   end
 
