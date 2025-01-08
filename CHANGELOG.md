@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
-## 0.5.0 (2025.01.xx)
+## 0.5.0 (2025.01.08)
 
 ### Added
 
@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Update docs
 * Static to Dynamic fetching of application name for connection defaults.
 * Update docs and include few anchor links.
+* Update specific test where async is disabled when using [`Application.put_env/4`](https://elixirforum.com/t/using-application-get-env-application-put-env-in-exunit-tests/8019/2)
 
 ## 0.4.3 (2024.12.27)
 
