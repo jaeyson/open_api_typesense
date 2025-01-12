@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.5.1 (2025.01.12)
+
+### Removed
+
+* `filter_by` option from `Documents.update_document`.
+
 ## 0.5.0 (2025.01.08)
 
 ### Added

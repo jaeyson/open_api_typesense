@@ -3,7 +3,7 @@ defmodule OpenApiTypesense.MixProject do
 
   @source_url "https://github.com/jaeyson/open_api_typesense"
   @hex_url "https://hexdocs.pm/open_api_typesense"
-  @version "0.5.0"
+  @version "0.5.1"
 
   def project do
     [

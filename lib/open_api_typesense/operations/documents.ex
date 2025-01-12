@@ -697,7 +697,6 @@ defmodule OpenApiTypesense.Documents do
 
   ## Options
 
-    * `filter_by`: Filter results by a particular value(s) or logical expressions. multiple conditions with &&.
     * `dirty_values`: Dealing with Dirty Data
 
   """
@@ -744,7 +743,7 @@ defmodule OpenApiTypesense.Documents do
   def update_document(%Connection{} = conn, collectionName, documentId, body, opts)
       when is_struct(conn) do
     client = opts[:client] || @default_client
-    query = Keyword.take(opts, [:dirty_values, :filter_by])
+    query = Keyword.take(opts, [:dirty_values])
 
     client.request(conn, %{
       args: [collectionName: collectionName, documentId: documentId, body: body],

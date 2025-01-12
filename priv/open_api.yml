@@ -954,14 +954,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: filter_by
-          in: query
-          description: >-
-            Filter results by a particular value(s) or logical expressions.
-            multiple conditions with &&.
-          schema:
-            type: string
-          example: 'companies_id:>=0'
         - name: dirty_values
           in: query
           description: Dealing with Dirty Data
