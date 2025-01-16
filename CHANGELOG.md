@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.5.2 (2025.01.16)
+
+### Changed
+
+* Documentation typos
+* Tidy documentation flow
+
+### Added
+
+* Error status code missing from creating a snapshot
+* More test coverage
+
 ## 0.5.1 (2025.01.12)
 
 ### Removed
