@@ -6,6 +6,8 @@ defmodule OperationsTest do
   alias OpenApiTypesense.Operations
   alias OpenApiTypesense.SuccessStatus
 
+  @rate_limit :timer.seconds(5)
+
   setup_all do
     conn = Connection.new()
     map_conn = %{api_key: "xyz", host: "localhost", port: 8108, scheme: "http"}
@@ -70,12 +72,12 @@ defmodule OperationsTest do
   test "success: take snapshot", %{conn: conn, map_conn: map_conn} do
     params = [snapshot_path: "/tmp/typesense-data-snapshot"]
 
-    assert {:ok, %SuccessStatus{success: true}} =
-             Operations.take_snapshot(params)
+    assert {:ok, %SuccessStatus{success: true}} = Operations.take_snapshot(params)
 
-    Process.sleep(50)
+    Process.sleep(@rate_limit)
     assert {:ok, %SuccessStatus{success: true}} = Operations.take_snapshot(conn, params)
-    Process.sleep(50)
+
+    Process.sleep(@rate_limit)
     assert {:ok, %SuccessStatus{success: true}} = Operations.take_snapshot(map_conn, params)
   end
 

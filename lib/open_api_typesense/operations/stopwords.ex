@@ -135,9 +135,9 @@ defmodule OpenApiTypesense.Stopwords do
 
   @doc """
   Either one of:
-  - `retrieve_stopwords_sets(setId, opts)`
-  - `retrieve_stopwords_sets(%{api_key: xyz, host: ...}, setId)`
-  - `retrieve_stopwords_sets(Connection.new(), setId)`
+  - `retrieve_stopwords_sets(opts)`
+  - `retrieve_stopwords_sets(%{api_key: xyz, host: ...})`
+  - `retrieve_stopwords_sets(Connection.new())`
   """
   @spec retrieve_stopwords_sets(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()} | :error
@@ -151,8 +151,8 @@ defmodule OpenApiTypesense.Stopwords do
 
   @doc """
   Either one of:
-  - `retrieve_stopwords_sets(%{api_key: xyz, host: ...}, setId, opts)`
-  - `retrieve_stopwords_sets(Connection.new(), setId, opts)`
+  - `retrieve_stopwords_sets(%{api_key: xyz, host: ...}, opts)`
+  - `retrieve_stopwords_sets(Connection.new(), opts)`
   """
   @spec retrieve_stopwords_sets(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()} | :error
@@ -187,9 +187,9 @@ defmodule OpenApiTypesense.Stopwords do
 
   @doc """
   Either one of:
-  - `retrieve_stopwords_sets(setId, opts)`
-  - `retrieve_stopwords_sets(%{api_key: xyz, host: ...}, setId)`
-  - `retrieve_stopwords_sets(Connection.new(), setId)`
+  - `upsert_stopwords_set(setId, body, opts)`
+  - `upsert_stopwords_set(%{api_key: xyz, host: ...}, setId, body)`
+  - `upsert_stopwords_set(Connection.new(), setId, body)`
   """
   @spec upsert_stopwords_set(
           map() | Connection.t() | String.t(),
@@ -208,8 +208,8 @@ defmodule OpenApiTypesense.Stopwords do
 
   @doc """
   Either one of:
-  - `retrieve_stopwords_sets(%{api_key: xyz, host: ...}, setId, opts)`
-  - `retrieve_stopwords_sets(Connection.new(), setId, opts)`
+  - `upsert_stopwords_set(%{api_key: xyz, host: ...}, setId, body, opts)`
+  - `upsert_stopwords_set(Connection.new(), setId, body, opts)`
   """
   @spec upsert_stopwords_set(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.StopwordsSetSchema.t()}

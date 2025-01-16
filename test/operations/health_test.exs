@@ -22,19 +22,31 @@ defmodule HealthTest do
     assert {:ok, %HealthStatus{ok: true}} = Health.health(map_conn, [])
   end
 
-  # Note: adding this test will add 5+ seconds!
-  # @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  # test "error: health check timeout" do
-  #   conn =
-  #     Connection.new(%{
-  #       api_key: "wrong_key",
-  #       host: "127.1.1.1",
-  #       port: 8108,
-  #       scheme: "http"
-  #     })
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "error: health check timeout" do
+    conn =
+      Connection.new(%{
+        api_key: "wrong_key",
+        host: "17.17.17.17",
+        port: 8108,
+        scheme: "http"
+      })
 
-  #   assert Health.health(conn, []) === {:error, "timeout"}
-  # end
+    assert {:error, "timeout"} = Health.health(conn, [])
+  end
+
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "error: health check connection refused" do
+    conn =
+      Connection.new(%{
+        api_key: "wrong_key",
+        host: "localhost",
+        port: 8119,
+        scheme: "http"
+      })
+
+    assert {:error, "connection refused"} = Health.health(conn, [])
+  end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "error: health check non-existing domain" do

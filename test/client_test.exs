@@ -56,7 +56,7 @@ defmodule ClientTest do
     end
 
     defp handle_response(status_code, _headers, body) do
-      Logger.warn("Request failed with status #{status_code} and body: #{body}")
+      Logger.warning("Request failed with status #{status_code} and body: #{body}")
       {:error, %{status: status_code, body: body}}
     end
 
@@ -76,14 +76,14 @@ defmodule ClientTest do
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "returns the configured options" do
-    Application.put_env(:open_api_typesense, :options, %{
+    Application.put_env(:open_api_typesense, :options,
       finch: MyApp.CustomFinch,
       receive_timeout: 5_000
-    })
+    )
 
     options = Application.get_env(:open_api_typesense, :options)
 
-    assert options == %{finch: MyApp.CustomFinch, receive_timeout: 5_000}
+    assert options === [finch: MyApp.CustomFinch, receive_timeout: 5_000]
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
@@ -92,7 +92,7 @@ defmodule ClientTest do
 
     options = Application.get_env(:open_api_typesense, :options)
 
-    assert options == nil
+    assert options === nil
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
@@ -107,13 +107,13 @@ defmodule ClientTest do
 
     conn = OpenApiTypesense.Connection.new(map_conn)
 
-    assert CustomClient == Application.get_env(:open_api_typesense, :client)
+    assert CustomClient === Application.get_env(:open_api_typesense, :client)
 
-    assert {:ok, %{"ok" => true}} == OpenApiTypesense.Health.health()
-    assert {:ok, %{"ok" => true}} == OpenApiTypesense.Health.health([])
-    assert {:ok, %{"ok" => true}} == OpenApiTypesense.Health.health(conn)
-    assert {:ok, %{"ok" => true}} == OpenApiTypesense.Health.health(map_conn)
-    assert {:ok, %{"ok" => true}} == OpenApiTypesense.Health.health(conn, [])
-    assert {:ok, %{"ok" => true}} == OpenApiTypesense.Health.health(map_conn, [])
+    assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health()
+    assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health([])
+    assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health(conn)
+    assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health(map_conn)
+    assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health(conn, [])
+    assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health(map_conn, [])
   end
 end

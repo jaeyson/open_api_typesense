@@ -17,6 +17,9 @@ config :open_api_typesense,
 
 ```elixir
 defmodule CustomClient do
+  @behaviour OpenApiTypesense.Client
+  
+  @impl OpenApiTypesense.Client
   def request(conn, params) do
     uri =
       %URI{
@@ -84,6 +87,9 @@ end
 
 ```elixir
 defmodule MyApp.CustomClient do
+  @behaviour OpenApiTypesense.Client
+  
+  @impl OpenApiTypesense.Client
   def request(conn, params) do
     url = %URI{
       scheme: conn.scheme,
@@ -126,6 +132,9 @@ end
 
 ```elixir
 defmodule MyApp.CustomClient do
+  @behaviour OpenApiTypesense.Client
+  
+  @impl OpenApiTypesense.Client
   def request(conn, params) do
     url = %URI{
       scheme: conn.scheme,
@@ -169,6 +178,9 @@ end
 
 ```elixir
 defmodule MyApp.CustomClient do
+  @behaviour OpenApiTypesense.Client
+  
+  @impl OpenApiTypesense.Client
   def request(conn, params) do
     url = %URI{
       scheme: conn.scheme,
@@ -252,27 +264,15 @@ end
 
 ## [Finch](https://hexdocs.pm/finch)
 
-Add to your supervision tree:
+<!-- tabs-open -->
 
-```elixir
-# e.g. lib/my_app/application.ex
-  @impl true
-  def start(_type, _args) do
-    children = [
-      # Starts a worker by calling: Githubber.Worker.start_link(arg)
-      # {Githubber.Worker, arg}
-      {Finch, name: MyFinch} # <- add this
-    ]
-
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Githubber.Supervisor]
-    Supervisor.start_link(children, opts)
-  end
-```
+### Client
 
 ```elixir
 defmodule MyApp.CustomClient do
+  @behaviour OpenApiTypesense.Client
+  
+  @impl OpenApiTypesense.Client
   def request(conn, _params) do
     uri = %URI{
       scheme: conn.scheme,
@@ -314,7 +314,34 @@ defmodule MyApp.CustomClient do
 end
 ```
 
+### `application.ex`
+
+Add to your supervision tree:
+
+```elixir
+# e.g. lib/my_app/application.ex
+  @impl true
+  def start(_type, _args) do
+    children = [
+      # Starts a worker by calling: Githubber.Worker.start_link(arg)
+      # {Githubber.Worker, arg}
+      {Finch, name: MyFinch} # <- add this
+    ]
+
+    # See https://hexdocs.pm/elixir/Supervisor.html
+    # for other strategies and supported options
+    opts = [strategy: :one_for_one, name: Githubber.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+```
+
+<!-- tabs-close -->
+
 ## [Tesla](https://hexdocs.pm/tesla)
+
+<!-- tabs-open -->
+
+### Adapter
 
 ```elixir
 # e.g. config/config.exs
@@ -322,6 +349,8 @@ import Config
 
 config :tesla, adapter: Tesla.Adapter.Hackney
 ```
+
+### Config
 
 ```elixir
 # e.g. config/runtime.exs
@@ -333,8 +362,13 @@ config :open_api_typesense,
   client: MyApp.CustomClient
 ```
 
+### Client
+
 ```elixir
 defmodule MyApp.CustomClient do
+  @behaviour OpenApiTypesense.Client
+  
+  @impl OpenApiTypesense.Client
   def request(conn, params) do
     url =
       %URI{
@@ -385,10 +419,15 @@ defmodule MyApp.CustomClient do
 end
 ```
 
+<!-- tabs-close -->
+
 ## [`:gun`](https://hexdocs.pm/gun)
 
 ```elixir
 defmodule MyApp.CustomClient do
+  @behaviour OpenApiTypesense.Client
+  
+  @impl OpenApiTypesense.Client
   def request(conn, params) do
     # Open a connection
     {:ok, pid} =

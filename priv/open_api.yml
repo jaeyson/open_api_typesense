@@ -291,6 +291,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '409':
+          description: Document already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
     patch:
       tags:
         - documents
@@ -471,6 +477,16 @@ paths:
           required: true
           schema:
             type: string
+        - name: limit
+          in: query
+          description: Limit results in paginating on collection listing.
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: Skip a certain number of results and start after that.
+          schema:
+            type: string
       responses:
         '200':
           description: List of all search overrides
@@ -604,6 +620,16 @@ paths:
           in: path
           description: The name of the collection
           required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Limit results in paginating on collection listing.
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: Skip a certain number of results and start after that.
           schema:
             type: string
       responses:
@@ -1423,6 +1449,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessStatus'
+        '409':
+          description: Another snapshot is in progress.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /operations/vote:
     post:
       tags:

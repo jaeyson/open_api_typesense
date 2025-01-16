@@ -137,6 +137,12 @@ defmodule OpenApiTypesense.Synonyms do
 
   @doc """
   List all collection synonyms
+
+  ## Options
+
+    * `limit`: Limit results in paginating on collection listing.
+    * `offset`: Skip a certain number of results and start after that.
+
   """
   @spec get_search_synonyms(String.t()) ::
           {:ok, OpenApiTypesense.SearchSynonymsResponse.t()}
@@ -177,12 +183,14 @@ defmodule OpenApiTypesense.Synonyms do
 
   def get_search_synonyms(%Connection{} = conn, collectionName, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
+    query = Keyword.take(opts, [:limit, :offset])
 
     client.request(conn, %{
       args: [collectionName: collectionName],
       call: {OpenApiTypesense.Synonyms, :get_search_synonyms},
       url: "/collections/#{collectionName}/synonyms",
       method: :get,
+      query: query,
       response: [
         {200, {OpenApiTypesense.SearchSynonymsResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}

@@ -24,16 +24,12 @@ defmodule OpenApiTypesense.Health do
   """
   @spec health(Connection.t() | map() | keyword()) ::
           {:ok, OpenApiTypesense.HealthStatus.t()} | :error
-  def health(%Connection{} = conn) when is_struct(conn) do
-    health(conn, [])
-  end
-
-  def health(conn) when not is_struct(conn) and is_map(conn) do
-    health(conn, [])
-  end
-
   def health(opts) when is_list(opts) do
     health(Connection.new(), opts)
+  end
+
+  def health(conn) do
+    health(conn, [])
   end
 
   @doc """

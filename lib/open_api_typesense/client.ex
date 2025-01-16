@@ -166,15 +166,7 @@ defmodule OpenApiTypesense.Client do
   #   end
   # end
 
-  defp parse_resp(%Req.TransportError{} = error, _opts_resp) do
-    {:error, Exception.message(error)}
-  end
-
-  defp parse_resp(%Req.HTTPError{} = error, _opts_resp) do
-    {:error, Exception.message(error)}
-  end
-
-  defp parse_resp(resp, opts_resp) do
+  defp parse_resp(%Req.Response{} = resp, opts_resp) do
     {code, values} =
       opts_resp
       |> Enum.find(fn {code, _values} ->
@@ -182,6 +174,10 @@ defmodule OpenApiTypesense.Client do
       end)
 
     parse_values(code, values, resp.body)
+  end
+
+  defp parse_resp(error, _opts_resp) do
+    {:error, Exception.message(error)}
   end
 
   @spec parse_values(

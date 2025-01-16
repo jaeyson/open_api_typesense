@@ -15,12 +15,12 @@ defmodule OverrideTest do
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "error: retrieve an override", %{conn: conn, map_conn: map_conn} do
     assert {:error, %ApiResponse{message: "Not Found"}} =
-             Override.get_search_override("helmets", 1)
+             Override.get_search_override("helmets", "custom-helmet")
 
-    assert {:error, _} = Override.get_search_override("helmets", 1, [])
-    assert {:error, _} = Override.get_search_override(conn, "helmets", 1)
-    assert {:error, _} = Override.get_search_override(map_conn, "helmets", 1)
-    assert {:error, _} = Override.get_search_override(conn, "helmets", 1, [])
-    assert {:error, _} = Override.get_search_override(map_conn, "helmets", 1, [])
+    assert {:error, _} = Override.get_search_override("helmets", "custom-helmet", [])
+    assert {:error, _} = Override.get_search_override(conn, "helmets", "custom-helmet")
+    assert {:error, _} = Override.get_search_override(map_conn, "helmets", "custom-helmet")
+    assert {:error, _} = Override.get_search_override(conn, "helmets", "custom-helmet", [])
+    assert {:error, _} = Override.get_search_override(map_conn, "helmets", "custom-helmet", [])
   end
 end
