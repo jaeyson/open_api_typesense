@@ -27,7 +27,7 @@ defmodule HealthTest do
     conn =
       Connection.new(%{
         api_key: "wrong_key",
-        host: "127.1.1.1",
+        host: "17.17.17.17",
         port: 8108,
         scheme: "http"
       })
