@@ -54,9 +54,27 @@ if config_env() == :prod do # if you'll use this in prod environment
   ...
 ```
 
-> **Note**: The `options` key can be used to pass additional configuration options such as custom Finch instance or receive timeout settings. You can add any options supported by Req here. For more details check [Req documentation](https://hexdocs.pm/req/Req.Steps.html#run_finch/1-request-options).
+> #### `options` key {: .tip}
+>
+> The `options` key can be used to pass additional configuration
+> options such as custom Finch instance or receive timeout
+> settings. You can add any options supported by Req here. For
+> more details check [Req documentation](https://hexdocs.pm/req/Req.Steps.html#run_finch/1-request-options).
 
-> **Note**: If you use this for adding tests in your app, you might want to add this in `config/test.exs`:
+```
+config :open_api_typesense,
+  api_key: "credential", # Admin API key
+  host: "111222333aaabbbcc-9.x9.typesense.net", # Nodes
+  port: 443,
+  scheme: "https"
+  options: [finch: MyApp.CustomFinch] # <- add options
+```
+
+> #### during tests {: .tip}
+>
+> If you have a different config for your app, consider 
+> adding it in `config/test.exs`.
+
 
 For Cloud hosted, you can generate and obtain the credentials from cluster instance admin interface:
 
@@ -85,8 +103,15 @@ called `request` that contains 2 args:
 Here's a custom client example ([`HTTPoison`](https://hexdocs.pm/httpoison/readme.html))
 in order to match the usage:
 
+<!-- tabs-open -->
+
+### Client module
+
 ```elixir
 defmodule MyApp.CustomClient do
+  @behaviour OpenApiTypesense.Client
+  
+  @impl OpenApiTypesense.Client
   def request(conn, params) do
     url = %URI{
       scheme: conn.scheme,
@@ -102,7 +127,7 @@ defmodule MyApp.CustomClient do
     request =
       if params[:request] do
         [{content_type, _schema}] = params.request
-        
+
         headers = [
           {"X-TYPESENSE-API-KEY", conn.api_key}
           {"Content-Type", content_type}
@@ -125,41 +150,28 @@ defmodule MyApp.CustomClient do
 end
 ```
 
-Then add your client in your config file:
+### Client config
 
 ```elixir
 config :open_api_typesense,
-  api_key: "credential", # Admin API key
-  host: "111222333aaabbbcc-9.x9.typesense.net", # Nodes
-  port: 443,
-  scheme: "https",
+  api_key: "xyz", # Admin API key
+  host: "localhost", # Nodes
+  port: 8108,
+  scheme: "http",
   client: MyApp.CustomClient # <- add this
 ```
 
-And here's a reference taken from one of functions from [`Collections`](https://hexdocs.pm/open_api_typesense/OpenApiTypesense.Collections.html#create_collection/3), as
-you may want to match the params:
-
-```elixir
-def create_collection(%Connection{} = conn, body, opts) when is_struct(conn) do
-  client = opts[:client] || @default_client
-  query = Keyword.take(opts, [:src_name])
-
-  client.request(conn, %{
-    args: [body: body],
-    call: {OpenApiTypesense.Collections, :create_collection},
-    url: "/collections",
-    body: body,
-    method: :post,
-    query: query,
-    request: [{"application/json", {OpenApiTypesense.CollectionSchema, :t}}],
-    response: [
-      {201, {OpenApiTypesense.CollectionResponse, :t}},
-      {400, {OpenApiTypesense.ApiResponse, :t}},
-      {409, {OpenApiTypesense.ApiResponse, :t}}
-    ],
-    opts: opts
-  })
-end
-```
+<!-- tabs-close -->
 
 Check [the examples](./guides/custom_http_client.md) on some HTTP client implementations.
+
+## Adding [cache, retry, compress_body](https://hexdocs.pm/req/Req.html#new/1) in the built in client
+
+E.g. when a user wants to change `retry` and `cache` options
+
+```elixir
+ExTypesense.get_collection("companies", req: [retry: false, cache: true])
+```
+
+See implementation [OpenApiTypesense.Client](`OpenApiTypesense.Client`) https://github.com/jaeyson/open_api_typesense/blob/main/lib/open_api_typesense/client.ex
+

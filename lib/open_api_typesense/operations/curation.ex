@@ -71,6 +71,12 @@ defmodule OpenApiTypesense.Curation do
 
   @doc """
   List all collection overrides
+
+  ## Options
+
+    * `limit`: Limit results in paginating on collection listing.
+    * `offset`: Skip a certain number of results and start after that.
+
   """
   @spec get_search_overrides(String.t()) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
@@ -109,13 +115,18 @@ defmodule OpenApiTypesense.Curation do
 
   def get_search_overrides(%Connection{} = conn, collectionName, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
+    query = Keyword.take(opts, [:limit, :offset])
 
     client.request(conn, %{
       args: [collectionName: collectionName],
       call: {OpenApiTypesense.Curation, :get_search_overrides},
       url: "/collections/#{collectionName}/overrides",
       method: :get,
-      response: [{200, {OpenApiTypesense.SearchOverridesResponse, :t}}],
+      query: query,
+      response: [
+        {200, {OpenApiTypesense.SearchOverridesResponse, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end

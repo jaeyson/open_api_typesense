@@ -94,24 +94,6 @@ defmodule OpenApiTypesense.Client do
     # options like retry, max_retries, etc. can be found in:
     # https://hexdocs.pm/req/Req.Steps.html#retry/1
     # NOTE: look at source code in Github
-    retry =
-      if Mix.env() === :test do
-        # disabled in order to cut time in tests
-        false
-      else
-        # default is :safe_transient
-        opts[:req][:retry] || :safe_transient
-      end
-
-    max_retries =
-      if Mix.env() === :test do
-        # disabled in order to cut time in tests
-        0
-      else
-        # default is 3
-        opts[:req][:max_retries] || 3
-      end
-
     url =
       %URI{
         scheme: conn.scheme,
@@ -126,8 +108,8 @@ defmodule OpenApiTypesense.Client do
         method: opts[:method] || :get,
         body: encode_body(opts),
         url: url,
-        retry: retry,
-        max_retries: max_retries,
+        retry: opts[:req][:retry] || :safe_transient,
+        max_retries: opts[:req][:max_retries] || 3,
         compress_body: opts[:req][:compress] || false,
         cache: opts[:req][:cache] || false,
         decode_json: [keys: :atoms]
@@ -166,15 +148,7 @@ defmodule OpenApiTypesense.Client do
   #   end
   # end
 
-  defp parse_resp(%Req.TransportError{} = error, _opts_resp) do
-    {:error, Exception.message(error)}
-  end
-
-  defp parse_resp(%Req.HTTPError{} = error, _opts_resp) do
-    {:error, Exception.message(error)}
-  end
-
-  defp parse_resp(resp, opts_resp) do
+  defp parse_resp(%Req.Response{} = resp, opts_resp) do
     {code, values} =
       opts_resp
       |> Enum.find(fn {code, _values} ->
@@ -182,6 +156,10 @@ defmodule OpenApiTypesense.Client do
       end)
 
     parse_values(code, values, resp.body)
+  end
+
+  defp parse_resp(error, _opts_resp) do
+    {:error, Exception.message(error)}
   end
 
   @spec parse_values(

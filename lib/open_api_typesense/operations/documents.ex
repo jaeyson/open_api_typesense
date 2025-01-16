@@ -559,7 +559,11 @@ defmodule OpenApiTypesense.Documents do
       method: :post,
       query: query,
       request: [{"application/json", :map}],
-      response: [{201, :map}, {404, {OpenApiTypesense.ApiResponse, :t}}],
+      response: [
+        {201, :map},
+        {404, {OpenApiTypesense.ApiResponse, :t}},
+        {409, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end

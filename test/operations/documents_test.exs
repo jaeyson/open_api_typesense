@@ -326,7 +326,7 @@ defmodule DocumentsTest do
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
-  test "success: delete a document", %{coll_name: coll_name} do
+  test "success: delete a document", %{coll_name: coll_name, conn: conn, map_conn: map_conn} do
     shoes_id = 420
 
     body =
@@ -344,8 +344,19 @@ defmodule DocumentsTest do
         price: "usd 109.95"
       }
 
-    {:ok, %{id: id}} = Documents.index_document(coll_name, body)
+    {:ok, %{id: id, shoes_id: ^shoes_id}} = Documents.index_document(coll_name, body)
+
     assert {:ok, %{id: ^id}} = Documents.delete_document(coll_name, id)
+
+    error = "Could not find a document with id: #{id}"
+
+    assert {:error, %ApiResponse{message: ^error}} =
+             Documents.delete_document(coll_name, id, [])
+
+    assert {:error, _} = Documents.delete_document(conn, coll_name, id)
+    assert {:error, _} = Documents.delete_document(map_conn, coll_name, id)
+    assert {:error, _} = Documents.delete_document(conn, coll_name, id, [])
+    assert {:error, _} = Documents.delete_document(map_conn, coll_name, id, [])
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
