@@ -6,9 +6,7 @@ defmodule ConnectionTest do
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]
   test "new/0 using the default config to creates a connection struct" do
-    conn = Connection.new()
-
-    assert conn == %Connection{
+    assert Connection.new() === %Connection{
              api_key: "xyz",
              host: "localhost",
              port: 8108,
@@ -26,12 +24,18 @@ defmodule ConnectionTest do
         api_key: "myapikey"
       })
 
-    assert conn == %Connection{
+    assert conn === %Connection{
              api_key: "myapikey",
              host: "otherhost",
              port: 9200,
              scheme: "https"
            }
+  end
+
+  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  test "new/1 with Connection struct" do
+    conn = Connection.new()
+    assert %Connection{} = Connection.new(conn)
   end
 
   @tag ["27.1": true, "26.0": true, "0.25.2": true]

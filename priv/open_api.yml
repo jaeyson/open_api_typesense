@@ -1449,6 +1449,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessStatus'
+        '409':
+          description: Another snapshot is in progress.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /operations/vote:
     post:
       tags:

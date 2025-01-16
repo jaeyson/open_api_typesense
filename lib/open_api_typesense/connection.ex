@@ -49,6 +49,10 @@ defmodule OpenApiTypesense.Connection do
 
   @doc since: "0.2.0"
   @spec new(t() | map()) :: %__MODULE__{}
+  def new(%__MODULE__{} = connection) when is_struct(connection) do
+    connection
+  end
+
   def new(connection) when is_map(connection) do
     missing_fields = Enum.sort(required_fields() -- Map.keys(connection))
 

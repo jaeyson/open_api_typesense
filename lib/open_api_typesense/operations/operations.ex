@@ -142,7 +142,10 @@ defmodule OpenApiTypesense.Operations do
       url: "/operations/snapshot",
       method: :post,
       query: query,
-      response: [{201, {OpenApiTypesense.SuccessStatus, :t}}],
+      response: [
+        {201, {OpenApiTypesense.SuccessStatus, :t}},
+        {409, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
