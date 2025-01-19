@@ -78,7 +78,7 @@ defmodule AnalyticsTest do
     %{conn: conn, map_conn: map_conn}
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "error: create analytics rule with non-existent collection", %{
     conn: conn,
     map_conn: map_conn
@@ -114,7 +114,7 @@ defmodule AnalyticsTest do
              Analytics.create_analytics_rule(map_conn, body, [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": false]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: upsert analytics rule", %{conn: conn, map_conn: map_conn} do
     name = "product_no_hits"
 
@@ -151,7 +151,7 @@ defmodule AnalyticsTest do
              Analytics.upsert_analytics_rule(map_conn, name, body, [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "error: create analytics rule with wrong field" do
     name = "products_test_query"
     field_name = "wrong_field"
@@ -177,7 +177,7 @@ defmodule AnalyticsTest do
     assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body)
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: list analytics rules", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %AnalyticsRulesRetrieveSchema{rules: rules}} =
              Analytics.retrieve_analytics_rules()
@@ -200,7 +200,7 @@ defmodule AnalyticsTest do
              Analytics.retrieve_analytics_rules(map_conn, [])
   end
 
-  @tag ["27.1": true, "26.0": false, "0.25.2": false]
+  @tag ["27.1": true, "27.0": true, "26.0": false]
   test "success (v27.1): create analytics rule and event", %{conn: conn, map_conn: map_conn} do
     name = "product_popularity"
 

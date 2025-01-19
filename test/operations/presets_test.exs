@@ -33,7 +33,7 @@ defmodule PresetsTest do
     %{conn: conn, map_conn: map_conn}
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: list presets", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %PresetsRetrieveSchema{presets: presets}} = Presets.retrieve_all_presets()
     assert length(presets) >= 1
@@ -45,7 +45,7 @@ defmodule PresetsTest do
     assert {:ok, _} = Presets.retrieve_all_presets(map_conn, [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: get a preset", %{conn: conn, map_conn: map_conn} do
     assert {:error, %ApiResponse{message: "Not found."}} = Presets.retrieve_preset("listing_view")
     assert {:error, _} = Presets.retrieve_preset("listing_view", [])
@@ -55,7 +55,7 @@ defmodule PresetsTest do
     assert {:error, _} = Presets.retrieve_preset(map_conn, "listing_view", [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: upsert a preset", %{conn: conn, map_conn: map_conn} do
     body =
       %{
@@ -76,7 +76,7 @@ defmodule PresetsTest do
     assert {:ok, _} = Presets.upsert_preset(map_conn, "restaurant_view", body, [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: delete a preset", %{conn: conn, map_conn: map_conn} do
     body =
       %{

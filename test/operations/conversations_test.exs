@@ -34,7 +34,7 @@ defmodule ConversationsTest do
     %{conn: conn, map_conn: map_conn}
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": false]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: list conversation models", %{conn: conn, map_conn: map_conn} do
     assert {:ok, models} = Conversations.retrieve_all_conversation_models()
     assert length(models) >= 0
@@ -45,7 +45,7 @@ defmodule ConversationsTest do
     assert {:ok, _} = Conversations.retrieve_all_conversation_models(map_conn, [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": false]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "error: get a non-existent conversation model", %{conn: conn, map_conn: map_conn} do
     assert {:error, %ApiResponse{message: "Model not found"}} =
              Conversations.retrieve_conversation_model("non-existent")
@@ -57,7 +57,7 @@ defmodule ConversationsTest do
     assert {:error, _} = Conversations.retrieve_conversation_model(map_conn, "xyz", [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": false]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: delete a conversation model", %{conn: conn, map_conn: map_conn} do
     assert {:error, %ApiResponse{message: "Model not found"}} =
              Conversations.delete_conversation_model("non-existent")
@@ -69,7 +69,7 @@ defmodule ConversationsTest do
     assert {:error, _} = Conversations.delete_conversation_model(map_conn, "xyz", [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": false]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "error: create a conversation model with incorrect API key", %{
     conn: conn,
     map_conn: map_conn
@@ -102,7 +102,7 @@ defmodule ConversationsTest do
     assert {:error, _} = Conversations.create_conversation_model(map_conn, body, [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": false]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "error: update a conversation model with incorrect API key", %{
     conn: conn,
     map_conn: map_conn

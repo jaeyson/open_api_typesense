@@ -32,7 +32,7 @@ defmodule SynonymsTest do
     %{coll_name: collection_name, conn: conn, map_conn: map_conn}
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: list collection synonyms", %{
     coll_name: coll_name,
     conn: conn,
@@ -50,7 +50,7 @@ defmodule SynonymsTest do
     assert {:ok, _} = Synonyms.get_search_synonyms(map_conn, coll_name, [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: upsert a collection synonym", %{
     coll_name: coll_name,
     conn: conn,
@@ -74,7 +74,7 @@ defmodule SynonymsTest do
     assert {:ok, _} = Synonyms.upsert_search_synonym(map_conn, coll_name, synonym_id, body, [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: delete a collection synonym", %{
     coll_name: coll_name,
     conn: conn,
@@ -99,7 +99,7 @@ defmodule SynonymsTest do
     assert {:error, _} = Synonyms.delete_search_synonym(map_conn, coll_name, synonym_id, [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: get a collection synonym", %{
     coll_name: coll_name,
     conn: conn,
