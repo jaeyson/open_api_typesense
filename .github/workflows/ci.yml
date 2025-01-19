@@ -73,8 +73,8 @@ jobs:
           -v /tmp/typesense-data:/data \
           -v /tmp/typesense-analytics-data:/analytics-data \
           typesense/typesense:${{ matrix.typesense}} \
-          --api-key=xyz \
-          --data-dir=/data \
+          --api-key xyz \
+          --data-dir /data \
           --enable-search-analytics=true \
           --analytics-dir=/analytics-data  \
           --analytics-flush-interval=60 \
