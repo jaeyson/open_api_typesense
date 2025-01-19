@@ -13,7 +13,7 @@ defmodule OpenApiTypesense.Override do
   Retrieve the details of a search override, given its id.
   """
   @spec get_search_override(String.t(), String.t()) ::
-          {:ok, OpenApiTypesense.SearchOverride.t()} | :error
+          {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_override(collectionName, overrideId) do
     get_search_override(Connection.new(), collectionName, overrideId)
   end
@@ -29,7 +29,7 @@ defmodule OpenApiTypesense.Override do
           String.t(),
           String.t() | keyword()
         ) ::
-          {:ok, OpenApiTypesense.SearchOverride.t()} | :error
+          {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_override(collectionName, overrideId, opts)
       when is_list(opts) and is_binary(collectionName) do
     get_search_override(Connection.new(), collectionName, overrideId, opts)
@@ -45,7 +45,7 @@ defmodule OpenApiTypesense.Override do
   - `get_search_override(Connection.new(), collectionName, overrideId, opts)`
   """
   @spec get_search_override(map() | Connection.t(), String.t(), String.t(), keyword()) ::
-          {:ok, OpenApiTypesense.SearchOverride.t()} | :error
+          {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_override(conn, collectionName, overrideId, opts)
       when not is_struct(conn) and is_map(conn) do
     get_search_override(Connection.new(conn), collectionName, overrideId, opts)
@@ -62,6 +62,7 @@ defmodule OpenApiTypesense.Override do
       method: :get,
       response: [
         {200, {OpenApiTypesense.SearchOverride, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts

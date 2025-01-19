@@ -58,6 +58,7 @@ defmodule OpenApiTypesense.Keys do
       response: [
         {201, {OpenApiTypesense.ApiKey, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {409, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -117,6 +118,7 @@ defmodule OpenApiTypesense.Keys do
       response: [
         {200, {OpenApiTypesense.ApiKeyDeleteResponse, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -169,7 +171,11 @@ defmodule OpenApiTypesense.Keys do
       call: {OpenApiTypesense.Keys, :get_key},
       url: "/keys/#{keyId}",
       method: :get,
-      response: [{200, {OpenApiTypesense.ApiKey, :t}}, {404, {OpenApiTypesense.ApiResponse, :t}}],
+      response: [
+        {200, {OpenApiTypesense.ApiKey, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end

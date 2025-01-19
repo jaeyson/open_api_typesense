@@ -59,6 +59,7 @@ defmodule OpenApiTypesense.Stopwords do
       method: :delete,
       response: [
         {200, {OpenApiTypesense.Stopwords, :delete_stopwords_set_200_json_resp}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -116,6 +117,7 @@ defmodule OpenApiTypesense.Stopwords do
       method: :get,
       response: [
         {200, {OpenApiTypesense.StopwordsSetRetrieveSchema, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -128,7 +130,8 @@ defmodule OpenApiTypesense.Stopwords do
   Retrieve the details of all stopwords sets
   """
   @spec retrieve_stopwords_sets ::
-          {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()} | :error
+          {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_stopwords_sets do
     retrieve_stopwords_sets(Connection.new())
   end
@@ -140,7 +143,8 @@ defmodule OpenApiTypesense.Stopwords do
   - `retrieve_stopwords_sets(Connection.new())`
   """
   @spec retrieve_stopwords_sets(map() | Connection.t() | keyword()) ::
-          {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()} | :error
+          {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_stopwords_sets(opts) when is_list(opts) do
     retrieve_stopwords_sets(Connection.new(), opts)
   end
@@ -155,7 +159,8 @@ defmodule OpenApiTypesense.Stopwords do
   - `retrieve_stopwords_sets(Connection.new(), opts)`
   """
   @spec retrieve_stopwords_sets(map() | Connection.t(), keyword()) ::
-          {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()} | :error
+          {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_stopwords_sets(conn, opts) when not is_struct(conn) and is_map(conn) do
     retrieve_stopwords_sets(Connection.new(conn), opts)
   end
@@ -168,7 +173,10 @@ defmodule OpenApiTypesense.Stopwords do
       call: {OpenApiTypesense.Stopwords, :retrieve_stopwords_sets},
       url: "/stopwords",
       method: :get,
-      response: [{200, {OpenApiTypesense.StopwordsSetsRetrieveAllSchema, :t}}],
+      response: [
+        {200, {OpenApiTypesense.StopwordsSetsRetrieveAllSchema, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -230,7 +238,8 @@ defmodule OpenApiTypesense.Stopwords do
       request: [{"application/json", {OpenApiTypesense.StopwordsSetUpsertSchema, :t}}],
       response: [
         {200, {OpenApiTypesense.StopwordsSetSchema, :t}},
-        {400, {OpenApiTypesense.ApiResponse, :t}}
+        {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })

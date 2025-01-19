@@ -86,6 +86,12 @@ paths:
                 x-go-type: '[]*CollectionResponse'
                 items:
                   $ref: '#/components/schemas/CollectionResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
       parameters:
         - name: limit
           in: query
@@ -126,6 +132,12 @@ paths:
                 $ref: '#/components/schemas/CollectionResponse'
         '400':
           description: 'Bad request, see error message for details'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
           content:
             application/json:
               schema:
@@ -206,6 +218,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: The collection was not found
           content:
@@ -234,6 +252,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CollectionResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Collection not found
           content:
@@ -285,6 +309,12 @@ paths:
               schema:
                 type: object
                 description: Can be any key-value pair
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Collection not found
           content:
@@ -349,6 +379,12 @@ paths:
                     example: 1
         '400':
           description: 'Bad request, see error message for details'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
           content:
             application/json:
               schema:
@@ -419,6 +455,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Collection not found
           content:
@@ -453,6 +495,12 @@ paths:
                 $ref: '#/components/schemas/SearchResult'
         '400':
           description: 'Bad request, see error message for details'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
           content:
             application/json:
               schema:
@@ -494,6 +542,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchOverridesResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: List of search overrides not found
           content:
@@ -528,6 +582,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchOverride'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Search override not found
           content:
@@ -571,6 +631,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchOverride'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Search override not found
           content:
@@ -603,6 +669,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchOverrideDeleteResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Search override not found
           content:
@@ -639,6 +711,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchSynonymsResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Search synonyms was not found
           content:
@@ -672,6 +750,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchSynonym'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Search synonym was not found
           content:
@@ -713,6 +797,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchSynonym'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Search synonym was not found
           content:
@@ -744,6 +834,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchSynonymDeleteResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Search synonym not found
           content:
@@ -797,6 +893,12 @@ paths:
 
                   {"id": "126", "company_name": "Random Corp.", "num_employees":
                   531,"country": "AU"}
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: The collection was not found
           content:
@@ -907,6 +1009,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: The collection was not found
           content:
@@ -953,6 +1061,12 @@ paths:
               schema:
                 type: object
                 description: Can be any key-value pair
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: The document or collection was not found
           content:
@@ -1002,6 +1116,12 @@ paths:
               schema:
                 type: object
                 description: Can be any key-value pair
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: The document or collection was not found
           content:
@@ -1040,6 +1160,12 @@ paths:
               schema:
                 type: object
                 description: Can be any key-value pair
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: The document or collection was not found
           content:
@@ -1060,6 +1186,12 @@ paths:
                 type: array
                 x-go-type: '[]*ConversationModelSchema'
           description: List of all conversation models
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
       summary: List all conversation models
       tags:
         - conversations
@@ -1079,6 +1211,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConversationModelSchema'
           description: Created Conversation Model
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '400':
           content:
             application/json:
@@ -1105,6 +1243,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConversationModelSchema'
           description: A conversation model
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Model not found
           content:
@@ -1137,6 +1281,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConversationModelSchema'
           description: The conversation model was successfully updated
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Model not found
           content:
@@ -1163,6 +1313,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConversationModelSchema'
           description: The conversation model was successfully deleted
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Model not found
           content:
@@ -1214,6 +1370,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '409':
           description: API key generation conflict
           content:
@@ -1245,6 +1407,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiKey'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: The key was not found
           content:
@@ -1277,6 +1445,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Key not found
           content:
@@ -1297,6 +1471,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CollectionAliasesResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   '/aliases/{aliasName}':
     put:
       tags:
@@ -1335,6 +1515,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Alias not found
           content:
@@ -1361,6 +1547,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CollectionAlias'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: The alias was not found
           content:
@@ -1386,6 +1578,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CollectionAlias'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Alias not found
           content:
@@ -1409,6 +1607,12 @@ paths:
                 properties:
                   version:
                     type: string
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /health:
     get:
       tags:
@@ -1449,6 +1653,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessStatus'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '409':
           description: Another snapshot is in progress.
           content:
@@ -1475,6 +1685,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessStatus'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /operations/db/compact:
     post:
       tags:
@@ -1494,6 +1710,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessStatus'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /operations/cache/clear:
     post:
       tags:
@@ -1510,6 +1732,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessStatus'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /config:
     post:
       tags:
@@ -1532,6 +1760,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessStatus'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /multi_search:
     post:
       operationId: multiSearch
@@ -1579,6 +1813,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /analytics/events:
     post:
       tags:
@@ -1604,6 +1844,12 @@ paths:
                 $ref: '#/components/schemas/AnalyticsEventCreateResponse'
         '400':
           description: 'Bad request, see error message for details'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
           content:
             application/json:
               schema:
@@ -1637,6 +1883,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Collection or field missing
           content:
@@ -1656,6 +1908,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnalyticsRulesRetrieveSchema'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   '/analytics/rules/{ruleName}':
     put:
       tags:
@@ -1690,6 +1948,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
     get:
       tags:
         - analytics
@@ -1710,6 +1974,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnalyticsRuleSchema'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Analytics rule not found
           content:
@@ -1756,6 +2026,12 @@ paths:
             application/json:
               schema:
                 type: object
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /stats.json:
     get:
       tags:
@@ -1770,6 +2046,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/APIStatsResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /stopwords:
     get:
       tags:
@@ -1784,6 +2066,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StopwordsSetsRetrieveAllSchema'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   '/stopwords/{setId}':
     put:
       tags:
@@ -1821,6 +2109,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
     get:
       tags:
         - stopwords
@@ -1842,6 +2136,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StopwordsSetRetrieveSchema'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Stopwords set not found.
           content:
@@ -1876,6 +2176,12 @@ paths:
                   - id
                 example: |
                   {"id": "countries"}
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Stopwords set not found.
           content:
@@ -1896,6 +2202,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PresetsRetrieveSchema'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   '/presets/{presetId}':
     get:
       tags:
@@ -1918,6 +2230,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PresetSchema'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Preset not found.
           content:
@@ -1958,6 +2276,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
     delete:
       tags:
         - presets
@@ -1979,6 +2303,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PresetDeleteSchema'
+        '401':
+          description: 'Missing API key'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Preset not found.
           content:

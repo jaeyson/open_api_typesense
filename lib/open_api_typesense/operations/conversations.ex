@@ -60,7 +60,8 @@ defmodule OpenApiTypesense.Conversations do
       request: [{"application/json", {OpenApiTypesense.ConversationModelCreateSchema, :t}}],
       response: [
         {200, {OpenApiTypesense.ConversationModelSchema, :t}},
-        {400, {OpenApiTypesense.ApiResponse, :t}}
+        {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })
@@ -72,7 +73,8 @@ defmodule OpenApiTypesense.Conversations do
   Delete a conversation model
   """
   @spec delete_conversation_model(String.t()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
+          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_conversation_model(modelId) do
     delete_conversation_model(Connection.new(), modelId)
   end
@@ -84,7 +86,8 @@ defmodule OpenApiTypesense.Conversations do
   - `delete_conversation_model(Connection.new(), modelId)`
   """
   @spec delete_conversation_model(map() | Connection.t(), String.t(), String.t() | keyword()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
+          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_conversation_model(modelId, opts) when is_list(opts) and is_binary(modelId) do
     delete_conversation_model(Connection.new(), modelId, opts)
   end
@@ -99,7 +102,8 @@ defmodule OpenApiTypesense.Conversations do
   - `delete_conversation_model(Connection.new(), modelId, opts)`
   """
   @spec delete_conversation_model(map() | Connection.t(), String.t(), keyword()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
+          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_conversation_model(conn, modelId, opts) when not is_struct(conn) and is_map(conn) do
     delete_conversation_model(Connection.new(conn), modelId, opts)
   end
@@ -114,6 +118,7 @@ defmodule OpenApiTypesense.Conversations do
       method: :delete,
       response: [
         {200, {OpenApiTypesense.ConversationModelSchema, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -126,7 +131,8 @@ defmodule OpenApiTypesense.Conversations do
   Retrieve all conversation models
   """
   @spec retrieve_all_conversation_models ::
-          {:ok, [OpenApiTypesense.ConversationModelSchema.t()]} | :error
+          {:ok, [OpenApiTypesense.ConversationModelSchema.t()]}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_all_conversation_models do
     retrieve_all_conversation_models(Connection.new())
   end
@@ -138,7 +144,8 @@ defmodule OpenApiTypesense.Conversations do
   - `retrieve_all_conversation_models(Connection.new())`
   """
   @spec retrieve_all_conversation_models(map() | Connection.t() | keyword()) ::
-          {:ok, [OpenApiTypesense.ConversationModelSchema.t()]} | :error
+          {:ok, [OpenApiTypesense.ConversationModelSchema.t()]}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_all_conversation_models(opts) when is_list(opts) do
     retrieve_all_conversation_models(Connection.new(), opts)
   end
@@ -153,7 +160,8 @@ defmodule OpenApiTypesense.Conversations do
   - `retrieve_all_conversation_models(Connection.new(), opts)`
   """
   @spec retrieve_all_conversation_models(map() | Connection.t(), keyword()) ::
-          {:ok, [OpenApiTypesense.ConversationModelSchema.t()]} | :error
+          {:ok, [OpenApiTypesense.ConversationModelSchema.t()]}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_all_conversation_models(conn, opts) when not is_struct(conn) and is_map(conn) do
     retrieve_all_conversation_models(Connection.new(conn), opts)
   end
@@ -166,7 +174,10 @@ defmodule OpenApiTypesense.Conversations do
       call: {OpenApiTypesense.Conversations, :retrieve_all_conversation_models},
       url: "/conversations/models",
       method: :get,
-      response: [{200, [{OpenApiTypesense.ConversationModelSchema, :t}]}],
+      response: [
+        {200, [{OpenApiTypesense.ConversationModelSchema, :t}]},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -177,7 +188,8 @@ defmodule OpenApiTypesense.Conversations do
   Retrieve a conversation model
   """
   @spec retrieve_conversation_model(String.t()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
+          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_conversation_model(modelId) do
     retrieve_conversation_model(Connection.new(), modelId)
   end
@@ -189,7 +201,8 @@ defmodule OpenApiTypesense.Conversations do
   - `retrieve_conversation_model(Connection.new(), modelId)`
   """
   @spec retrieve_conversation_model(map() | Connection.t() | String.t(), String.t() | keyword()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
+          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_conversation_model(modelId, opts) when is_list(opts) and is_binary(modelId) do
     retrieve_conversation_model(Connection.new(), modelId, opts)
   end
@@ -204,7 +217,8 @@ defmodule OpenApiTypesense.Conversations do
   - `retrieve_conversation_model(Connection.new(), modelId, opts)`
   """
   @spec retrieve_conversation_model(map() | Connection.t(), String.t(), keyword()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
+          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_conversation_model(conn, modelId, opts)
       when not is_struct(conn) and is_map(conn) do
     retrieve_conversation_model(Connection.new(conn), modelId, opts)
@@ -220,6 +234,7 @@ defmodule OpenApiTypesense.Conversations do
       method: :get,
       response: [
         {200, {OpenApiTypesense.ConversationModelSchema, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -232,7 +247,8 @@ defmodule OpenApiTypesense.Conversations do
   Update a conversation model
   """
   @spec update_conversation_model(String.t(), map()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
+          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_conversation_model(modelId, body) do
     update_conversation_model(Connection.new(), modelId, body)
   end
@@ -247,7 +263,9 @@ defmodule OpenApiTypesense.Conversations do
           map() | Connection.t() | String.t(),
           String.t() | map(),
           map() | keyword()
-        ) :: {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
+        ) ::
+          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_conversation_model(modelId, body, opts) when is_list(opts) and is_binary(modelId) do
     update_conversation_model(Connection.new(), modelId, body, opts)
   end
@@ -262,7 +280,8 @@ defmodule OpenApiTypesense.Conversations do
   - `update_conversation_model(Connection.new(), modelId, body, opts)`
   """
   @spec update_conversation_model(map() | Connection.t(), String.t(), map(), keyword()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()} | :error
+          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_conversation_model(conn, modelId, body, opts)
       when not is_struct(conn) and is_map(conn) do
     update_conversation_model(Connection.new(conn), modelId, body, opts)
@@ -280,6 +299,7 @@ defmodule OpenApiTypesense.Conversations do
       request: [{"application/json", {OpenApiTypesense.ConversationModelUpdateSchema, :t}}],
       response: [
         {200, {OpenApiTypesense.ConversationModelSchema, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts

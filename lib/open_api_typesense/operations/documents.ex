@@ -65,7 +65,11 @@ defmodule OpenApiTypesense.Documents do
       url: "/collections/#{collectionName}/documents/#{documentId}",
       method: :delete,
       query: query,
-      response: [{200, :map}, {404, {OpenApiTypesense.ApiResponse, :t}}],
+      response: [
+        {200, :map},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -113,6 +117,7 @@ defmodule OpenApiTypesense.Documents do
       response: [
         {200, {OpenApiTypesense.Documents, :delete_documents_200_json_resp}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -175,6 +180,7 @@ defmodule OpenApiTypesense.Documents do
       method: :delete,
       response: [
         {200, {OpenApiTypesense.SearchOverrideDeleteResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -236,7 +242,11 @@ defmodule OpenApiTypesense.Documents do
       url: "/collections/#{collectionName}/documents/export",
       method: :get,
       query: query,
-      response: [{200, {:string, :generic}}, {404, {OpenApiTypesense.ApiResponse, :t}}],
+      response: [
+        {200, {:string, :generic}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -297,7 +307,11 @@ defmodule OpenApiTypesense.Documents do
       url: "/collections/#{collectionName}/documents/#{documentId}",
       method: :get,
       query: query,
-      response: [{200, :map}, {404, {OpenApiTypesense.ApiResponse, :t}}],
+      response: [
+        {200, :map},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -308,7 +322,8 @@ defmodule OpenApiTypesense.Documents do
   Retrieve the details of a search override, given its id.
   """
   @spec get_search_override(String.t(), String.t()) ::
-          {:ok, OpenApiTypesense.SearchOverride.t()} | :error
+          {:ok, OpenApiTypesense.SearchOverride.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_override(collectionName, overrideId) do
     get_search_override(Connection.new(), collectionName, overrideId)
   end
@@ -324,7 +339,8 @@ defmodule OpenApiTypesense.Documents do
           String.t(),
           String.t() | keyword()
         ) ::
-          {:ok, OpenApiTypesense.SearchOverride.t()} | :error
+          {:ok, OpenApiTypesense.SearchOverride.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_override(collectionName, overrideId, opts)
       when is_list(opts) and is_binary(collectionName) do
     get_search_override(Connection.new(), collectionName, overrideId, opts)
@@ -340,7 +356,8 @@ defmodule OpenApiTypesense.Documents do
   - `get_search_override(Connection.new(), collectionName, overrideId, opts)`
   """
   @spec get_search_override(map() | Connection.t(), String.t(), String.t(), keyword()) ::
-          {:ok, OpenApiTypesense.SearchOverride.t()} | :error
+          {:ok, OpenApiTypesense.SearchOverride.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_override(conn, collectionName, overrideId, opts)
       when not is_struct(conn) and is_map(conn) do
     get_search_override(Connection.new(conn), collectionName, overrideId, opts)
@@ -357,6 +374,7 @@ defmodule OpenApiTypesense.Documents do
       method: :get,
       response: [
         {200, {OpenApiTypesense.SearchOverride, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -367,7 +385,8 @@ defmodule OpenApiTypesense.Documents do
   List all collection overrides
   """
   @spec get_search_overrides(String.t()) ::
-          {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
+          {:ok, OpenApiTypesense.SearchOverridesResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_overrides(collectionName) do
     get_search_overrides(Connection.new(), collectionName)
   end
@@ -379,7 +398,8 @@ defmodule OpenApiTypesense.Documents do
   - `get_search_overrides(Connection.new(), collectionName)`
   """
   @spec get_search_overrides(map() | Connection.t() | String.t(), String.t() | keyword()) ::
-          {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
+          {:ok, OpenApiTypesense.SearchOverridesResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_overrides(collectionName, opts)
       when is_list(opts) and is_binary(collectionName) do
     get_search_overrides(Connection.new(), collectionName, opts)
@@ -395,7 +415,8 @@ defmodule OpenApiTypesense.Documents do
   - `get_search_overrides(Connection.new(), collectionName, opts)`
   """
   @spec get_search_overrides(map() | Connection.t(), String.t(), keyword()) ::
-          {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
+          {:ok, OpenApiTypesense.SearchOverridesResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_overrides(conn, collectionName, opts)
       when not is_struct(conn) and is_map(conn) do
     get_search_overrides(Connection.new(conn), collectionName, opts)
@@ -411,6 +432,7 @@ defmodule OpenApiTypesense.Documents do
       method: :get,
       response: [
         {200, {OpenApiTypesense.SearchOverridesResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -495,6 +517,7 @@ defmodule OpenApiTypesense.Documents do
       response: [
         {200, {:string, :generic}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -561,6 +584,7 @@ defmodule OpenApiTypesense.Documents do
       request: [{"application/json", :map}],
       response: [
         {201, :map},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}},
         {409, {OpenApiTypesense.ApiResponse, :t}}
       ],
@@ -629,7 +653,8 @@ defmodule OpenApiTypesense.Documents do
       request: [{"application/json", {OpenApiTypesense.MultiSearchSearchesParameter, :t}}],
       response: [
         {200, {OpenApiTypesense.MultiSearchResult, :t}},
-        {400, {OpenApiTypesense.ApiResponse, :t}}
+        {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })
@@ -688,6 +713,7 @@ defmodule OpenApiTypesense.Documents do
       response: [
         {200, {OpenApiTypesense.SearchResult, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: params
@@ -757,7 +783,11 @@ defmodule OpenApiTypesense.Documents do
       method: :patch,
       query: query,
       request: [{"application/json", :map}],
-      response: [{200, :map}, {404, {OpenApiTypesense.ApiResponse, :t}}],
+      response: [
+        {200, :map},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -808,6 +838,7 @@ defmodule OpenApiTypesense.Documents do
       response: [
         {200, {OpenApiTypesense.Documents, :update_documents_200_json_resp}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -872,6 +903,7 @@ defmodule OpenApiTypesense.Documents do
       request: [{"application/json", {OpenApiTypesense.SearchOverrideSchema, :t}}],
       response: [
         {200, {OpenApiTypesense.SearchOverride, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
