@@ -74,7 +74,7 @@ defmodule ClientTest do
     end)
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "returns the configured options" do
     Application.put_env(:open_api_typesense, :options,
       finch: MyApp.CustomFinch,
@@ -86,7 +86,7 @@ defmodule ClientTest do
     assert options === [finch: MyApp.CustomFinch, receive_timeout: 5_000]
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "returns an empty map if options is not configured" do
     Application.delete_env(:open_api_typesense, :options)
 
@@ -95,7 +95,7 @@ defmodule ClientTest do
     assert options === nil
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "use another HTTP client" do
     map_conn = %{
       api_key: "xyz",

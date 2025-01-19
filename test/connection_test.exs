@@ -4,7 +4,7 @@ defmodule ConnectionTest do
 
   alias OpenApiTypesense.Connection
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "new/0 using the default config to creates a connection struct" do
     assert Connection.new() === %Connection{
              api_key: "xyz",
@@ -14,7 +14,7 @@ defmodule ConnectionTest do
            }
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "new/1 with custom fields creates a connection struct" do
     conn =
       Connection.new(%{
@@ -32,20 +32,20 @@ defmodule ConnectionTest do
            }
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "new/1 with Connection struct" do
     conn = Connection.new()
     assert %Connection{} = Connection.new(conn)
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "new/1 with empty map raises ArgumentError" do
     error = assert_raise ArgumentError, fn -> Connection.new(%{}) end
 
     assert error.message === "Missing required fields: [:api_key, :host, :port, :scheme]"
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "new/1 with invalid data type raises ArgumentError" do
     invalid_inputs = [
       nil,

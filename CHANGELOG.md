@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.6.0 (2025.01.19)
+
+### Changed
+
+* CI to support Typesense versions v26.0, v27.0, v27.1
+
+### Removed
+
+* Support for Typesense version v0.25.2
+
 ## 0.5.2 (2025.01.16)
 
 ### Changed

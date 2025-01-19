@@ -38,7 +38,7 @@ defmodule DocumentsTest do
     %{coll_name: name, conn: conn, map_conn: map_conn}
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "error: update a non-existent document", %{
     coll_name: coll_name,
     conn: conn,
@@ -64,7 +64,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.update_document(map_conn, coll_name, document_id, body, opts)
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: search a document", %{coll_name: coll_name, conn: conn, map_conn: map_conn} do
     body =
       [
@@ -107,7 +107,7 @@ defmodule DocumentsTest do
     assert {:ok, _} = Documents.search(map_conn, coll_name, opts)
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "error: update non-existent documents", %{
     coll_name: coll_name,
     conn: conn,
@@ -131,7 +131,7 @@ defmodule DocumentsTest do
     assert {:ok, _} = Documents.import_documents(map_conn, coll_name, body, opts)
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "error: multi-search with no documents", %{conn: conn, map_conn: map_conn} do
     body =
       %{
@@ -156,7 +156,7 @@ defmodule DocumentsTest do
     assert {:ok, _} = Documents.multi_search(map_conn, body, params)
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: update documents by query", %{
     coll_name: coll_name,
     conn: conn,
@@ -211,7 +211,7 @@ defmodule DocumentsTest do
              Documents.update_documents(map_conn, coll_name, update, filter_by: "shoes_id:>=0")
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: import documents", %{coll_name: coll_name} do
     body =
       [
@@ -246,7 +246,7 @@ defmodule DocumentsTest do
     assert {:ok, _} = Documents.import_documents(coll_name, body, action: "create")
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: index a document", %{coll_name: coll_name, conn: conn, map_conn: map_conn} do
     shoes_id = 220
 
@@ -272,7 +272,7 @@ defmodule DocumentsTest do
     assert {:ok, _} = Documents.index_document(map_conn, coll_name, body, [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: list collection overrides", %{
     coll_name: coll_name,
     conn: conn,
@@ -293,7 +293,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.get_search_overrides(map_conn, "xyz", [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "error: get a non-existent override", %{
     coll_name: coll_name,
     conn: conn,
@@ -309,7 +309,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.get_search_override(map_conn, coll_name, "xyz", [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "error: delete a non-existent override", %{
     coll_name: coll_name,
     conn: conn,
@@ -325,7 +325,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.delete_search_override(map_conn, coll_name, "xyz", [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: delete a document", %{coll_name: coll_name, conn: conn, map_conn: map_conn} do
     shoes_id = 420
 
@@ -359,7 +359,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.delete_document(map_conn, coll_name, id, [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: delete all documents", %{coll_name: coll_name, conn: conn, map_conn: map_conn} do
     body =
       [
@@ -403,7 +403,7 @@ defmodule DocumentsTest do
     assert {:ok, _} = Documents.delete_documents(map_conn, coll_name, opts)
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "error: get a non-existent document", %{
     coll_name: coll_name,
     conn: conn,
@@ -422,7 +422,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.get_document(map_conn, coll_name, document_id, [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "error: export document from a non-existent collection", %{conn: conn, map_conn: map_conn} do
     opts = [exclude_fields: "fields"]
 
@@ -436,7 +436,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.export_documents(map_conn, "xyz", opts)
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: upsert a search override", %{
     coll_name: coll_name,
     conn: conn,
@@ -473,7 +473,7 @@ defmodule DocumentsTest do
              Documents.upsert_search_override(map_conn, coll_name, "customize-apple", body, [])
   end
 
-  @tag ["27.1": true, "26.0": true, "0.25.2": true]
+  @tag ["27.1": true, "27.0": true, "26.0": true]
   test "field" do
     assert [num_deleted: :integer] = Documents.__fields__(:delete_documents_200_json_resp)
     assert [num_updated: :integer] = Documents.__fields__(:update_documents_200_json_resp)
