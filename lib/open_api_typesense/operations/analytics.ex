@@ -60,7 +60,8 @@ defmodule OpenApiTypesense.Analytics do
       request: [{"application/json", {OpenApiTypesense.AnalyticsEventCreateSchema, :t}}],
       response: [
         {201, {OpenApiTypesense.AnalyticsEventCreateResponse, :t}},
-        {400, {OpenApiTypesense.ApiResponse, :t}}
+        {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })
@@ -120,6 +121,7 @@ defmodule OpenApiTypesense.Analytics do
       response: [
         {201, {OpenApiTypesense.AnalyticsRuleSchema, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -177,6 +179,7 @@ defmodule OpenApiTypesense.Analytics do
       method: :delete,
       response: [
         {200, {OpenApiTypesense.AnalyticsRuleDeleteResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -234,6 +237,7 @@ defmodule OpenApiTypesense.Analytics do
       method: :get,
       response: [
         {200, {OpenApiTypesense.AnalyticsRuleSchema, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -247,7 +251,8 @@ defmodule OpenApiTypesense.Analytics do
 
   """
   @spec retrieve_analytics_rules ::
-          {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()} | :error
+          {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_analytics_rules do
     retrieve_analytics_rules(Connection.new())
   end
@@ -259,7 +264,8 @@ defmodule OpenApiTypesense.Analytics do
   - `retrieve_analytics_rules(Connection.new())`
   """
   @spec retrieve_analytics_rules(map() | Connection.t() | keyword()) ::
-          {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()} | :error
+          {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_analytics_rules(opts) when is_list(opts) do
     retrieve_analytics_rules(Connection.new(), opts)
   end
@@ -274,7 +280,8 @@ defmodule OpenApiTypesense.Analytics do
   - `retrieve_analytics_rules(Connection.new(), opts)`
   """
   @spec retrieve_analytics_rules(map() | Connection.t(), keyword()) ::
-          {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()} | :error
+          {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_analytics_rules(conn, opts) when not is_struct(conn) and is_map(conn) do
     retrieve_analytics_rules(Connection.new(conn), opts)
   end
@@ -287,7 +294,10 @@ defmodule OpenApiTypesense.Analytics do
       call: {OpenApiTypesense.Analytics, :retrieve_analytics_rules},
       url: "/analytics/rules",
       method: :get,
-      response: [{200, {OpenApiTypesense.AnalyticsRulesRetrieveSchema, :t}}],
+      response: [
+        {200, {OpenApiTypesense.AnalyticsRulesRetrieveSchema, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -350,7 +360,8 @@ defmodule OpenApiTypesense.Analytics do
       request: [{"application/json", {OpenApiTypesense.AnalyticsRuleUpsertSchema, :t}}],
       response: [
         {200, {OpenApiTypesense.AnalyticsRuleSchema, :t}},
-        {400, {OpenApiTypesense.ApiResponse, :t}}
+        {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })

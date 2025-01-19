@@ -61,6 +61,7 @@ defmodule OpenApiTypesense.Presets do
       method: :delete,
       response: [
         {200, {OpenApiTypesense.PresetDeleteSchema, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -73,7 +74,8 @@ defmodule OpenApiTypesense.Presets do
   Retrieve the details of all presets
   """
   @spec retrieve_all_presets ::
-          {:ok, OpenApiTypesense.PresetsRetrieveSchema.t()} | :error
+          {:ok, OpenApiTypesense.PresetsRetrieveSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_all_presets do
     retrieve_all_presets(Connection.new())
   end
@@ -85,7 +87,8 @@ defmodule OpenApiTypesense.Presets do
   - `retrieve_all_presets(Connection.new())`
   """
   @spec retrieve_all_presets(map() | Connection.t() | keyword()) ::
-          {:ok, OpenApiTypesense.PresetsRetrieveSchema.t()} | :error
+          {:ok, OpenApiTypesense.PresetsRetrieveSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_all_presets(opts) when is_list(opts) do
     retrieve_all_presets(Connection.new(), opts)
   end
@@ -100,7 +103,8 @@ defmodule OpenApiTypesense.Presets do
   - `retrieve_all_presets(Connection.new(), opts)`
   """
   @spec retrieve_all_presets(map() | Connection.t(), keyword()) ::
-          {:ok, OpenApiTypesense.PresetsRetrieveSchema.t()} | :error
+          {:ok, OpenApiTypesense.PresetsRetrieveSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_all_presets(conn, opts) when not is_struct(conn) and is_map(conn) do
     retrieve_all_presets(Connection.new(conn), opts)
   end
@@ -113,7 +117,10 @@ defmodule OpenApiTypesense.Presets do
       call: {OpenApiTypesense.Presets, :retrieve_all_presets},
       url: "/presets",
       method: :get,
-      response: [{200, {OpenApiTypesense.PresetsRetrieveSchema, :t}}],
+      response: [
+        {200, {OpenApiTypesense.PresetsRetrieveSchema, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -166,6 +173,7 @@ defmodule OpenApiTypesense.Presets do
       method: :get,
       response: [
         {200, {OpenApiTypesense.PresetSchema, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -222,7 +230,8 @@ defmodule OpenApiTypesense.Presets do
       request: [{"application/json", {OpenApiTypesense.PresetUpsertSchema, :t}}],
       response: [
         {200, {OpenApiTypesense.PresetSchema, :t}},
-        {400, {OpenApiTypesense.ApiResponse, :t}}
+        {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })

@@ -80,6 +80,7 @@ defmodule OpenApiTypesense.Collections do
       response: [
         {201, {OpenApiTypesense.CollectionResponse, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {409, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -132,6 +133,7 @@ defmodule OpenApiTypesense.Collections do
       method: :delete,
       response: [
         {200, {OpenApiTypesense.CollectionAlias, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -189,6 +191,7 @@ defmodule OpenApiTypesense.Collections do
       method: :delete,
       response: [
         {200, {OpenApiTypesense.CollectionResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -243,6 +246,7 @@ defmodule OpenApiTypesense.Collections do
       method: :get,
       response: [
         {200, {OpenApiTypesense.CollectionAlias, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -254,7 +258,9 @@ defmodule OpenApiTypesense.Collections do
 
   List all aliases and the corresponding collections that they map to.
   """
-  @spec get_aliases :: {:ok, OpenApiTypesense.CollectionAliasesResponse.t()} | :error
+  @spec get_aliases ::
+          {:ok, OpenApiTypesense.CollectionAliasesResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_aliases do
     get_aliases(Connection.new())
   end
@@ -266,7 +272,8 @@ defmodule OpenApiTypesense.Collections do
   - `get_aliases(Connection.new())`
   """
   @spec get_aliases(map() | Connection.t() | keyword()) ::
-          {:ok, OpenApiTypesense.CollectionAliasesResponse.t()} | :error
+          {:ok, OpenApiTypesense.CollectionAliasesResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_aliases(opts) when is_list(opts) do
     get_aliases(Connection.new(), opts)
   end
@@ -281,7 +288,8 @@ defmodule OpenApiTypesense.Collections do
   - `get_aliases(Connection.new(), opts)`
   """
   @spec get_aliases(map() | Connection.t(), keyword()) ::
-          {:ok, OpenApiTypesense.CollectionAliasesResponse.t()} | :error
+          {:ok, OpenApiTypesense.CollectionAliasesResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_aliases(conn, opts) when not is_struct(conn) and is_map(conn) do
     get_aliases(Connection.new(conn), opts)
   end
@@ -294,7 +302,10 @@ defmodule OpenApiTypesense.Collections do
       call: {OpenApiTypesense.Collections, :get_aliases},
       url: "/aliases",
       method: :get,
-      response: [{200, {OpenApiTypesense.CollectionAliasesResponse, :t}}],
+      response: [
+        {200, {OpenApiTypesense.CollectionAliasesResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -350,6 +361,7 @@ defmodule OpenApiTypesense.Collections do
       method: :get,
       response: [
         {200, {OpenApiTypesense.CollectionResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -368,7 +380,9 @@ defmodule OpenApiTypesense.Collections do
     * `exclude_fields`: Exclude the field definitions from being returned in the response.
 
   """
-  @spec get_collections :: {:ok, [OpenApiTypesense.CollectionResponse.t()]} | :error
+  @spec get_collections ::
+          {:ok, [OpenApiTypesense.CollectionResponse.t()]}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_collections, do: get_collections(Connection.new())
 
   @doc """
@@ -378,7 +392,8 @@ defmodule OpenApiTypesense.Collections do
   - `get_collections(exclude_fields: "fields", limit: 10)`
   """
   @spec get_collections(map() | Connection.t() | keyword()) ::
-          {:ok, [OpenApiTypesense.CollectionResponse.t()]} | :error
+          {:ok, [OpenApiTypesense.CollectionResponse.t()]}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_collections(opts) when is_list(opts) do
     get_collections(Connection.new(), opts)
   end
@@ -393,7 +408,8 @@ defmodule OpenApiTypesense.Collections do
   - `get_collections(Connection.new(), opts)`
   """
   @spec get_collections(map() | Connection.t(), keyword()) ::
-          {:ok, [OpenApiTypesense.CollectionResponse.t()]} | :error
+          {:ok, [OpenApiTypesense.CollectionResponse.t()]}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_collections(conn, opts) when not is_struct(conn) do
     get_collections(Connection.new(conn), opts)
   end
@@ -408,7 +424,10 @@ defmodule OpenApiTypesense.Collections do
       url: "/collections",
       method: :get,
       query: query,
-      response: [{200, [{OpenApiTypesense.CollectionResponse, :t}]}],
+      response: [
+        {200, [{OpenApiTypesense.CollectionResponse, :t}]},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
@@ -469,6 +488,7 @@ defmodule OpenApiTypesense.Collections do
       response: [
         {200, {OpenApiTypesense.CollectionUpdateSchema, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -531,6 +551,7 @@ defmodule OpenApiTypesense.Collections do
       response: [
         {200, {OpenApiTypesense.CollectionAlias, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts

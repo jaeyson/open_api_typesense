@@ -63,6 +63,7 @@ defmodule OpenApiTypesense.Curation do
       method: :delete,
       response: [
         {200, {OpenApiTypesense.SearchOverrideDeleteResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -79,7 +80,8 @@ defmodule OpenApiTypesense.Curation do
 
   """
   @spec get_search_overrides(String.t()) ::
-          {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
+          {:ok, OpenApiTypesense.SearchOverridesResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_overrides(collectionName) do
     get_search_overrides(Connection.new(), collectionName)
   end
@@ -91,7 +93,8 @@ defmodule OpenApiTypesense.Curation do
   - `get_search_overrides(Connection.new(), collectionName)`
   """
   @spec get_search_overrides(map() | Connection.t() | String.t(), String.t() | keyword()) ::
-          {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
+          {:ok, OpenApiTypesense.SearchOverridesResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_overrides(collectionName, opts)
       when is_list(opts) and is_binary(collectionName) do
     get_search_overrides(Connection.new(), collectionName, opts)
@@ -107,7 +110,8 @@ defmodule OpenApiTypesense.Curation do
   - `get_search_overrides(Connection.new(), collectionName, opts)`
   """
   @spec get_search_overrides(map() | Connection.t(), String.t(), keyword()) ::
-          {:ok, OpenApiTypesense.SearchOverridesResponse.t()} | :error
+          {:ok, OpenApiTypesense.SearchOverridesResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_overrides(conn, collectionName, opts)
       when not is_struct(conn) and is_map(conn) do
     get_search_overrides(Connection.new(conn), collectionName, opts)
@@ -125,6 +129,7 @@ defmodule OpenApiTypesense.Curation do
       query: query,
       response: [
         {200, {OpenApiTypesense.SearchOverridesResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -189,6 +194,7 @@ defmodule OpenApiTypesense.Curation do
       request: [{"application/json", {OpenApiTypesense.SearchOverrideSchema, :t}}],
       response: [
         {200, {OpenApiTypesense.SearchOverride, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts

@@ -16,7 +16,7 @@ defmodule OpenApiTypesense.Debug do
 
   Print debugging information
   """
-  @spec debug :: {:ok, map()} | :error
+  @spec debug :: {:ok, map()} | {:ok, map()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def debug, do: debug(Connection.new())
 
   @doc """
@@ -25,7 +25,8 @@ defmodule OpenApiTypesense.Debug do
   - `debug(%{api_key: xyz, host: ...})`
   - `debug(Connection.new())`
   """
-  @spec debug(map() | Connection.t() | keyword()) :: {:ok, map()} | :error
+  @spec debug(map() | Connection.t() | keyword()) ::
+          {:ok, map()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def debug(opts) when is_list(opts) do
     debug(Connection.new(), opts)
   end
@@ -39,7 +40,8 @@ defmodule OpenApiTypesense.Debug do
   - `debug(%{api_key: xyz, host: ...}, opts)`
   - `debug(Connection.new(), opts)`
   """
-  @spec debug(map() | Connection.t(), keyword()) :: {:ok, map()} | :error
+  @spec debug(map() | Connection.t(), keyword()) ::
+          {:ok, map()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def debug(conn, opts) when not is_struct(conn) and is_map(conn) do
     debug(Connection.new(conn), opts)
   end
@@ -53,7 +55,10 @@ defmodule OpenApiTypesense.Debug do
       call: {OpenApiTypesense.Debug, :debug},
       url: "/debug",
       method: :get,
-      response: [{200, {OpenApiTypesense.Debug, :debug_200_json_resp}}],
+      response: [
+        {200, {OpenApiTypesense.Debug, :debug_200_json_resp}},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
+      ],
       opts: opts
     })
   end
