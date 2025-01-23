@@ -4,6 +4,7 @@ defmodule JoinTest do
   alias ExTypesense.TestSchema.Person
   alias OpenApiTypesense.ApiResponse
   alias OpenApiTypesense.CollectionResponse
+  alias OpenApiTypesense.Collections
   alias OpenApiTypesense.Connection
   alias OpenApiTypesense.Documents
   alias OpenApiTypesense.MultiSearchResult
@@ -45,9 +46,9 @@ defmodule JoinTest do
       ]
     }
 
-    {:ok, _} = ExTypesense.create_collection(author_schema)
-    {:ok, _} = ExTypesense.create_collection(book_schema)
-    {:ok, _} = ExTypesense.create_collection(order_schema)
+    {:ok, _} = Collections.create_collection(author_schema)
+    {:ok, _} = Collections.create_collection(book_schema)
+    {:ok, _} = Collections.create_collection(order_schema)
 
     [
       %{
@@ -72,16 +73,16 @@ defmodule JoinTest do
       }
     ]
     |> Enum.map(fn document ->
-      {:ok, %{id: id}} = ExTypesense.index_document(author_schema.name, document.author)
+      {:ok, %{id: id}} = Documents.index_document(author_schema.name, document.author)
 
       book = Map.put(document.book, :author_id, id)
 
-      {:ok, _} = ExTypesense.index_document(book_schema.name, book)
+      {:ok, _} = Documents.index_document(book_schema.name, book)
     end)
 
     on_exit(fn ->
-      {:ok, _} = ExTypesense.drop_collection(author_schema.name)
-      {:ok, _} = ExTypesense.drop_collection(book_schema.name)
+      {:ok, _} = Collections.drop_collection(author_schema.name)
+      {:ok, _} = Collections.drop_collection(book_schema.name)
     end)
 
     :ok
@@ -115,7 +116,7 @@ defmodule JoinTest do
                   ]
                 }
               ]
-            }} = ExTypesense.multi_search(searches)
+            }} = Documents.multi_search(searches)
   end
 
   @tag ["27.1": true, "27.0": true, "26.0": true]

@@ -151,3 +151,6 @@ jobs:
       - name: Post test coverage to Coveralls
         run: mix coveralls.github
         if: ${{ matrix.lint }}
+
+      - name: Run codacy-coverage-reporter
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
