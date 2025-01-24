@@ -1,6 +1,6 @@
 import Config
 
-if Mix.env() in [:dev, :test] do
+if config_env() in [:dev, :test] do
   config :open_api_typesense,
     api_key: "xyz",
     host: "localhost",
