@@ -17,6 +17,7 @@ defmodule OpenApiTypesense.Client do
           {:ok, any()}
           | {:error, ApiResponse.t()}
           | {:error, String.t()}
+          | {:error, list()}
           | :error
 
   @doc since: "0.2.0"
@@ -166,14 +167,16 @@ defmodule OpenApiTypesense.Client do
   #   end
   # end
 
-  defp parse_resp(%Req.Response{} = resp, opts_resp) do
-    {code, values} =
-      opts_resp
-      |> Enum.find(fn {code, _values} ->
-        code === resp.status
-      end)
+  # Some resources are missing 4xx descriptions, hence we will set a default
+  # instead so we can see the actual error message instead of stacktrace.
+  # See https://github.com/typesense/typesense-api-spec/pull/84
+  defp parse_resp(%Req.Response{} = resp, status_type) do
+    {status, type} =
+      status_type
+      |> Enum.find(fn {status, _type} -> status == resp.status end) ||
+        {resp.status, :map}
 
-    parse_values(code, values, resp.body)
+    parse_values(status, type, resp.body)
   end
 
   defp parse_resp(error, _opts_resp) do
