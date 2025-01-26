@@ -23,6 +23,7 @@ jobs:
 
     env:
       MIX_ENV: test
+      CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       LATEST_TYPESENSE: '27.1'
 
