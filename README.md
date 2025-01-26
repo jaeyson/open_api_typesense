@@ -9,6 +9,8 @@ Restful client for Typesense with adherence to Open API spec 3 (formerly Swagger
 [![Typesense badge](https://img.shields.io/badge/Typesense-v26.0_%7C_v27.0_%7C_v27.1-darkblue)](https://typesense.org/docs/27.1/api)
 [![Coverage Status](https://coveralls.io/repos/github/jaeyson/open_api_typesense/badge.svg?branch=main)](https://coveralls.io/github/jaeyson/open_api_typesense?branch=main)
 [![CI Status](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/965dd3f8866d49c3b3e82edd0f6270cb)](https://app.codacy.com/gh/jaeyson/open_api_typesense/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![CodeScene Average Code Health](https://codescene.io/projects/63240/status-badges/average-code-health)](https://codescene.io/projects/63240)
 
 ## Installation
 

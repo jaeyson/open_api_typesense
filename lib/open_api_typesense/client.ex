@@ -10,6 +10,7 @@ defmodule OpenApiTypesense.Client do
   @doc """
   A callback function for custom HTTP client
   """
+  @doc since: "0.2.0"
   @callback request(conn :: map(), params :: keyword()) :: response()
 
   @typedoc since: "0.2.0"
