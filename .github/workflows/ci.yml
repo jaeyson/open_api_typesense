@@ -23,7 +23,6 @@ jobs:
 
     env:
       MIX_ENV: test
-      CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       LATEST_TYPESENSE: '27.1'
 
@@ -152,6 +151,3 @@ jobs:
       - name: Post test coverage to Coveralls
         run: mix coveralls.github
         if: ${{ matrix.lint }}
-
-      - name: Run codacy-coverage-reporter
-        run: bash <(curl -Ls https://coverage.codacy.com/get.sh)

@@ -2,11 +2,10 @@ defmodule JoinTest do
   use ExUnit.Case, async: true
 
   alias OpenApiTypesense.ApiResponse
-  alias OpenApiTypesense.CollectionResponse
   alias OpenApiTypesense.Collections
-  alias OpenApiTypesense.Connection
   alias OpenApiTypesense.Documents
   alias OpenApiTypesense.MultiSearchResult
+  alias OpenApiTypesense.SearchResult
 
   setup_all do
     author_schema = %{
@@ -54,6 +53,32 @@ defmodule JoinTest do
       ]
     }
 
+    product_variant_schema = %{
+      name: "product_variants",
+      fields: [
+        %{name: "title", type: "string"},
+        %{name: "price", type: "float"},
+        %{name: "product_id", type: "string", reference: "products.product_id"}
+      ]
+    }
+
+    retailer_schema = %{
+      name: "retailers",
+      fields: [
+        %{name: "title", type: "string"},
+        %{name: "location", type: "geopoint"}
+      ]
+    }
+
+    inventory_schema = %{
+      name: "inventory",
+      fields: [
+        %{name: "qty", type: "int32"},
+        %{name: "retailer_id", type: "string", reference: "retailers.id"},
+        %{name: "product_variant_id", type: "string", reference: "product_variants.id"}
+      ]
+    }
+
     customer_product_prices_schema = %{
       name: "customer_product_prices",
       fields: [
@@ -93,6 +118,9 @@ defmodule JoinTest do
     {:ok, _} = Collections.create_collection(customer_schema)
     {:ok, _} = Collections.create_collection(order_schema)
     {:ok, _} = Collections.create_collection(product_schema)
+    {:ok, _} = Collections.create_collection(product_variant_schema)
+    {:ok, _} = Collections.create_collection(retailer_schema)
+    {:ok, _} = Collections.create_collection(inventory_schema)
     {:ok, _} = Collections.create_collection(customer_product_prices_schema)
     {:ok, _} = Collections.create_collection(document_schema)
     {:ok, _} = Collections.create_collection(user_schema)
@@ -118,22 +146,110 @@ defmodule JoinTest do
       %{
         author: %{first_name: "Leo", last_name: "Tolstoy"},
         book: %{title: "War and Peace"}
+      },
+      %{
+        author: %{first_name: "Enid", last_name: "Blyton"},
+        book: [
+          %{title: "Famous Five"},
+          %{title: "Secret Seven"}
+        ]
       }
     ]
     |> Enum.map(fn document ->
       {:ok, %{id: id}} = Documents.index_document(author_schema.name, document.author)
 
-      book = Map.put(document.book, :author_id, id)
+      if is_list(document.book) do
+        document.book
+        |> Enum.map(&Map.put(&1, :author_id, id))
+        |> Enum.map(&Documents.index_document(book_schema.name, &1))
+      else
+        book = Map.put(document.book, :author_id, id)
 
-      {:ok, _} = Documents.index_document(book_schema.name, book)
+        {:ok, _} = Documents.index_document(book_schema.name, book)
+      end
     end)
 
     [
-      %{product_id: "1", product_name: "Product 1", product_description: "Description 1"},
-      %{product_id: "2", product_name: "Product 2", product_description: "Description 2"}
+      %{
+        product_id: "1",
+        product_name: "Handcraft Blends Organic Castor Oil",
+        product_description: """
+        100% Pure and Natural - Premium Grade Carrier Oil for
+        Hair Growth, Eyelashes and Eyebrows, Hair and Body
+        Expeller-Pressed & Hexane-Free
+        """
+      },
+      %{
+        product_id: "2",
+        product_name: "Nighttime Aromatherapy Self Care Bundle",
+        product_description: """
+        Sulfate Free Lavender Shampoo and Conditioner Set Plus
+        Dream Essential Oil Blend for Diffusers - Lavender Gift
+        for Women with Dreamy Lavender Essential Oil
+        """
+      }
     ]
     |> Enum.each(fn product ->
       {:ok, _} = Documents.index_document(product_schema.name, product)
+    end)
+
+    product_variants = [
+      %{title: "Small", price: 19.99, product_id: "1"},
+      %{title: "Large", price: 29.99, product_id: "1"},
+      %{title: "Standard", price: 39.99, product_id: "2"}
+    ]
+
+    variant_ids =
+      Enum.map(product_variants, fn variant ->
+        {:ok, %{id: id}} = Documents.index_document(product_variant_schema.name, variant)
+        id
+      end)
+
+    retailers = [
+      %{title: "Store Downtown", location: [48.87538726829884, 2.296113163780903]},
+      %{title: "Store Uptown", location: [2.296113163780903, 48.87538726829884]}
+    ]
+
+    retailer_ids =
+      Enum.map(retailers, fn retailer ->
+        {:ok, %{id: id}} = Documents.index_document(retailer_schema.name, retailer)
+        id
+      end)
+
+    [
+      %{
+        qty: 50,
+        retailer_id: Enum.at(retailer_ids, 0),
+        product_variant_id: Enum.at(variant_ids, 0)
+      },
+      %{
+        qty: 30,
+        retailer_id: Enum.at(retailer_ids, 0),
+        product_variant_id: Enum.at(variant_ids, 1)
+      },
+      %{
+        qty: 30,
+        retailer_id: Enum.at(retailer_ids, 0),
+        product_variant_id: Enum.at(variant_ids, 2)
+      },
+      %{
+        qty: 25,
+        retailer_id: Enum.at(retailer_ids, 1),
+        product_variant_id: Enum.at(variant_ids, 0)
+      },
+      %{
+        qty: 15,
+        retailer_id: Enum.at(retailer_ids, 1),
+        product_variant_id: Enum.at(variant_ids, 1)
+      },
+      %{
+        qty: 15,
+        retailer_id: Enum.at(retailer_ids, 1),
+        product_variant_id: Enum.at(variant_ids, 2)
+      }
+    ]
+    |> Enum.each(fn inventory ->
+      {:ok, _} = Documents.index_document(inventory_schema.name, inventory)
     end)
 
     customers = [
@@ -212,6 +328,9 @@ defmodule JoinTest do
       {:ok, _} = Collections.delete_collection(customer_schema.name)
       {:ok, _} = Collections.delete_collection(order_schema.name)
       {:ok, _} = Collections.delete_collection(product_schema.name)
+      {:ok, _} = Collections.delete_collection(product_variant_schema.name)
+      {:ok, _} = Collections.delete_collection(retailer_schema.name)
+      {:ok, _} = Collections.delete_collection(inventory_schema.name)
       {:ok, _} = Collections.delete_collection(customer_product_prices_schema.name)
       {:ok, _} = Collections.delete_collection(document_schema.name)
       {:ok, _} = Collections.delete_collection(user_schema.name)
@@ -261,7 +380,7 @@ defmodule JoinTest do
         %{
           collection: "customers",
           q: "*",
-          filter_by: "$orders(customer_id:=customer_a)"
+          filter_by: "$orders(customer_id:=1)"
         },
         %{
           q: "*",
@@ -274,7 +393,23 @@ defmodule JoinTest do
     assert {:ok,
             %MultiSearchResult{
               results: [
-                %{found: 0, hits: []},
+                %{
+                  found: 1,
+                  hits: [
+                    %{
+                      document: %{
+                        forename: "Jane",
+                        surname: "Doe",
+                        orders: %{
+                          id: "2",
+                          total_price: 199.99,
+                          initial_date: 1_709_596_800,
+                          customer_id: "1"
+                        }
+                      }
+                    }
+                  ]
+                },
                 %{
                   found: 1,
                   hits: [
@@ -334,25 +469,197 @@ defmodule JoinTest do
   end
 
   @tag ["27.1": true, "27.0": true, "26.0": true]
-  test "success: many-to-many relation" do
+  test "success: merging or nesting joined fields" do
     searches = %{
       searches: [
         %{
-          q: "*",
-          collection: "documents",
-          filter_by: "$user_doc_access(user_id:=user1)"
-        },
-        %{
-          q: "*",
-          collection: "documents",
-          query_by: "title",
-          filter_by: "$user_doc_access(id: *)",
-          include_fields: "$users(id) as user_identifier"
+          collection: "books",
+          include_fields: "$authors(*, strategy: merge)",
+          q: "light",
+          query_by: "title"
         }
       ]
     }
 
-    assert {:ok, %MultiSearchResult{results: [%{found: 2}, %{found: 2}]}} =
-             Documents.multi_search(searches)
+    assert {:ok,
+            %MultiSearchResult{
+              results: [
+                %{
+                  found: 1,
+                  hits: [
+                    %{
+                      document: %{
+                        id: "3",
+                        title: "To the Lighthouse",
+                        first_name: "Virginia",
+                        last_name: "Woolf",
+                        author_id: "3"
+                      },
+                      highlights: [
+                        %{
+                          field: "title",
+                          snippet: "To the <mark>Light</mark>house",
+                          matched_tokens: ["Light"]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }} = Documents.multi_search(searches)
+  end
+
+  @tag ["27.1": true, "27.0": true, "26.0": true]
+  test "success: forcing nested array for joined fields" do
+    searches = %{
+      searches: [
+        %{
+          collection: "authors",
+          q: "*",
+          filter_by: "$books(id:*)",
+          include_fields: "$books(*, strategy: nest_array)"
+        }
+      ]
+    }
+
+    assert {:ok,
+            %OpenApiTypesense.MultiSearchResult{
+              conversation: nil,
+              results: [
+                %{
+                  found: 6,
+                  hits: [
+                    %{
+                      document: %{
+                        id: "5",
+                        first_name: "Enid",
+                        last_name: "Blyton",
+                        books: [
+                          %{id: "5", title: "Famous Five", author_id: "5"},
+                          %{id: "6", title: "Secret Seven", author_id: "5"}
+                        ]
+                      }
+                    }
+                    | _the_rest_of_documents
+                  ]
+                }
+              ]
+            }} = Documents.multi_search(searches)
+  end
+
+  @tag ["27.1": true, "27.0": true, "26.0": true]
+  test "success: left join" do
+    opts = [
+      collection: "authors",
+      q: "*",
+      query_by: "first_name",
+      filter_by: "$books(author_id:1)"
+    ]
+
+    assert {:ok,
+            %SearchResult{
+              found: 1,
+              hits: [
+                %{
+                  document: %{
+                    id: "1",
+                    first_name: "Mark",
+                    last_name: "Twain",
+                    books: %{id: "1", title: "The Adventures of Huckleberry Finn", author_id: "1"}
+                  }
+                }
+              ]
+            }} = Documents.search("authors", opts)
+  end
+
+  @tag ["27.1": true, "27.0": true, "26.0": true]
+  test "success: nested joins" do
+    opts = [
+      q: "shampoo",
+      query_by: "product_name,product_description",
+      filter_by: "$product_variants( $inventory( $retailers(id:*)))",
+      include_fields: "$product_variants(price, $inventory(qty, $retailers(title)))"
+    ]
+
+    assert {:ok,
+            %SearchResult{
+              found: 1,
+              hits: [
+                %{
+                  document: %{
+                    id: "1",
+                    product_id: "2",
+                    product_name: "Nighttime Aromatherapy Self Care Bundle",
+                    product_description: """
+                    Sulfate Free Lavender Shampoo and Conditioner Set Plus
+                    Dream Essential Oil Blend for Diffusers - Lavender Gift
+                    for Women with Dreamy Lavender Essential Oil
+                    """,
+                    product_variants: %{
+                      price: 39.99,
+                      inventory: [
+                        %{retailers: %{title: "Store Downtown"}, qty: 30},
+                        %{retailers: %{title: "Store Uptown"}, qty: 15}
+                      ]
+                    }
+                  },
+                  highlight: %{
+                    product_description: %{
+                      snippet: """
+                      Sulfate Free Lavender <mark>Shampoo</mark> and Conditioner Set Plus
+                      Dream Essential Oil Blend for Diffusers - Lavender Gift
+                      for Women with Dreamy Lavender Essential Oil
+                      """,
+                      matched_tokens: ["Shampoo"]
+                    }
+                  },
+                  highlights: [
+                    %{
+                      field: "product_description",
+                      snippet: """
+                      Sulfate Free Lavender <mark>Shampoo</mark> and Conditioner Set Plus
+                      Dream Essential Oil Blend for Diffusers - Lavender Gift
+                      for Women with Dreamy Lavender Essential Oil
+                      """,
+                      matched_tokens: ["Shampoo"]
+                    }
+                  ]
+                }
+              ]
+            }} = Documents.search("products", opts)
+  end
+
+  @tag ["27.1": true, "27.0": true, "26.0": true]
+  test "success: nested joins (geo radius)" do
+    opts = [
+      q: "shampoo",
+      query_by: "product_name,product_description",
+      filter_by:
+        "$product_variants( $inventory( $retailers(location:(48.87538726829884, 2.296113163780903, 1km))))",
+      include_fields: "$product_variants(price, $inventory(qty, $retailers(title)))"
+    ]
+
+    assert {:ok,
+            %SearchResult{
+              found: 1,
+              hits: [
+                %{
+                  document: %{
+                    id: "1",
+                    product_id: "2",
+                    product_name: "Nighttime Aromatherapy Self Care Bundle",
+                    product_description: """
+                    Sulfate Free Lavender Shampoo and Conditioner Set Plus
+                    Dream Essential Oil Blend for Diffusers - Lavender Gift
+                    for Women with Dreamy Lavender Essential Oil
+                    """,
+                    product_variants: %{
+                      price: 39.99,
+                      inventory: %{retailers: %{title: "Store Downtown"}, qty: 30}
+                    }
+                  }
+                }
+              ]
+            }} = Documents.search("products", opts)
   end
 end
