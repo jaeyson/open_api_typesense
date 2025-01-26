@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.6.2 (2025.01.26)
+
+### Added
+
+* Tests for [JOIns](https://typesense.org/docs/latest/api/joins.html)
+
+### Changed
+
+* Handle unknown HTTP status response
+* Use [`config_env/0`](https://hexdocs.pm/elixir/Config.html#config_env/0) instead of [`Mix.env/0`](https://hexdocs.pm/mix/Mix.html#env/0)
+
 ## 0.6.1 (2025.01.19)
 
 ### Added
