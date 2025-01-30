@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.6.3 (2025.01.30)
+
+### Removed
+
+* Logic for checking environment during test.
+
 ## 0.6.2 (2025.01.26)
 
 ### Added
