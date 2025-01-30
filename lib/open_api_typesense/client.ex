@@ -96,24 +96,6 @@ defmodule OpenApiTypesense.Client do
     # options like retry, max_retries, etc. can be found in:
     # https://hexdocs.pm/req/Req.Steps.html#retry/1
     # NOTE: look at source code in Github
-    retry =
-      if Mix.env() === :test do
-        # disabled in order to cut time in tests
-        false
-      else
-        # default is :safe_transient
-        opts[:req][:retry] || :safe_transient
-      end
-
-    max_retries =
-      if Mix.env() === :test do
-        # disabled in order to cut time in tests
-        0
-      else
-        # default is 3
-        opts[:req][:max_retries] || 3
-      end
-
     url =
       %URI{
         scheme: conn.scheme,
@@ -128,8 +110,8 @@ defmodule OpenApiTypesense.Client do
         method: opts[:method] || :get,
         body: encode_body(opts),
         url: url,
-        retry: retry,
-        max_retries: max_retries,
+        max_retries: opts[:req][:max_retries] || 3,
+        retry: opts[:req][:retry] || :safe_transient,
         compress_body: opts[:req][:compress] || false,
         cache: opts[:req][:cache] || false,
         decode_json: [keys: :atoms]
