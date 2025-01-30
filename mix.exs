@@ -44,7 +44,7 @@ defmodule OpenApiTypesense.MixProject do
       {:ex_doc, "~> 0.34", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:req, "~> 0.5"},
-      {:excoveralls, "~> 0.18", only: :test},
+      {:excoveralls, "~> 0.18", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
       {:oapi_generator, "~> 0.2", only: :dev, runtime: false, optional: true}
     ]
@@ -60,7 +60,7 @@ defmodule OpenApiTypesense.MixProject do
       formatters: ["html"],
       extras: [
         "CHANGELOG.md",
-        "README.md": [title: "Overview"],
+        "README.md",
         "LICENSE.md": [title: "License"],
         "guides/custom_http_client.md": [title: "Custom HTTP Client"]
       ],
