@@ -45,7 +45,7 @@ defmodule JoinTest do
     }
 
     product_schema = %{
-      name: "products",
+      name: "join_products",
       fields: [
         %{name: "product_id", type: "string"},
         %{name: "product_name", type: "string"},
@@ -58,7 +58,7 @@ defmodule JoinTest do
       fields: [
         %{name: "title", type: "string"},
         %{name: "price", type: "float"},
-        %{name: "product_id", type: "string", reference: "products.product_id"}
+        %{name: "product_id", type: "string", reference: "join_products.product_id"}
       ]
     }
 
@@ -84,7 +84,7 @@ defmodule JoinTest do
       fields: [
         %{name: "customer_id", type: "string"},
         %{name: "custom_price", type: "float"},
-        %{name: "product_id", type: "string", reference: "products.product_id"}
+        %{name: "product_id", type: "string", reference: "join_products.product_id"}
       ]
     }
 
@@ -437,12 +437,12 @@ defmodule JoinTest do
       searches: [
         %{
           q: "*",
-          collection: "products",
+          collection: "join_products",
           filter_by: "$customer_product_prices(customer_id:=1)"
         },
         %{
           q: "*",
-          collection: "products",
+          collection: "join_products",
           filter_by: "$customer_product_prices(customer_id:=1 && custom_price:<=100)"
         }
       ]
@@ -626,7 +626,7 @@ defmodule JoinTest do
                   ]
                 }
               ]
-            }} = Documents.search("products", opts)
+            }} = Documents.search("join_products", opts)
   end
 
   @tag ["27.1": true, "27.0": true, "26.0": true]
@@ -660,6 +660,6 @@ defmodule JoinTest do
                   }
                 }
               ]
-            }} = Documents.search("products", opts)
+            }} = Documents.search("join_products", opts)
   end
 end
