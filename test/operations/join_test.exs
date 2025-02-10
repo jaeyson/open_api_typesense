@@ -1,7 +1,6 @@
 defmodule JoinTest do
   use ExUnit.Case, async: true
 
-  alias OpenApiTypesense.ApiResponse
   alias OpenApiTypesense.Collections
   alias OpenApiTypesense.Documents
   alias OpenApiTypesense.MultiSearchResult
@@ -113,18 +112,21 @@ defmodule JoinTest do
       ]
     }
 
-    {:ok, _} = Collections.create_collection(author_schema)
-    {:ok, _} = Collections.create_collection(book_schema)
-    {:ok, _} = Collections.create_collection(customer_schema)
-    {:ok, _} = Collections.create_collection(order_schema)
-    {:ok, _} = Collections.create_collection(product_schema)
-    {:ok, _} = Collections.create_collection(product_variant_schema)
-    {:ok, _} = Collections.create_collection(retailer_schema)
-    {:ok, _} = Collections.create_collection(inventory_schema)
-    {:ok, _} = Collections.create_collection(customer_product_prices_schema)
-    {:ok, _} = Collections.create_collection(document_schema)
-    {:ok, _} = Collections.create_collection(user_schema)
-    {:ok, _} = Collections.create_collection(user_doc_access_schema)
+    [
+      author_schema,
+      book_schema,
+      customer_schema,
+      order_schema,
+      product_schema,
+      product_variant_schema,
+      retailer_schema,
+      inventory_schema,
+      customer_product_prices_schema,
+      document_schema,
+      user_schema,
+      user_doc_access_schema
+    ]
+    |> Enum.each(&Collections.create_collection/1)
 
     [
       %{
@@ -323,18 +325,8 @@ defmodule JoinTest do
     end)
 
     on_exit(fn ->
-      {:ok, _} = Collections.delete_collection(author_schema.name)
-      {:ok, _} = Collections.delete_collection(book_schema.name)
-      {:ok, _} = Collections.delete_collection(customer_schema.name)
-      {:ok, _} = Collections.delete_collection(order_schema.name)
-      {:ok, _} = Collections.delete_collection(product_schema.name)
-      {:ok, _} = Collections.delete_collection(product_variant_schema.name)
-      {:ok, _} = Collections.delete_collection(retailer_schema.name)
-      {:ok, _} = Collections.delete_collection(inventory_schema.name)
-      {:ok, _} = Collections.delete_collection(customer_product_prices_schema.name)
-      {:ok, _} = Collections.delete_collection(document_schema.name)
-      {:ok, _} = Collections.delete_collection(user_schema.name)
-      {:ok, _} = Collections.delete_collection(user_doc_access_schema.name)
+      {:ok, colls} = Collections.get_collections()
+      Enum.each(colls, &Collections.delete_collection(&1.name))
     end)
 
     :ok
