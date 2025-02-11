@@ -5,5 +5,7 @@ config :open_api_typesense,
   host: "localhost",
   port: 8108,
   scheme: "http",
-  max_retries: 0,
-  retry: false
+  # see https://hexdocs.pm/req/Req.html#new/1
+  options: [
+    retry: false
+  ]
