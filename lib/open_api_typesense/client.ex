@@ -37,6 +37,9 @@ defmodule OpenApiTypesense.Client do
   @spec get_client :: keyword() | nil
   def get_client, do: Application.get_env(:open_api_typesense, :client)
 
+  defp test_max_retries, do: Application.get_env(:open_api_typesense, :max_retries)
+  defp test_retry, do: Application.get_env(:open_api_typesense, :retry)
+
   @doc """
   Returns the Typesense's API key
 
@@ -110,8 +113,8 @@ defmodule OpenApiTypesense.Client do
         method: opts[:method] || :get,
         body: encode_body(opts),
         url: url,
-        max_retries: opts[:req][:max_retries] || 3,
-        retry: opts[:req][:retry] || :safe_transient,
+        max_retries: test_max_retries() || opts[:req][:max_retries] || 3,
+        retry: test_retry() || opts[:req][:retry] || :safe_transient,
         compress_body: opts[:req][:compress] || false,
         cache: opts[:req][:cache] || false,
         decode_json: [keys: :atoms]

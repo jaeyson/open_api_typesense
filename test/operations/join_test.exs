@@ -325,8 +325,21 @@ defmodule JoinTest do
     end)
 
     on_exit(fn ->
-      {:ok, colls} = Collections.get_collections()
-      Enum.each(colls, &Collections.delete_collection(&1.name))
+      [
+        author_schema.name,
+        book_schema.name,
+        customer_schema.name,
+        order_schema.name,
+        product_schema.name,
+        product_variant_schema.name,
+        retailer_schema.name,
+        inventory_schema.name,
+        customer_product_prices_schema.name,
+        document_schema.name,
+        user_schema.name,
+        user_doc_access_schema.name
+      ]
+      |> Enum.each(&Collections.delete_collection/1)
     end)
 
     :ok

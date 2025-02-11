@@ -1,21 +1,5 @@
 import Config
 
-if config_env() in [:dev, :test] do
-  config :open_api_typesense,
-    api_key: "xyz",
-    host: "localhost",
-    port: 8108,
-    scheme: "http"
-end
-
-if config_env() in [:dev] do
-  config :oapi_generator,
-    default: [
-      output: [
-        base_module: OpenApiTypesense,
-        location: "lib/open_api_typesense",
-        operation_subdirectory: "operations/",
-        schema_subdirectory: "schemas/"
-      ]
-    ]
-end
+# Import environment specific config. This must remain at the bottom
+# of this file so it overrides the configuration defined above.
+import_config "#{config_env()}.exs"
