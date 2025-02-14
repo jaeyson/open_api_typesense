@@ -1,7 +1,6 @@
 defmodule JoinTest do
   use ExUnit.Case, async: true
 
-  alias OpenApiTypesense.ApiResponse
   alias OpenApiTypesense.Collections
   alias OpenApiTypesense.Documents
   alias OpenApiTypesense.MultiSearchResult
@@ -45,7 +44,7 @@ defmodule JoinTest do
     }
 
     product_schema = %{
-      name: "products",
+      name: "join_products",
       fields: [
         %{name: "product_id", type: "string"},
         %{name: "product_name", type: "string"},
@@ -58,7 +57,7 @@ defmodule JoinTest do
       fields: [
         %{name: "title", type: "string"},
         %{name: "price", type: "float"},
-        %{name: "product_id", type: "string", reference: "products.product_id"}
+        %{name: "product_id", type: "string", reference: "join_products.product_id"}
       ]
     }
 
@@ -84,7 +83,7 @@ defmodule JoinTest do
       fields: [
         %{name: "customer_id", type: "string"},
         %{name: "custom_price", type: "float"},
-        %{name: "product_id", type: "string", reference: "products.product_id"}
+        %{name: "product_id", type: "string", reference: "join_products.product_id"}
       ]
     }
 
@@ -113,18 +112,21 @@ defmodule JoinTest do
       ]
     }
 
-    {:ok, _} = Collections.create_collection(author_schema)
-    {:ok, _} = Collections.create_collection(book_schema)
-    {:ok, _} = Collections.create_collection(customer_schema)
-    {:ok, _} = Collections.create_collection(order_schema)
-    {:ok, _} = Collections.create_collection(product_schema)
-    {:ok, _} = Collections.create_collection(product_variant_schema)
-    {:ok, _} = Collections.create_collection(retailer_schema)
-    {:ok, _} = Collections.create_collection(inventory_schema)
-    {:ok, _} = Collections.create_collection(customer_product_prices_schema)
-    {:ok, _} = Collections.create_collection(document_schema)
-    {:ok, _} = Collections.create_collection(user_schema)
-    {:ok, _} = Collections.create_collection(user_doc_access_schema)
+    [
+      author_schema,
+      book_schema,
+      customer_schema,
+      order_schema,
+      product_schema,
+      product_variant_schema,
+      retailer_schema,
+      inventory_schema,
+      customer_product_prices_schema,
+      document_schema,
+      user_schema,
+      user_doc_access_schema
+    ]
+    |> Enum.each(&Collections.create_collection/1)
 
     [
       %{
@@ -323,18 +325,21 @@ defmodule JoinTest do
     end)
 
     on_exit(fn ->
-      {:ok, _} = Collections.delete_collection(author_schema.name)
-      {:ok, _} = Collections.delete_collection(book_schema.name)
-      {:ok, _} = Collections.delete_collection(customer_schema.name)
-      {:ok, _} = Collections.delete_collection(order_schema.name)
-      {:ok, _} = Collections.delete_collection(product_schema.name)
-      {:ok, _} = Collections.delete_collection(product_variant_schema.name)
-      {:ok, _} = Collections.delete_collection(retailer_schema.name)
-      {:ok, _} = Collections.delete_collection(inventory_schema.name)
-      {:ok, _} = Collections.delete_collection(customer_product_prices_schema.name)
-      {:ok, _} = Collections.delete_collection(document_schema.name)
-      {:ok, _} = Collections.delete_collection(user_schema.name)
-      {:ok, _} = Collections.delete_collection(user_doc_access_schema.name)
+      [
+        author_schema.name,
+        book_schema.name,
+        customer_schema.name,
+        order_schema.name,
+        product_schema.name,
+        product_variant_schema.name,
+        retailer_schema.name,
+        inventory_schema.name,
+        customer_product_prices_schema.name,
+        document_schema.name,
+        user_schema.name,
+        user_doc_access_schema.name
+      ]
+      |> Enum.each(&Collections.delete_collection/1)
     end)
 
     :ok
@@ -437,12 +442,12 @@ defmodule JoinTest do
       searches: [
         %{
           q: "*",
-          collection: "products",
+          collection: "join_products",
           filter_by: "$customer_product_prices(customer_id:=1)"
         },
         %{
           q: "*",
-          collection: "products",
+          collection: "join_products",
           filter_by: "$customer_product_prices(customer_id:=1 && custom_price:<=100)"
         }
       ]
@@ -626,7 +631,7 @@ defmodule JoinTest do
                   ]
                 }
               ]
-            }} = Documents.search("products", opts)
+            }} = Documents.search("join_products", opts)
   end
 
   @tag ["27.1": true, "27.0": true, "26.0": true]
@@ -660,6 +665,6 @@ defmodule JoinTest do
                   }
                 }
               ]
-            }} = Documents.search("products", opts)
+            }} = Documents.search("join_products", opts)
   end
 end

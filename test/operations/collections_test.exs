@@ -104,7 +104,7 @@ defmodule CollectionsTest do
 
     body = %{fields: [%{name: "price", drop: true}]}
 
-    assert {:ok, %CollectionUpdateSchema{}} =
+    assert {:ok, %CollectionUpdateSchema{fields: [%{name: "price", drop: true}]}} =
              Collections.update_collection(name, body)
 
     assert {:error, %ApiResponse{message: _}} = Collections.update_collection(name, body, [])
