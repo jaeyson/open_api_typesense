@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.6.4 (2025.02.16)
+
+### Added
+
+* Separate dev and test environments.
+* JOINs tests.
+
+### Changed
+
+* No timeouts during tests.
+* Bump dependency versions.
+
 ## 0.6.3 (2025.01.30)
 
 ### Removed
