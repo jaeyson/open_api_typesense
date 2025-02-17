@@ -5,10 +5,16 @@ defmodule OpenApiTypesense.Connection do
   Fetches credentials either from application env or map.
   """
 
-  alias OpenApiTypesense.Client
-
   @derive {Inspect, except: [:api_key]}
-  defstruct [:host, :api_key, :port, :scheme, :client]
+  defstruct [
+    :host,
+    :api_key,
+    :port,
+    :scheme,
+    :client,
+    # see https://hexdocs.pm/req/Req.html#new/1
+    options: []
+  ]
 
   @typedoc since: "0.2.0"
   @type t() :: %{
@@ -16,7 +22,8 @@ defmodule OpenApiTypesense.Connection do
           api_key: binary() | nil,
           port: non_neg_integer() | nil,
           scheme: binary() | nil,
-          client: list() | nil
+          client: list() | nil,
+          options: list()
         }
 
   @doc """
@@ -49,15 +56,16 @@ defmodule OpenApiTypesense.Connection do
 
   @doc since: "0.2.0"
   @spec new(t() | map()) :: %__MODULE__{}
-  def new(%__MODULE__{} = connection) when is_struct(connection) do
-    connection
+  def new(%__MODULE__{} = conn) when is_struct(conn, __MODULE__) do
+    conn
   end
 
-  def new(connection) when is_map(connection) do
-    missing_fields = Enum.sort(required_fields() -- Map.keys(connection))
+  def new(conn) when is_map(conn) do
+    missing_fields = Enum.sort(required_fields() -- Map.keys(conn))
 
     if missing_fields == [] do
-      struct(__MODULE__, connection)
+      fields = Map.merge(defaults(), conn)
+      struct(__MODULE__, fields)
     else
       raise ArgumentError, "Missing required fields: #{inspect(missing_fields)}"
     end
@@ -75,19 +83,29 @@ defmodule OpenApiTypesense.Connection do
     # another HTTP client. See README.
     __MODULE__
     |> struct(%{})
-    |> Map.drop([:__struct__])
-    |> Map.drop([:client])
+    |> Map.drop([:__struct__, :client, :options])
     |> Map.keys()
   end
 
   @spec defaults :: map()
   defp defaults do
     %{
-      host: Client.get_host(),
-      api_key: Client.api_key(),
-      port: Client.get_port(),
-      scheme: Client.get_scheme(),
-      client: Client.get_client()
+      host: config(:host),
+      api_key: config(:api_key),
+      port: config(:port),
+      scheme: config(:scheme),
+      client: config(:client),
+      options: config(:options, [])
     }
+  end
+
+  @spec config(atom()) :: any()
+  def config(key, default \\ nil) do
+    Access.get(config(), key, default)
+  end
+
+  @spec config :: list()
+  def config do
+    Application.get_all_env(:open_api_typesense)
   end
 end

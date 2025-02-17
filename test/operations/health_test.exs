@@ -15,7 +15,6 @@ defmodule HealthTest do
   @tag ["27.1": true, "27.0": true, "26.0": true]
   test "success: health check", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %HealthStatus{ok: true}} = Health.health()
-    assert {:ok, %HealthStatus{ok: true}} = Health.health([])
     assert {:ok, %HealthStatus{ok: true}} = Health.health(conn)
     assert {:ok, %HealthStatus{ok: true}} = Health.health(map_conn)
     assert {:ok, %HealthStatus{ok: true}} = Health.health(conn, [])

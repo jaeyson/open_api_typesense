@@ -23,22 +23,23 @@ defmodule OpenApiTypesense.Client do
 
   @doc since: "0.2.0"
   @spec get_host :: String.t() | nil
+  @deprecated "Use OpenApiTypesense.Connection.config(:host) instead"
   def get_host, do: Application.get_env(:open_api_typesense, :host)
 
   @doc since: "0.2.0"
   @spec get_scheme :: String.t() | nil
+  @deprecated "Use OpenApiTypesense.Connection.config(:scheme) instead"
   def get_scheme, do: Application.get_env(:open_api_typesense, :scheme)
 
   @doc since: "0.2.0"
   @spec get_port :: non_neg_integer() | nil
+  @deprecated "Use OpenApiTypesense.Connection.config(:port) instead"
   def get_port, do: Application.get_env(:open_api_typesense, :port)
 
   @doc since: "0.5.0"
   @spec get_client :: keyword() | nil
+  @deprecated "Use OpenApiTypesense.Connection.config(:client) instead"
   def get_client, do: Application.get_env(:open_api_typesense, :client)
-
-  defp test_max_retries, do: Application.get_env(:open_api_typesense, :max_retries)
-  defp test_retry, do: Application.get_env(:open_api_typesense, :retry)
 
   @doc """
   Returns the Typesense's API key
@@ -90,40 +91,42 @@ defmodule OpenApiTypesense.Client do
     if client do
       client.request(conn, opts)
     else
-      default_client(conn, opts)
+      req_client = build_req_client(conn, opts)
+      req_request(req_client, opts)
     end
   end
 
-  defp default_client(conn, opts) do
-    # Req.Request.append_error_steps and its retry option are used here.
-    # options like retry, max_retries, etc. can be found in:
-    # https://hexdocs.pm/req/Req.Steps.html#retry/1
-    # NOTE: look at source code in Github
+  def build_req_client(conn, opts) do
+    # Default request options. These can be overridden in this hierarchy:
+    # 1. Via the `:options` key in `config.exs`.
+    # 2. By passing `:req` key to `opts` arg to request/2.
+    req_options =
+      conn
+      |> Map.get(:options, [])
+      |> Keyword.merge(Access.get(opts, :req, []))
+
     url =
       %URI{
         scheme: conn.scheme,
         host: conn.host,
         port: conn.port,
-        path: opts[:url],
-        query: URI.encode_query(opts[:query] || [])
+        path: Access.get(opts, :url),
+        query: URI.encode_query(Access.get(opts, :query, []))
       }
 
-    {_req, resp} =
-      [
-        method: opts[:method] || :get,
-        body: encode_body(opts),
-        url: url,
-        max_retries: test_max_retries() || opts[:req][:max_retries] || 3,
-        retry: test_retry() || opts[:req][:retry] || :safe_transient,
-        compress_body: opts[:req][:compress] || false,
-        cache: opts[:req][:cache] || false,
-        decode_json: [keys: :atoms]
-      ]
-      |> Req.new()
-      |> Req.Request.merge_options(Map.to_list(Map.get(conn, :options, %{})))
-      |> Req.Request.put_header("x-typesense-api-key", Map.get(conn, :api_key))
-      |> Req.Request.run_request()
+    [
+      method: Access.get(opts, :method, :get),
+      body: encode_body(opts),
+      url: url,
+      decode_json: [keys: :atoms]
+    ]
+    |> Req.new()
+    |> Req.Request.merge_options(req_options)
+    |> Req.Request.put_header("x-typesense-api-key", Map.get(conn, :api_key))
+  end
 
+  defp req_request(req_client, opts) do
+    {_req, resp} = Req.Request.run_request(req_client)
     parse_resp(resp, opts[:response])
   end
 
