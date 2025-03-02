@@ -17,7 +17,8 @@ defmodule ConnectionTest do
              api_key: "xyz",
              host: "localhost",
              port: 8108,
-             scheme: "http"
+             scheme: "http",
+             options: [retry: false]
            }
   end
 
@@ -35,7 +36,8 @@ defmodule ConnectionTest do
              api_key: "myapikey",
              host: "otherhost",
              port: 9200,
-             scheme: "https"
+             scheme: "https",
+             options: [retry: false]
            }
   end
 
