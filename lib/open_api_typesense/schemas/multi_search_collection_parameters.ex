@@ -57,6 +57,7 @@ defmodule OpenApiTypesense.MultiSearchCollectionParameters do
           query_by_weights: String.t() | nil,
           remote_embedding_num_tries: integer | nil,
           remote_embedding_timeout_ms: integer | nil,
+          rerank_hybrid_matches: boolean | nil,
           search_cutoff_ms: integer | nil,
           snippet_threshold: integer | nil,
           sort_by: String.t() | nil,
@@ -67,7 +68,8 @@ defmodule OpenApiTypesense.MultiSearchCollectionParameters do
           typo_tokens_threshold: integer | nil,
           use_cache: boolean | nil,
           vector_query: String.t() | nil,
-          voice_query: String.t() | nil
+          voice_query: String.t() | nil,
+          "x-typesense-api-key": String.t() | nil
         }
 
   defstruct [
@@ -124,6 +126,7 @@ defmodule OpenApiTypesense.MultiSearchCollectionParameters do
     :query_by_weights,
     :remote_embedding_num_tries,
     :remote_embedding_timeout_ms,
+    :rerank_hybrid_matches,
     :search_cutoff_ms,
     :snippet_threshold,
     :sort_by,
@@ -134,7 +137,8 @@ defmodule OpenApiTypesense.MultiSearchCollectionParameters do
     :typo_tokens_threshold,
     :use_cache,
     :vector_query,
-    :voice_query
+    :voice_query,
+    :"x-typesense-api-key"
   ]
 
   @doc false
@@ -196,6 +200,7 @@ defmodule OpenApiTypesense.MultiSearchCollectionParameters do
       query_by_weights: {:string, :generic},
       remote_embedding_num_tries: :integer,
       remote_embedding_timeout_ms: :integer,
+      rerank_hybrid_matches: :boolean,
       search_cutoff_ms: :integer,
       snippet_threshold: :integer,
       sort_by: {:string, :generic},
@@ -206,7 +211,8 @@ defmodule OpenApiTypesense.MultiSearchCollectionParameters do
       typo_tokens_threshold: :integer,
       use_cache: :boolean,
       vector_query: {:string, :generic},
-      voice_query: {:string, :generic}
+      voice_query: {:string, :generic},
+      "x-typesense-api-key": {:string, :generic}
     ]
   end
 end

@@ -52,6 +52,10 @@ jobs:
         - typesense: '27.1'
           otp: '27'
           elixir: '1.18'
+          lint: false
+        - typesense: '28.0'
+          otp: '27'
+          elixir: '1.18'
           lint: true
 
     services:

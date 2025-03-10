@@ -17,7 +17,10 @@ defmodule OpenApiTypesense.Field do
           reference: String.t() | nil,
           sort: boolean | nil,
           stem: boolean | nil,
+          stem_dictionary: String.t() | nil,
           store: boolean | nil,
+          symbols_to_index: [String.t()] | nil,
+          token_separators: [String.t()] | nil,
           type: String.t(),
           vec_dist: String.t() | nil
         }
@@ -36,7 +39,10 @@ defmodule OpenApiTypesense.Field do
     :reference,
     :sort,
     :stem,
+    :stem_dictionary,
     :store,
+    :symbols_to_index,
+    :token_separators,
     :type,
     :vec_dist
   ]
@@ -60,7 +66,10 @@ defmodule OpenApiTypesense.Field do
       reference: {:string, :generic},
       sort: :boolean,
       stem: :boolean,
+      stem_dictionary: {:string, :generic},
       store: :boolean,
+      symbols_to_index: [string: :generic],
+      token_separators: [string: :generic],
       type: {:string, :generic},
       vec_dist: {:string, :generic}
     ]
