@@ -1,10 +1,12 @@
-defmodule OpenApiTypesense.SearchResult do
+defmodule OpenApiTypesense.MultiSearchResultItem do
   @moduledoc """
-  Provides struct and type for a SearchResult
+  Provides struct and type for a MultiSearchResultItem
   """
 
   @type t :: %__MODULE__{
+          code: integer | nil,
           conversation: OpenApiTypesense.SearchResultConversation.t() | nil,
+          error: String.t() | nil,
           facet_counts: [OpenApiTypesense.FacetCounts.t()] | nil,
           found: integer | nil,
           found_docs: integer | nil,
@@ -18,7 +20,9 @@ defmodule OpenApiTypesense.SearchResult do
         }
 
   defstruct [
+    :code,
     :conversation,
+    :error,
     :facet_counts,
     :found,
     :found_docs,
@@ -37,7 +41,9 @@ defmodule OpenApiTypesense.SearchResult do
 
   def __fields__(:t) do
     [
+      code: :integer,
       conversation: {OpenApiTypesense.SearchResultConversation, :t},
+      error: {:string, :generic},
       facet_counts: [{OpenApiTypesense.FacetCounts, :t}],
       found: :integer,
       found_docs: :integer,

@@ -3,15 +3,18 @@ defmodule OpenApiTypesense.MultiSearchSearchesParameter do
   Provides struct and type for a MultiSearchSearchesParameter
   """
 
-  @type t :: %__MODULE__{searches: [OpenApiTypesense.MultiSearchCollectionParameters.t()]}
+  @type t :: %__MODULE__{
+          searches: [OpenApiTypesense.MultiSearchCollectionParameters.t()],
+          union: boolean | nil
+        }
 
-  defstruct [:searches]
+  defstruct [:searches, :union]
 
   @doc false
   @spec __fields__(atom) :: keyword
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [searches: [{OpenApiTypesense.MultiSearchCollectionParameters, :t}]]
+    [searches: [{OpenApiTypesense.MultiSearchCollectionParameters, :t}], union: :boolean]
   end
 end
