@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.6.5 (2025.03.23)
+
+### Changed ([#25](https://github.com/jaeyson/open_api_typesense/pull/25))
+
+* the client now accepts all options defined in Req.new/1
+* global configuration can be set in config.exs
+* per-function call overrides are possible using the req argument
+* the Req client configuration has been deprecated and moved from the Client module to the Connection module
+
 ## 0.6.4 (2025.02.16)
 
 ### Added
