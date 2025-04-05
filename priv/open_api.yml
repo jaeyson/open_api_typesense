@@ -3496,7 +3496,7 @@ components:
           description: >
             Treat space as typo: search for q=basket ball if q=basketball is not found or vice-versa.
             Splitting/joining of tokens will only be attempted if the original query produces no results.
-            To always trigger this behavior, set value to `always``.
+            To always trigger this behavior, set value to `always`.
             To disable, set value to `off`. Default is `fallback`.
           type: string
 
