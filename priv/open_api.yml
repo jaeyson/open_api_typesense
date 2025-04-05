@@ -1654,6 +1654,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SchemaChangeStatus'
+        "401":
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /operations/snapshot:
     post:
       tags:

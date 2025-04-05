@@ -3,6 +3,10 @@ defmodule OpenApiTypesense.Debug do
   Provides API endpoint related to debug
   """
 
+  defstruct [:version]
+
+  alias OpenApiTypesense.Connection
+
   @default_client OpenApiTypesense.Client
 
   @type debug_200_json_resp :: %{version: String.t() | nil}
@@ -12,11 +16,41 @@ defmodule OpenApiTypesense.Debug do
 
   Print debugging information
   """
-  @spec debug(keyword) :: {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def debug(opts \\ []) do
+  @spec debug :: {:ok, map()} | {:ok, map()} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def debug, do: debug(Connection.new())
+
+  @doc """
+  Either one of:
+  - `debug(opts)`
+  - `debug(%{api_key: xyz, host: ...})`
+  - `debug(Connection.new())`
+  """
+  @spec debug(map() | Connection.t() | keyword()) ::
+          {:ok, map()} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def debug(opts) when is_list(opts) do
+    debug(Connection.new(), opts)
+  end
+
+  def debug(conn) do
+    debug(conn, [])
+  end
+
+  @doc """
+  Either one of:
+  - `debug(%{api_key: xyz, host: ...}, opts)`
+  - `debug(Connection.new(), opts)`
+  """
+  @spec debug(map() | Connection.t(), keyword()) ::
+          {:ok, map()} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def debug(conn, opts) when not is_struct(conn) and is_map(conn) do
+    debug(Connection.new(conn), opts)
+  end
+
+  @spec debug(Connection.t(), keyword()) :: {:ok, map()} | :error
+  def debug(%Connection{} = conn, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
 
-    client.request(%{
+    client.request(conn, %{
       args: [],
       call: {OpenApiTypesense.Debug, :debug},
       url: "/debug",
@@ -30,7 +64,7 @@ defmodule OpenApiTypesense.Debug do
   end
 
   @doc false
-  @spec __fields__(atom) :: keyword
+  @spec __fields__(atom()) :: keyword()
   def __fields__(:debug_200_json_resp) do
     [version: {:string, :generic}]
   end

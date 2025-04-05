@@ -32,7 +32,7 @@ defmodule CollectionsTest do
     %{schema: schema, alias_name: "foo_bar", conn: conn, map_conn: map_conn}
   end
 
-  @tag ["27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: clone a collection schema" do
     schema = %{
       "name" => "vehicles",
@@ -58,7 +58,7 @@ defmodule CollectionsTest do
              Collections.create_collection(payload, src_name: schema["name"])
   end
 
-  @tag ["27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: create a collection", %{schema: schema, conn: conn, map_conn: map_conn} do
     name = schema["name"]
 
@@ -72,7 +72,7 @@ defmodule CollectionsTest do
              Collections.create_collection(map_conn, schema, [])
   end
 
-  @tag ["27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list collections", %{conn: conn, map_conn: map_conn} do
     assert {:ok, collections} = Collections.get_collections()
     assert length(collections) >= 0
@@ -85,7 +85,7 @@ defmodule CollectionsTest do
     assert {:ok, _} = Collections.get_collections(map_conn, limit: 1)
   end
 
-  @tag ["27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: update an existing collection", %{conn: conn, map_conn: map_conn} do
     name = "burgers"
 
@@ -122,7 +122,7 @@ defmodule CollectionsTest do
     Collections.delete_collection(name)
   end
 
-  @tag ["27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list empty aliases", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %CollectionAliasesResponse{aliases: aliases}} = Collections.get_aliases()
     assert length(aliases) >= 0
@@ -133,7 +133,7 @@ defmodule CollectionsTest do
     assert {:ok, _} = Collections.get_aliases(map_conn, [])
   end
 
-  @tag ["27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: delete a missing collection", %{conn: conn, map_conn: map_conn} do
     assert Collections.delete_collection("non-existing-collection") ==
              {:error,
@@ -148,7 +148,7 @@ defmodule CollectionsTest do
     assert {:error, %ApiResponse{message: _}} = Collections.delete_collection(map_conn, "xyz", [])
   end
 
-  @tag ["27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: upsert an alias", %{
     schema: schema,
     alias_name: alias_name,
@@ -176,7 +176,7 @@ defmodule CollectionsTest do
     assert {:error, %ApiResponse{message: _}} = Collections.delete_alias(map_conn, alias_name, [])
   end
 
-  @tag ["27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: get a non-existing alias", %{conn: conn, map_conn: map_conn} do
     assert Collections.get_alias("non-existing-alias") ==
              {:error, %ApiResponse{message: "Not Found"}}
@@ -188,7 +188,7 @@ defmodule CollectionsTest do
     assert {:error, %ApiResponse{message: _}} = Collections.get_alias(map_conn, "xyz", [])
   end
 
-  @tag ["27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: get a non-existing collection", %{conn: conn, map_conn: map_conn} do
     assert Collections.get_collection("non-existing-collection") ==
              {:error, %ApiResponse{message: "Not Found"}}

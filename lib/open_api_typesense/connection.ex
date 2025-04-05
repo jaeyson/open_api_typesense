@@ -75,6 +75,18 @@ defmodule OpenApiTypesense.Connection do
     raise ArgumentError, "Expected a map for connection options"
   end
 
+  @doc since: "0.6.5"
+  @spec config(atom()) :: any()
+  def config(key, default \\ nil) do
+    Access.get(config(), key, default)
+  end
+
+  @doc since: "0.6.5"
+  @spec config :: list()
+  def config do
+    Application.get_all_env(:open_api_typesense)
+  end
+
   @spec required_fields :: list(atom())
   defp required_fields do
     # Dropping :client key in order to make it optional
@@ -97,15 +109,5 @@ defmodule OpenApiTypesense.Connection do
       client: config(:client),
       options: config(:options, [])
     }
-  end
-
-  @spec config(atom()) :: any()
-  def config(key, default \\ nil) do
-    Access.get(config(), key, default)
-  end
-
-  @spec config :: list()
-  def config do
-    Application.get_all_env(:open_api_typesense)
   end
 end

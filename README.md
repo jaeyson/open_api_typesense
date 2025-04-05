@@ -20,7 +20,7 @@ by adding `open_api_typesense` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:open_api_typesense, "~> 0.6"}
+    {:open_api_typesense, "~> 0.7"}
 
     # Or from GitHub repository, if you want the latest greatest from main branch
     {:open_api_typesense, git: "https://github.com/jaeyson/open_api_typesense.git"}

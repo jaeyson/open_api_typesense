@@ -21,26 +21,6 @@ defmodule OpenApiTypesense.Client do
           | {:error, list()}
           | :error
 
-  @doc since: "0.2.0"
-  @spec get_host :: String.t() | nil
-  @deprecated "Use OpenApiTypesense.Connection.config(:host) instead"
-  def get_host, do: Application.get_env(:open_api_typesense, :host)
-
-  @doc since: "0.2.0"
-  @spec get_scheme :: String.t() | nil
-  @deprecated "Use OpenApiTypesense.Connection.config(:scheme) instead"
-  def get_scheme, do: Application.get_env(:open_api_typesense, :scheme)
-
-  @doc since: "0.2.0"
-  @spec get_port :: non_neg_integer() | nil
-  @deprecated "Use OpenApiTypesense.Connection.config(:port) instead"
-  def get_port, do: Application.get_env(:open_api_typesense, :port)
-
-  @doc since: "0.5.0"
-  @spec get_client :: keyword() | nil
-  @deprecated "Use OpenApiTypesense.Connection.config(:client) instead"
-  def get_client, do: Application.get_env(:open_api_typesense, :client)
-
   @doc """
   Returns the Typesense's API key
 
@@ -190,12 +170,17 @@ defmodule OpenApiTypesense.Client do
     resp =
       values
       |> Enum.map(fn {module, _func_name} ->
-        if is_list(body) do
-          Enum.map(body, fn single_body ->
-            struct(module, single_body)
-          end)
-        else
-          struct(module, body)
+        cond do
+          is_list(body) ->
+            Enum.map(body, fn single_body ->
+              struct(module, single_body)
+            end)
+
+          is_nil(body) ->
+            []
+
+          true ->
+            struct(module, body)
         end
       end)
       |> List.flatten()
