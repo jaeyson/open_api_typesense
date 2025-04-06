@@ -259,7 +259,7 @@ defmodule OpenApiTypesense.Operations do
   """
   @doc since: "0.4.0"
   @spec retrieve_api_stats ::
-          {:ok, OpenApiTypesense.APIStatsResponse.t()}
+          {:ok, OpenApiTypesense.ApiStatsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_api_stats do
     retrieve_api_stats([])
@@ -273,7 +273,7 @@ defmodule OpenApiTypesense.Operations do
   """
   @doc since: "0.4.0"
   @spec retrieve_api_stats(map() | Connection.t() | keyword()) ::
-          {:ok, OpenApiTypesense.APIStatsResponse.t()}
+          {:ok, OpenApiTypesense.ApiStatsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_api_stats(opts) when is_list(opts) do
     retrieve_api_stats(Connection.new(), opts)
@@ -290,7 +290,7 @@ defmodule OpenApiTypesense.Operations do
   """
   @doc since: "0.4.0"
   @spec retrieve_api_stats(map() | Connection.t(), keyword()) ::
-          {:ok, OpenApiTypesense.APIStatsResponse.t()}
+          {:ok, OpenApiTypesense.ApiStatsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_api_stats(conn, opts) when not is_struct(conn) and is_map(conn) do
     retrieve_api_stats(Connection.new(conn), opts)
@@ -305,7 +305,7 @@ defmodule OpenApiTypesense.Operations do
       url: "/stats.json",
       method: :get,
       response: [
-        {200, {OpenApiTypesense.APIStatsResponse, :t}},
+        {200, {OpenApiTypesense.ApiStatsResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts

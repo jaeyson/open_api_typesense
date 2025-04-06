@@ -2084,7 +2084,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/APIStatsResponse'
+                $ref: '#/components/schemas/ApiStatsResponse'
         "401":
           description: Missing API key
           content:
@@ -4161,7 +4161,7 @@ components:
           items:
             $ref: '#/components/schemas/AnalyticsRuleSchema'
           x-go-type: '[]*AnalyticsRuleSchema'
-    APIStatsResponse:
+    ApiStatsResponse:
       type: object
       properties:
         delete_latency_ms:

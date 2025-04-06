@@ -1,7 +1,7 @@
 defmodule OperationsTest do
   use ExUnit.Case, async: true
 
-  alias OpenApiTypesense.APIStatsResponse
+  alias OpenApiTypesense.ApiStatsResponse
   alias OpenApiTypesense.Connection
   alias OpenApiTypesense.Operations
   alias OpenApiTypesense.SuccessStatus
@@ -17,12 +17,12 @@ defmodule OperationsTest do
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: retrieve api stats", %{conn: conn, map_conn: map_conn} do
-    assert {:ok, %APIStatsResponse{}} = Operations.retrieve_api_stats()
-    assert {:ok, %APIStatsResponse{}} = Operations.retrieve_api_stats([])
-    assert {:ok, %APIStatsResponse{}} = Operations.retrieve_api_stats(conn)
-    assert {:ok, %APIStatsResponse{}} = Operations.retrieve_api_stats(map_conn)
-    assert {:ok, %APIStatsResponse{}} = Operations.retrieve_api_stats(conn, [])
-    assert {:ok, %APIStatsResponse{}} = Operations.retrieve_api_stats(map_conn, [])
+    assert {:ok, %ApiStatsResponse{}} = Operations.retrieve_api_stats()
+    assert {:ok, %ApiStatsResponse{}} = Operations.retrieve_api_stats([])
+    assert {:ok, %ApiStatsResponse{}} = Operations.retrieve_api_stats(conn)
+    assert {:ok, %ApiStatsResponse{}} = Operations.retrieve_api_stats(map_conn)
+    assert {:ok, %ApiStatsResponse{}} = Operations.retrieve_api_stats(conn, [])
+    assert {:ok, %ApiStatsResponse{}} = Operations.retrieve_api_stats(map_conn, [])
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]

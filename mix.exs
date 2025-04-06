@@ -50,6 +50,19 @@ defmodule OpenApiTypesense.MixProject do
     ]
   end
 
+  defp get_modules(path) do
+    File.ls!("lib/open_api_typesense/#{path}")
+    |> Enum.map(fn schema_name ->
+      module_name =
+        schema_name
+        |> Path.rootname()
+        |> Macro.camelize()
+
+      Module.concat(OpenApiTypesense, module_name)
+    end)
+    |> Enum.sort()
+  end
+
   defp docs do
     [
       api_reference: false,
@@ -72,22 +85,8 @@ defmodule OpenApiTypesense.MixProject do
           OpenApiTypesense.Client,
           OpenApiTypesense.Connection
         ],
-        Operations: [
-          OpenApiTypesense.Analytics,
-          OpenApiTypesense.Collections,
-          OpenApiTypesense.Conversations,
-          OpenApiTypesense.Curation,
-          OpenApiTypesense.Debug,
-          OpenApiTypesense.Documents,
-          OpenApiTypesense.Health,
-          OpenApiTypesense.Keys,
-          OpenApiTypesense.Operations,
-          OpenApiTypesense.Override,
-          OpenApiTypesense.Presets,
-          OpenApiTypesense.Stemming,
-          OpenApiTypesense.Stopwords,
-          OpenApiTypesense.Synonyms
-        ]
+        Operations: get_modules("operations"),
+        Schemas: get_modules("schemas")
       ]
     ]
   end
