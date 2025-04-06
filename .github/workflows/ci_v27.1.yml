@@ -1,4 +1,4 @@
-name: CI
+name: CI v27.1
 
 on:
   push:
@@ -24,43 +24,19 @@ jobs:
     env:
       MIX_ENV: test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      LATEST_TYPESENSE: '28.0'
+      LATEST_TYPESENSE: '27.1'
 
     strategy:
       matrix:
         include:
-        - typesense: '26.0'
-          otp: '25'
-          elixir: '1.14'
-          lint: false
-        - typesense: '27.0'
-          otp: '25'
-          elixir: '1.14'
-          lint: false
         - typesense: '27.1'
           otp: '25'
           elixir: '1.14'
-          lint: false
-        - typesense: '28.0'
-          otp: '25'
-          elixir: '1.14'
-          lint: false
-        - typesense: '26.0'
-          otp: '27'
-          elixir: '1.18'
-          lint: false
-        - typesense: '27.0'
-          otp: '27'
-          elixir: '1.18'
           lint: false
         - typesense: '27.1'
           otp: '27'
           elixir: '1.18'
           lint: false
-        - typesense: '28.0'
-          otp: '27'
-          elixir: '1.18'
-          lint: true
 
     services:
       typesense:
