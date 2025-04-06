@@ -1,4 +1,6 @@
 defmodule OpenApiTypesense.Debug do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoint related to debug
   """
@@ -16,8 +18,9 @@ defmodule OpenApiTypesense.Debug do
 
   Print debugging information
   """
+  @doc since: "0.4.0"
   @spec debug :: {:ok, map()} | {:ok, map()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def debug, do: debug(Connection.new())
+  def debug, do: debug([])
 
   @doc """
   Either one of:
@@ -25,6 +28,7 @@ defmodule OpenApiTypesense.Debug do
   - `debug(%{api_key: xyz, host: ...})`
   - `debug(Connection.new())`
   """
+  @doc since: "0.4.0"
   @spec debug(map() | Connection.t() | keyword()) ::
           {:ok, map()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def debug(opts) when is_list(opts) do
@@ -40,13 +44,13 @@ defmodule OpenApiTypesense.Debug do
   - `debug(%{api_key: xyz, host: ...}, opts)`
   - `debug(Connection.new(), opts)`
   """
+  @doc since: "0.4.0"
   @spec debug(map() | Connection.t(), keyword()) ::
           {:ok, map()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def debug(conn, opts) when not is_struct(conn) and is_map(conn) do
     debug(Connection.new(conn), opts)
   end
 
-  @spec debug(Connection.t(), keyword()) :: {:ok, map()} | :error
   def debug(%Connection{} = conn, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
 

@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.7.0 (2025.04.06)
+
+### Changed ([#28](https://github.com/jaeyson/open_api_typesense/pull/28))
+
+* Update to include Typesense [v28.0](https://typesense.org/docs/28.0/api)
+* Removed deprecated functions in `OpenApiTypesense.Client`
+* Bump dependency versions.
+* Renamed `search` to `search_collection` from `Documents` module.
+
+### Added
+
+* Tests for [stemming](https://typesense.org/docs/28.0/api/stemming.html)
+* Doc version tags
+
 ## 0.6.5 (2025.03.23)
 
 ### Changed ([#25](https://github.com/jaeyson/open_api_typesense/pull/25))

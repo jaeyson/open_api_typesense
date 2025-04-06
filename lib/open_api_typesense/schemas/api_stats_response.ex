@@ -1,6 +1,6 @@
-defmodule OpenApiTypesense.APIStatsResponse do
+defmodule OpenApiTypesense.ApiStatsResponse do
   @moduledoc """
-  Provides struct and type for a APIStatsResponse
+  Provides struct and type for a ApiStatsResponse
   """
 
   @type t :: %__MODULE__{

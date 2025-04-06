@@ -12,7 +12,7 @@ defmodule DebugTest do
     %{conn: conn, map_conn: map_conn}
   end
 
-  @tag ["27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list stopwords sets", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %Debug{version: _}} = Debug.debug()
     assert {:ok, _} = Debug.debug([])
@@ -22,7 +22,7 @@ defmodule DebugTest do
     assert {:ok, _} = Debug.debug(map_conn, [])
   end
 
-  @tag ["27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "field" do
     assert [version: {:string, :generic}] = Debug.__fields__(:debug_200_json_resp)
   end

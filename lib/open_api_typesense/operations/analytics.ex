@@ -1,4 +1,6 @@
 defmodule OpenApiTypesense.Analytics do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoints related to analytics
   """
@@ -12,11 +14,12 @@ defmodule OpenApiTypesense.Analytics do
 
   Sending events for analytics e.g rank search results based on popularity.
   """
+  @doc since: "0.4.0"
   @spec create_analytics_event(map()) ::
           {:ok, OpenApiTypesense.AnalyticsEventCreateResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_analytics_event(body) do
-    create_analytics_event(Connection.new(), body)
+    create_analytics_event(body, [])
   end
 
   @doc """
@@ -25,6 +28,7 @@ defmodule OpenApiTypesense.Analytics do
   - `create_analytics_event(%{api_key: xyz, host: ...}, payload)`
   - `create_analytics_event(Connection.new(), payload)`
   """
+  @doc since: "0.4.0"
   @spec create_analytics_event(map() | Connection.t(), map() | keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsEventCreateResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -41,6 +45,7 @@ defmodule OpenApiTypesense.Analytics do
   - `create_analytics_event(%{api_key: xyz, host: ...}, payload, opts)`
   - `create_analytics_event(Connection.new(), payload, opts)`
   """
+  @doc since: "0.4.0"
   @spec create_analytics_event(map() | Connection.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsEventCreateResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -72,11 +77,12 @@ defmodule OpenApiTypesense.Analytics do
 
   When an analytics rule is created, we give it a name and describe the type, the source collections and the destination collection.
   """
+  @doc since: "0.4.0"
   @spec create_analytics_rule(map()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_analytics_rule(body) do
-    create_analytics_rule(Connection.new(), body)
+    create_analytics_rule(body, [])
   end
 
   @doc """
@@ -85,6 +91,7 @@ defmodule OpenApiTypesense.Analytics do
   - `create_analytics_rule(%{api_key: xyz, host: ...}, payload)`
   - `create_analytics_rule(Connection.new(), payload)`
   """
+  @doc since: "0.4.0"
   @spec create_analytics_rule(map() | Connection.t(), map() | keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -101,6 +108,7 @@ defmodule OpenApiTypesense.Analytics do
   - `create_analytics_rule(%{api_key: xyz, host: ...}, payload, opts)`
   - `create_analytics_rule(Connection.new(), payload, opts)`
   """
+  @doc since: "0.4.0"
   @spec create_analytics_rule(map() | Connection.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -133,11 +141,12 @@ defmodule OpenApiTypesense.Analytics do
 
   Permanently deletes an analytics rule, given it's name
   """
+  @doc since: "0.4.0"
   @spec delete_analytics_rule(String.t()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_analytics_rule(ruleName) do
-    delete_analytics_rule(Connection.new(), ruleName)
+    delete_analytics_rule(ruleName, [])
   end
 
   @doc """
@@ -146,6 +155,7 @@ defmodule OpenApiTypesense.Analytics do
   - `delete_analytics_rule(%{api_key: xyz, host: ...}, ruleName)`
   - `delete_analytics_rule(Connection.new(), ruleName)`
   """
+  @doc since: "0.4.0"
   @spec delete_analytics_rule(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -162,6 +172,7 @@ defmodule OpenApiTypesense.Analytics do
   - `delete_analytics_rule(%{api_key: xyz, host: ...}, ruleName, opts)`
   - `delete_analytics_rule(Connection.new(), ruleName, opts)`
   """
+  @doc since: "0.4.0"
   @spec delete_analytics_rule(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -191,11 +202,12 @@ defmodule OpenApiTypesense.Analytics do
 
   Retrieve the details of an analytics rule, given it's name
   """
+  @doc since: "0.4.0"
   @spec retrieve_analytics_rule(String.t()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_analytics_rule(ruleName) do
-    retrieve_analytics_rule(Connection.new(), ruleName)
+    retrieve_analytics_rule(ruleName, [])
   end
 
   @doc """
@@ -204,6 +216,7 @@ defmodule OpenApiTypesense.Analytics do
   - `retrieve_analytics_rule(%{api_key: xyz, host: ...}, ruleName)`
   - `retrieve_analytics_rule(Connection.new(), ruleName)`
   """
+  @doc since: "0.4.0"
   @spec retrieve_analytics_rule(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -220,6 +233,7 @@ defmodule OpenApiTypesense.Analytics do
   - `retrieve_analytics_rule(%{api_key: xyz, host: ...}, ruleName, opts)`
   - `retrieve_analytics_rule(Connection.new(), ruleName, opts)`
   """
+  @doc since: "0.4.0"
   @spec retrieve_analytics_rule(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -250,11 +264,12 @@ defmodule OpenApiTypesense.Analytics do
   Retrieve the details of all analytics rules
 
   """
+  @doc since: "0.4.0"
   @spec retrieve_analytics_rules ::
           {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_analytics_rules do
-    retrieve_analytics_rules(Connection.new())
+    retrieve_analytics_rules([])
   end
 
   @doc """
@@ -263,6 +278,7 @@ defmodule OpenApiTypesense.Analytics do
   - `retrieve_analytics_rules(%{api_key: xyz, host: ...})`
   - `retrieve_analytics_rules(Connection.new())`
   """
+  @doc since: "0.4.0"
   @spec retrieve_analytics_rules(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -279,6 +295,7 @@ defmodule OpenApiTypesense.Analytics do
   - `retrieve_analytics_rules(%{api_key: xyz, host: ...}, opts)`
   - `retrieve_analytics_rules(Connection.new(), opts)`
   """
+  @doc since: "0.4.0"
   @spec retrieve_analytics_rules(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -307,11 +324,12 @@ defmodule OpenApiTypesense.Analytics do
 
   Upserts an analytics rule with the given name.
   """
+  @doc since: "0.4.0"
   @spec upsert_analytics_rule(String.t(), map()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_analytics_rule(ruleName, body) do
-    upsert_analytics_rule(Connection.new(), ruleName, body)
+    upsert_analytics_rule(ruleName, body, [])
   end
 
   @doc """
@@ -320,6 +338,7 @@ defmodule OpenApiTypesense.Analytics do
   - `upsert_analytics_rule(%{api_key: xyz, host: ...}, ruleName, body)`
   - `upsert_analytics_rule(Connection.new(), ruleName, body)`
   """
+  @doc since: "0.4.0"
   @spec upsert_analytics_rule(
           map() | Connection.t() | String.t(),
           String.t() | map(),
@@ -340,6 +359,7 @@ defmodule OpenApiTypesense.Analytics do
   - `upsert_analytics_rule(%{api_key: xyz, host: ...}, ruleName, body, opts)`
   - `upsert_analytics_rule(Connection.new(), ruleName, body, opts)`
   """
+  @doc since: "0.4.0"
   @spec upsert_analytics_rule(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}

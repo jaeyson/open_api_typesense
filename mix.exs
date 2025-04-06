@@ -3,7 +3,7 @@ defmodule OpenApiTypesense.MixProject do
 
   @source_url "https://github.com/jaeyson/open_api_typesense"
   @hex_url "https://hexdocs.pm/open_api_typesense"
-  @version "0.6.5"
+  @version "0.7.0"
 
   def project do
     [
@@ -50,6 +50,19 @@ defmodule OpenApiTypesense.MixProject do
     ]
   end
 
+  defp get_modules(path) do
+    File.ls!("lib/open_api_typesense/#{path}")
+    |> Enum.map(fn schema_name ->
+      module_name =
+        schema_name
+        |> Path.rootname()
+        |> Macro.camelize()
+
+      Module.concat(OpenApiTypesense, module_name)
+    end)
+    |> Enum.sort()
+  end
+
   defp docs do
     [
       api_reference: false,
@@ -72,91 +85,8 @@ defmodule OpenApiTypesense.MixProject do
           OpenApiTypesense.Client,
           OpenApiTypesense.Connection
         ],
-        Operations: [
-          OpenApiTypesense.Analytics,
-          OpenApiTypesense.Collections,
-          OpenApiTypesense.Conversations,
-          OpenApiTypesense.Curation,
-          OpenApiTypesense.Debug,
-          OpenApiTypesense.Documents,
-          OpenApiTypesense.Health,
-          OpenApiTypesense.Keys,
-          OpenApiTypesense.Operations,
-          OpenApiTypesense.Override,
-          OpenApiTypesense.Presets,
-          OpenApiTypesense.Stopwords,
-          OpenApiTypesense.Synonyms
-        ],
-        Schemas: [
-          OpenApiTypesense.AnalyticsEventCreateResponse,
-          OpenApiTypesense.AnalyticsEventCreateSchema,
-          OpenApiTypesense.AnalyticsRuleDeleteResponse,
-          OpenApiTypesense.AnalyticsRuleParameters,
-          OpenApiTypesense.AnalyticsRuleParametersDestination,
-          OpenApiTypesense.AnalyticsRuleParametersSource,
-          OpenApiTypesense.AnalyticsRuleParametersSourceEvents,
-          OpenApiTypesense.AnalyticsRuleSchema,
-          OpenApiTypesense.AnalyticsRuleUpsertSchema,
-          OpenApiTypesense.AnalyticsRulesRetrieveSchema,
-          OpenApiTypesense.ApiKey,
-          OpenApiTypesense.ApiKeyDeleteResponse,
-          OpenApiTypesense.ApiKeySchema,
-          OpenApiTypesense.ApiKeysResponse,
-          OpenApiTypesense.ApiResponse,
-          OpenApiTypesense.APIStatsResponse,
-          OpenApiTypesense.CollectionAlias,
-          OpenApiTypesense.CollectionAliasSchema,
-          OpenApiTypesense.CollectionAliasesResponse,
-          OpenApiTypesense.CollectionAliasesesResponse,
-          OpenApiTypesense.CollectionResponse,
-          OpenApiTypesense.CollectionSchema,
-          OpenApiTypesense.CollectionUpdateSchema,
-          OpenApiTypesense.ConversationModelCreateSchema,
-          OpenApiTypesense.ConversationModelSchema,
-          OpenApiTypesense.ConversationModelUpdateSchema,
-          OpenApiTypesense.FacetCounts,
-          OpenApiTypesense.FacetCountsCounts,
-          OpenApiTypesense.FacetCountsStats,
-          OpenApiTypesense.Field,
-          OpenApiTypesense.FieldEmbed,
-          OpenApiTypesense.FieldEmbedModelConfig,
-          OpenApiTypesense.HealthStatus,
-          OpenApiTypesense.MultiSearchCollectionParameters,
-          OpenApiTypesense.MultiSearchResult,
-          OpenApiTypesense.MultiSearchSearchesParameter,
-          OpenApiTypesense.PresetDeleteSchema,
-          OpenApiTypesense.PresetSchema,
-          OpenApiTypesense.PresetUpsertSchema,
-          OpenApiTypesense.PresetsRetrieveSchema,
-          OpenApiTypesense.SearchGroupedHit,
-          OpenApiTypesense.SearchHighlight,
-          OpenApiTypesense.SearchOverride,
-          OpenApiTypesense.SearchOverrideDeleteResponse,
-          OpenApiTypesense.SearchOverrideExclude,
-          OpenApiTypesense.SearchOverrideInclude,
-          OpenApiTypesense.SearchOverrideRule,
-          OpenApiTypesense.SearchOverrideSchema,
-          OpenApiTypesense.SearchOverridesResponse,
-          OpenApiTypesense.SearchParameters,
-          OpenApiTypesense.SearchResult,
-          OpenApiTypesense.SearchResultConversation,
-          OpenApiTypesense.SearchResultHit,
-          OpenApiTypesense.SearchResultHitDocument,
-          OpenApiTypesense.SearchResultHitGeoDistanceMeters,
-          OpenApiTypesense.SearchResultHitTextMatchInfo,
-          OpenApiTypesense.SearchResultRequestParams,
-          OpenApiTypesense.SearchResultRequestParamsVoiceQuery,
-          OpenApiTypesense.SearchSynonym,
-          OpenApiTypesense.SearchSynonymDeleteResponse,
-          OpenApiTypesense.SearchSynonymSchema,
-          OpenApiTypesense.SearchSynonymsResponse,
-          OpenApiTypesense.StopwordsSetRetrieveSchema,
-          OpenApiTypesense.StopwordsSetSchema,
-          OpenApiTypesense.StopwordsSetUpsertSchema,
-          OpenApiTypesense.StopwordsSetsRetrieveAllSchema,
-          OpenApiTypesense.SuccessStatus,
-          OpenApiTypesense.VoiceQueryModelCollectionConfig
-        ]
+        Operations: get_modules("operations"),
+        Schemas: get_modules("schemas")
       ]
     ]
   end

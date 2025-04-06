@@ -24,7 +24,7 @@ jobs:
     env:
       MIX_ENV: test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      LATEST_TYPESENSE: '27.1'
+      LATEST_TYPESENSE: '28.0'
 
     strategy:
       matrix:
@@ -41,6 +41,10 @@ jobs:
           otp: '25'
           elixir: '1.14'
           lint: false
+        - typesense: '28.0'
+          otp: '25'
+          elixir: '1.14'
+          lint: false
         - typesense: '26.0'
           otp: '27'
           elixir: '1.18'
@@ -50,6 +54,10 @@ jobs:
           elixir: '1.18'
           lint: false
         - typesense: '27.1'
+          otp: '27'
+          elixir: '1.18'
+          lint: false
+        - typesense: '28.0'
           otp: '27'
           elixir: '1.18'
           lint: true

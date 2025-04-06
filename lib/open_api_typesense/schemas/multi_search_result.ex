@@ -5,7 +5,7 @@ defmodule OpenApiTypesense.MultiSearchResult do
 
   @type t :: %__MODULE__{
           conversation: OpenApiTypesense.SearchResultConversation.t() | nil,
-          results: [OpenApiTypesense.SearchResult.t()]
+          results: [OpenApiTypesense.MultiSearchResultItem.t()]
         }
 
   defstruct [:conversation, :results]
@@ -17,7 +17,7 @@ defmodule OpenApiTypesense.MultiSearchResult do
   def __fields__(:t) do
     [
       conversation: {OpenApiTypesense.SearchResultConversation, :t},
-      results: [{OpenApiTypesense.SearchResult, :t}]
+      results: [{OpenApiTypesense.MultiSearchResultItem, :t}]
     ]
   end
 end
