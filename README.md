@@ -2,15 +2,20 @@
 
 Restful client for Typesense with adherence to Open API spec 3 (formerly Swagger)
 
-[![Dependabot](https://img.shields.io/badge/Dependabot-enabled-green)](https://github.com/jaeyson/open_api_typesense/pulls/app%2Fdependabot)
 [![Hex.pm](https://img.shields.io/hexpm/v/open_api_typesense)](https://hex.pm/packages/open_api_typesense)
 [![Hexdocs.pm](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/open_api_typesense)
-[![Hex.pm](https://img.shields.io/hexpm/l/open_api_typesense)](https://hexdocs.pm/open_api_typesense/license.html)
-[![Typesense badge](https://img.shields.io/badge/Typesense-v26.0_%7C_v27.0_%7C_v27.1_%7C_v28.0-darkblue)](https://typesense.org/docs/27.1/api)
 [![Coverage Status](https://coveralls.io/repos/github/jaeyson/open_api_typesense/badge.svg?branch=main)](https://coveralls.io/github/jaeyson/open_api_typesense?branch=main)
-[![CI Status](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/965dd3f8866d49c3b3e82edd0f6270cb)](https://app.codacy.com/gh/jaeyson/open_api_typesense/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![CodeScene Average Code Health](https://codescene.io/projects/63240/status-badges/average-code-health)](https://codescene.io/projects/63240)
+[![codescenene Average Code Health](https://codescene.io/projects/63240/status-badges/average-code-health)](https://codescene.io/projects/63240)
+
+[![CI v28.0](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v28.0.yml/badge.svg)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v28.0.yml)
+[![CI v27.1](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v27.1.yml/badge.svg)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v27.1.yml)
+[![CI v27.0](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v27.0.yml/badge.svg)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v27.0.yml)
+[![CI v26.0](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v26.0.yml/badge.svg)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v26.0.yml)
+
+[![Dependabot](https://img.shields.io/badge/Dependabot-enabled-green)](https://github.com/jaeyson/open_api_typesense/pulls/app%2Fdependabot)
+[![Hex.pm](https://img.shields.io/hexpm/l/open_api_typesense)](https://hexdocs.pm/open_api_typesense/license.html)
+[![Latest Typesense compatible](https://img.shields.io/badge/Latest%20Typesense%20compatible-v28.0-%230F35BC)](https://typesense.org/docs/28.0/api)
 
 ## Installation
 
