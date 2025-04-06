@@ -1,4 +1,6 @@
 defmodule OpenApiTypesense.Synonyms do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoints related to synonyms
   """
@@ -10,11 +12,12 @@ defmodule OpenApiTypesense.Synonyms do
   @doc """
   Delete a synonym associated with a collection
   """
+  @doc since: "0.4.0"
   @spec delete_search_synonym(String.t(), String.t()) ::
           {:ok, OpenApiTypesense.SearchSynonymDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_search_synonym(collectionName, synonymId) do
-    delete_search_synonym(Connection.new(), collectionName, synonymId, [])
+    delete_search_synonym(collectionName, synonymId, [])
   end
 
   @doc """
@@ -23,6 +26,7 @@ defmodule OpenApiTypesense.Synonyms do
   - `delete_search_synonym(%{api_key: xyz, host: ...}, collectionName, synonymId)`
   - `delete_search_synonym(Connection.new(), collectionName, synonymId)`
   """
+  @doc since: "0.4.0"
   @spec delete_search_synonym(
           map() | Connection.t() | String.t(),
           String.t(),
@@ -44,6 +48,7 @@ defmodule OpenApiTypesense.Synonyms do
   - `delete_search_synonym(%{api_key: xyz, host: ...}, collectionName, synonymId, opts)`
   - `delete_search_synonym(Connection.new(), collectionName, synonymId, opts)`
   """
+  @doc since: "0.4.0"
   @spec delete_search_synonym(
           map() | Connection.t() | String.t(),
           String.t(),
@@ -80,10 +85,11 @@ defmodule OpenApiTypesense.Synonyms do
 
   Retrieve the details of a search synonym, given its id.
   """
+  @doc since: "0.4.0"
   @spec get_search_synonym(String.t(), String.t()) ::
           {:ok, OpenApiTypesense.SearchSynonym.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_synonym(collectionName, synonymId) do
-    get_search_synonym(Connection.new(), collectionName, synonymId, [])
+    get_search_synonym(collectionName, synonymId, [])
   end
 
   @doc """
@@ -92,6 +98,7 @@ defmodule OpenApiTypesense.Synonyms do
   - `get_search_synonym(%{api_key: xyz, host: ...}, collectionName, synonymId)`
   - `get_search_synonym(Connection.new(), collectionName, synonymId)`
   """
+  @doc since: "0.4.0"
   @spec get_search_synonym(
           map() | Connection.t() | String.t(),
           String.t(),
@@ -112,6 +119,7 @@ defmodule OpenApiTypesense.Synonyms do
   - `get_search_synonym(%{api_key: xyz, host: ...}, collectionName, synonymId, opts)`
   - `get_search_synonym(Connection.new(), collectionName, synonymId, opts)`
   """
+  @doc since: "0.4.0"
   @spec get_search_synonym(map() | Connection.t(), String.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchSynonym.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_synonym(conn, collectionName, synonymId, opts)
@@ -146,11 +154,12 @@ defmodule OpenApiTypesense.Synonyms do
     * `offset`: Skip a certain number of results and start after that.
 
   """
+  @doc since: "0.4.0"
   @spec get_search_synonyms(String.t()) ::
           {:ok, OpenApiTypesense.SearchSynonymsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_synonyms(collectionName) do
-    get_search_synonyms(Connection.new(), collectionName, [])
+    get_search_synonyms(collectionName, [])
   end
 
   @doc """
@@ -159,6 +168,7 @@ defmodule OpenApiTypesense.Synonyms do
   - `get_search_synonyms(%{api_key: xyz, host: ...}, collectionName)`
   - `get_search_synonyms(Connection.new(), collectionName)`
   """
+  @doc since: "0.4.0"
   @spec get_search_synonyms(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchSynonymsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -176,6 +186,7 @@ defmodule OpenApiTypesense.Synonyms do
   - `get_search_synonyms(%{api_key: xyz, host: ...}, collectionName, opts)`
   - `get_search_synonyms(Connection.new(), collectionName, opts)`
   """
+  @doc since: "0.4.0"
   @spec get_search_synonyms(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchSynonymsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -207,10 +218,11 @@ defmodule OpenApiTypesense.Synonyms do
 
   Create or update a synonym  to define search terms that should be considered equivalent.
   """
+  @doc since: "0.4.0"
   @spec upsert_search_synonym(String.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.SearchSynonym.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_search_synonym(collectionName, synonymId, body) do
-    upsert_search_synonym(Connection.new(), collectionName, synonymId, body, [])
+    upsert_search_synonym(collectionName, synonymId, body, [])
   end
 
   @doc """
@@ -219,6 +231,7 @@ defmodule OpenApiTypesense.Synonyms do
   - `upsert_search_synonym(%{api_key: xyz, host: ...}, collectionName, synonymId, body)`
   - `upsert_search_synonym(Connection.new(), collectionName, synonymId, body)`
   """
+  @doc since: "0.4.0"
   @spec upsert_search_synonym(
           map() | Connection.t() | String.t(),
           String.t(),
@@ -240,6 +253,7 @@ defmodule OpenApiTypesense.Synonyms do
   - `upsert_search_synonym(%{api_key: xyz, host: ...}, collectionName, synonymId, body, opts)`
   - `upsert_search_synonym(Connection.new(), collectionName, synonymId, body, opts)`
   """
+  @doc since: "0.4.0"
   @spec upsert_search_synonym(map() | Connection.t(), String.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.SearchSynonym.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_search_synonym(conn, collectionName, synonymId, body, opts)

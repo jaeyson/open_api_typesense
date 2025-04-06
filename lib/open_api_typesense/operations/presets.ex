@@ -1,4 +1,6 @@
 defmodule OpenApiTypesense.Presets do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoints related to presets
   """
@@ -12,11 +14,12 @@ defmodule OpenApiTypesense.Presets do
 
   Permanently deletes a preset, given it's name.
   """
+  @doc since: "0.4.0"
   @spec delete_preset(String.t()) ::
           {:ok, OpenApiTypesense.PresetDeleteSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_preset(presetId) do
-    delete_preset(Connection.new(), presetId)
+    delete_preset(presetId, [])
   end
 
   @doc """
@@ -25,6 +28,7 @@ defmodule OpenApiTypesense.Presets do
   - `delete_preset(%{api_key: xyz, host: ...}, presetId)`
   - `delete_preset(Connection.new(), presetId)`
   """
+  @doc since: "0.4.0"
   @spec delete_preset(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.PresetDeleteSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -41,6 +45,7 @@ defmodule OpenApiTypesense.Presets do
   - `delete_preset(%{api_key: xyz, host: ...}, presetId, opts)`
   - `delete_preset(Connection.new(), presetId, opts)`
   """
+  @doc since: "0.4.0"
   @spec delete_preset(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.PresetDeleteSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -48,9 +53,6 @@ defmodule OpenApiTypesense.Presets do
     delete_preset(Connection.new(conn), presetId, opts)
   end
 
-  @spec delete_preset(Connection.t(), String.t(), keyword()) ::
-          {:ok, OpenApiTypesense.PresetDeleteSchema.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_preset(%Connection{} = conn, presetId, opts) when is_struct(conn) do
     client = opts[:client] || @default_client
 
@@ -73,11 +75,12 @@ defmodule OpenApiTypesense.Presets do
 
   Retrieve the details of all presets
   """
+  @doc since: "0.4.0"
   @spec retrieve_all_presets ::
           {:ok, OpenApiTypesense.PresetsRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_all_presets do
-    retrieve_all_presets(Connection.new())
+    retrieve_all_presets([])
   end
 
   @doc """
@@ -86,6 +89,7 @@ defmodule OpenApiTypesense.Presets do
   - `retrieve_all_presets(%{api_key: xyz, host: ...})`
   - `retrieve_all_presets(Connection.new())`
   """
+  @doc since: "0.4.0"
   @spec retrieve_all_presets(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.PresetsRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -102,6 +106,7 @@ defmodule OpenApiTypesense.Presets do
   - `retrieve_all_presets(%{api_key: xyz, host: ...}, opts)`
   - `retrieve_all_presets(Connection.new(), opts)`
   """
+  @doc since: "0.4.0"
   @spec retrieve_all_presets(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.PresetsRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -130,10 +135,11 @@ defmodule OpenApiTypesense.Presets do
 
   Retrieve the details of a preset, given it's name.
   """
+  @doc since: "0.4.0"
   @spec retrieve_preset(String.t()) ::
           {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_preset(presetId) do
-    retrieve_preset(Connection.new(), presetId)
+    retrieve_preset(presetId, [])
   end
 
   @doc """
@@ -142,6 +148,7 @@ defmodule OpenApiTypesense.Presets do
   - `retrieve_preset(%{api_key: xyz, host: ...}, presetId)`
   - `retrieve_preset(Connection.new(), presetId)`
   """
+  @doc since: "0.4.0"
   @spec retrieve_preset(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_preset(presetId, opts) when is_list(opts) and is_binary(presetId) do
@@ -157,6 +164,7 @@ defmodule OpenApiTypesense.Presets do
   - `retrieve_preset(%{api_key: xyz, host: ...}, presetId, opts)`
   - `retrieve_preset(Connection.new(), presetId, opts)`
   """
+  @doc since: "0.4.0"
   @spec retrieve_preset(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_preset(conn, presetId, opts) when not is_struct(conn) and is_map(conn) do
@@ -185,10 +193,11 @@ defmodule OpenApiTypesense.Presets do
 
   Create or update an existing preset.
   """
+  @doc since: "0.4.0"
   @spec upsert_preset(String.t(), map()) ::
           {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_preset(presetId, body) do
-    upsert_preset(Connection.new(), presetId, body)
+    upsert_preset(presetId, body, [])
   end
 
   @doc """
@@ -197,6 +206,7 @@ defmodule OpenApiTypesense.Presets do
   - `upsert_preset(%{api_key: xyz, host: ...}, presetId, payload)`
   - `upsert_preset(Connection.new(), presetId, payload)`
   """
+  @doc since: "0.4.0"
   @spec upsert_preset(map() | Connection.t() | String.t(), String.t() | map(), map() | keyword()) ::
           {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_preset(presetId, body, opts) when is_list(opts) and is_binary(presetId) do
@@ -212,6 +222,7 @@ defmodule OpenApiTypesense.Presets do
   - `upsert_preset(%{api_key: xyz, host: ...}, presetId, payload, opts)`
   - `upsert_preset(Connection.new(), presetId, payload, opts)`
   """
+  @doc since: "0.4.0"
   @spec upsert_preset(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_preset(conn, presetId, body, opts) when not is_struct(conn) and is_map(conn) do

@@ -1,4 +1,6 @@
 defmodule OpenApiTypesense.Stopwords do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoints related to stopwords
   """
@@ -16,10 +18,11 @@ defmodule OpenApiTypesense.Stopwords do
 
   Permanently deletes a stopwords set, given it's name.
   """
+  @doc since: "0.4.0"
   @spec delete_stopwords_set(String.t()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_stopwords_set(setId) do
-    delete_stopwords_set(Connection.new(), setId)
+    delete_stopwords_set(setId, [])
   end
 
   @doc """
@@ -28,6 +31,7 @@ defmodule OpenApiTypesense.Stopwords do
   - `delete_stopwords_set(%{api_key: xyz, host: ...}, setId)`
   - `delete_stopwords_set(Connection.new(), setId)`
   """
+  @doc since: "0.4.0"
   @spec delete_stopwords_set(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_stopwords_set(setId, opts) when is_list(opts) and is_binary(setId) do
@@ -43,6 +47,7 @@ defmodule OpenApiTypesense.Stopwords do
   - `delete_stopwords_set(%{api_key: xyz, host: ...}, setId, opts)`
   - `delete_stopwords_set(Connection.new(), setId, opts)`
   """
+  @doc since: "0.4.0"
   @spec delete_stopwords_set(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_stopwords_set(conn, setId, opts) when not is_struct(conn) and is_map(conn) do
@@ -71,11 +76,12 @@ defmodule OpenApiTypesense.Stopwords do
 
   Retrieve the details of a stopwords set, given it's name.
   """
+  @doc since: "0.4.0"
   @spec retrieve_stopwords_set(String.t()) ::
           {:ok, OpenApiTypesense.StopwordsSetRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_stopwords_set(setId) do
-    retrieve_stopwords_set(Connection.new(), setId)
+    retrieve_stopwords_set(setId, [])
   end
 
   @doc """
@@ -84,6 +90,7 @@ defmodule OpenApiTypesense.Stopwords do
   - `retrieve_stopwords_set(%{api_key: xyz, host: ...}, setId)`
   - `retrieve_stopwords_set(Connection.new(), setId)`
   """
+  @doc since: "0.4.0"
   @spec retrieve_stopwords_set(map() | Connection.t() | String.t(), keyword()) ::
           {:ok, OpenApiTypesense.StopwordsSetRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -100,6 +107,7 @@ defmodule OpenApiTypesense.Stopwords do
   - `retrieve_stopwords_set(%{api_key: xyz, host: ...}, setId, conn, opts)`
   - `retrieve_stopwords_set(Connection.new(), setId, conn, opts)`
   """
+  @doc since: "0.4.0"
   @spec retrieve_stopwords_set(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.StopwordsSetRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -129,11 +137,12 @@ defmodule OpenApiTypesense.Stopwords do
 
   Retrieve the details of all stopwords sets
   """
+  @doc since: "0.4.0"
   @spec retrieve_stopwords_sets ::
           {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_stopwords_sets do
-    retrieve_stopwords_sets(Connection.new())
+    retrieve_stopwords_sets([])
   end
 
   @doc """
@@ -142,6 +151,7 @@ defmodule OpenApiTypesense.Stopwords do
   - `retrieve_stopwords_sets(%{api_key: xyz, host: ...})`
   - `retrieve_stopwords_sets(Connection.new())`
   """
+  @doc since: "0.4.0"
   @spec retrieve_stopwords_sets(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -158,6 +168,7 @@ defmodule OpenApiTypesense.Stopwords do
   - `retrieve_stopwords_sets(%{api_key: xyz, host: ...}, opts)`
   - `retrieve_stopwords_sets(Connection.new(), opts)`
   """
+  @doc since: "0.4.0"
   @spec retrieve_stopwords_sets(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -186,11 +197,12 @@ defmodule OpenApiTypesense.Stopwords do
 
   When an analytics rule is created, we give it a name and describe the type, the source collections and the destination collection.
   """
+  @doc since: "0.4.0"
   @spec upsert_stopwords_set(String.t(), map()) ::
           {:ok, OpenApiTypesense.StopwordsSetSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_stopwords_set(setId, body) do
-    upsert_stopwords_set(Connection.new(), setId, body)
+    upsert_stopwords_set(setId, body, [])
   end
 
   @doc """
@@ -199,6 +211,7 @@ defmodule OpenApiTypesense.Stopwords do
   - `upsert_stopwords_set(%{api_key: xyz, host: ...}, setId, body)`
   - `upsert_stopwords_set(Connection.new(), setId, body)`
   """
+  @doc since: "0.4.0"
   @spec upsert_stopwords_set(
           map() | Connection.t() | String.t(),
           String.t() | map(),
@@ -219,6 +232,7 @@ defmodule OpenApiTypesense.Stopwords do
   - `upsert_stopwords_set(%{api_key: xyz, host: ...}, setId, body, opts)`
   - `upsert_stopwords_set(Connection.new(), setId, body, opts)`
   """
+  @doc since: "0.4.0"
   @spec upsert_stopwords_set(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.StopwordsSetSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}

@@ -1,4 +1,6 @@
 defmodule OpenApiTypesense.Operations do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoints related to operations
   """
@@ -12,6 +14,7 @@ defmodule OpenApiTypesense.Operations do
 
   Responses of search requests that are sent with use_cache parameter are cached in a LRU cache. Clears cache completely.
   """
+  @doc since: "0.4.2"
   @spec clear_cache ::
           {:ok, OpenApiTypesense.SuccessStatus.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -25,6 +28,7 @@ defmodule OpenApiTypesense.Operations do
   - `clear_cache(%{api_key: xyz, host: ...})`
   - `clear_cache(Connection.new())`
   """
+  @doc since: "0.4.2"
   @spec clear_cache(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -41,6 +45,7 @@ defmodule OpenApiTypesense.Operations do
   - `clear_cache(%{api_key: xyz, host: ...}, opts)`
   - `clear_cache(Connection.new(), opts)`
   """
+  @doc since: "0.4.2"
   @spec clear_cache(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -69,6 +74,7 @@ defmodule OpenApiTypesense.Operations do
 
   Typesense uses RocksDB to store your documents on the disk. If you do frequent writes or updates, you could benefit from running a compaction of the underlying RocksDB database. This could reduce the size of the database and decrease read latency. While the database will not block during this operation, we recommend running it during off-peak hours.
   """
+  @doc since: "0.4.2"
   @spec compact ::
           {:ok, OpenApiTypesense.SuccessStatus.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -82,6 +88,7 @@ defmodule OpenApiTypesense.Operations do
   - `compact(%{api_key: xyz, host: ...})`
   - `compact(Connection.new())`
   """
+  @doc since: "0.4.2"
   @spec compact(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -98,6 +105,7 @@ defmodule OpenApiTypesense.Operations do
   - `compact(%{api_key: xyz, host: ...}, opts)`
   - `compact(Connection.new(), opts)`
   """
+  @doc since: "0.4.2"
   @spec compact(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -131,6 +139,7 @@ defmodule OpenApiTypesense.Operations do
       iex> OpenApiTypesense.Operations.config(body)
 
   """
+  @doc since: "0.4.2"
   @spec config(map()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -144,6 +153,7 @@ defmodule OpenApiTypesense.Operations do
   - `config(%{api_key: xyz, host: ...}, payload)`
   - `config(Connection.new(), payload)`
   """
+  @doc since: "0.4.2"
   @spec config(map() | Connection.t(), map() | keyword()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -160,6 +170,7 @@ defmodule OpenApiTypesense.Operations do
   - `config(%{api_key: xyz, host: ...}, payload, opts)`
   - `config(Connection.new(), payload, opts)`
   """
+  @doc since: "0.4.2"
   @spec config(map() | Connection.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -246,6 +257,7 @@ defmodule OpenApiTypesense.Operations do
 
   Retrieve the stats about API endpoints.
   """
+  @doc since: "0.4.0"
   @spec retrieve_api_stats ::
           {:ok, OpenApiTypesense.APIStatsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -259,6 +271,7 @@ defmodule OpenApiTypesense.Operations do
   - `retrieve_api_stats(%{api_key: xyz, host: ...})`
   - `retrieve_api_stats(Connection.new())`
   """
+  @doc since: "0.4.0"
   @spec retrieve_api_stats(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.APIStatsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -275,6 +288,7 @@ defmodule OpenApiTypesense.Operations do
   - `retrieve_api_stats(%{api_key: xyz, host: ...}, opts)`
   - `retrieve_api_stats(Connection.new(), opts)`
   """
+  @doc since: "0.4.0"
   @spec retrieve_api_stats(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.APIStatsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -303,6 +317,7 @@ defmodule OpenApiTypesense.Operations do
 
   Retrieve the metrics.
   """
+  @doc since: "0.4.0"
   @spec retrieve_metrics :: {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_metrics do
     retrieve_metrics([])
@@ -314,6 +329,7 @@ defmodule OpenApiTypesense.Operations do
   - `retrieve_metrics(%{api_key: xyz, host: ...})`
   - `retrieve_metrics(Connection.new())`
   """
+  @doc since: "0.4.0"
   @spec retrieve_metrics(map() | Connection.t() | keyword()) ::
           {:ok, map()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_metrics(opts) when is_list(opts) do
@@ -329,6 +345,7 @@ defmodule OpenApiTypesense.Operations do
   - `retrieve_metrics(%{api_key: xyz, host: ...}, opts)`
   - `retrieve_metrics(Connection.new(), opts)`
   """
+  @doc since: "0.4.0"
   @spec retrieve_metrics(map() | Connection.t(), keyword()) ::
           {:ok, map()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_metrics(conn, opts) when not is_struct(conn) and is_map(conn) do
@@ -361,6 +378,7 @@ defmodule OpenApiTypesense.Operations do
     * `snapshot_path`: The directory on the server where the snapshot should be saved.
 
   """
+  @doc since: "0.4.0"
   @spec take_snapshot(keyword()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def take_snapshot(opts) do
@@ -372,6 +390,7 @@ defmodule OpenApiTypesense.Operations do
   - `take_snapshot(%{api_key: xyz, host: ...}, opts)`
   - `take_snapshot(Connection.new(), opts)`
   """
+  @doc since: "0.4.0"
   @spec take_snapshot(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def take_snapshot(conn, opts) when not is_struct(conn) and is_map(conn) do
@@ -402,6 +421,7 @@ defmodule OpenApiTypesense.Operations do
 
   Triggers a follower node to initiate the raft voting process, which triggers leader re-election. The follower node that you run this operation against will become the new leader, once this command succeeds.
   """
+  @doc since: "0.4.0"
   @spec vote ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def vote do
@@ -414,6 +434,7 @@ defmodule OpenApiTypesense.Operations do
   - `vote(%{api_key: xyz, host: ...})`
   - `vote(Connection.new())`
   """
+  @doc since: "0.4.0"
   @spec vote(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def vote(opts) when is_list(opts) do
@@ -429,6 +450,7 @@ defmodule OpenApiTypesense.Operations do
   - `vote(%{api_key: xyz, host: ...}, opts)`
   - `vote(Connection.new(), opts)`
   """
+  @doc since: "0.4.0"
   @spec vote(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def vote(conn, opts) when not is_struct(conn) and is_map(conn) do

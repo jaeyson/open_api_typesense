@@ -1,4 +1,6 @@
 defmodule OpenApiTypesense.Documents do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoints related to documents
   """
@@ -19,10 +21,11 @@ defmodule OpenApiTypesense.Documents do
     * `ignore_not_found`: Ignore the error and treat the deletion as success.
 
   """
+  @doc since: "0.4.0"
   @spec delete_document(String.t(), String.t()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_document(collectionName, documentId) do
-    delete_document(Connection.new(), collectionName, documentId, [])
+    delete_document(collectionName, documentId, [])
   end
 
   @doc """
@@ -31,6 +34,7 @@ defmodule OpenApiTypesense.Documents do
   - `delete_document(%{api_key: xyz, host: ...}, collectionName, documentId)`
   - `delete_document(Connection.new(), collectionName, documentId)`
   """
+  @doc since: "0.4.0"
   @spec delete_document(map() | Connection.t() | String.t(), String.t(), String.t() | keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_document(collectionName, documentId, opts)
@@ -47,6 +51,7 @@ defmodule OpenApiTypesense.Documents do
   - `delete_document(%{api_key: xyz, host: ...}, collectionName, documentId, opts)`
   - `delete_document(Connection.new(), collectionName, documentId, opts)`
   """
+  @doc since: "0.4.0"
   @spec delete_document(map() | Connection.t(), String.t(), String.t(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_document(conn, collectionName, documentId, opts)
@@ -89,6 +94,7 @@ defmodule OpenApiTypesense.Documents do
     * `truncate`: When true, removes all documents from the collection while preserving the collection and its schema.
 
   """
+  @doc since: "0.4.0"
   @spec delete_documents(String.t(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_documents(collectionName, opts) do
@@ -101,6 +107,7 @@ defmodule OpenApiTypesense.Documents do
   - `delete_documents(%{api_key: xyz, host: ...}, collectionName, opts)`
   - `delete_documents(Connection.new(), collectionName, opts)`
   """
+  @doc since: "0.4.0"
   @spec delete_documents(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_documents(conn, collectionName, opts) when not is_struct(conn) and is_map(conn) do
@@ -130,11 +137,12 @@ defmodule OpenApiTypesense.Documents do
   @doc """
   Delete an override associated with a collection
   """
+  @doc since: "0.4.0"
   @spec delete_search_override(String.t(), String.t()) ::
           {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_search_override(collectionName, overrideId) do
-    delete_search_override(Connection.new(), collectionName, overrideId)
+    delete_search_override(collectionName, overrideId, [])
   end
 
   @doc """
@@ -143,6 +151,7 @@ defmodule OpenApiTypesense.Documents do
   - `delete_search_override(%{api_key: xyz, host: ...}, overrideId)`
   - `delete_search_override(Connection.new(), overrideId)`
   """
+  @doc since: "0.4.0"
   @spec delete_search_override(
           map() | Connection.t() | String.t(),
           String.t(),
@@ -164,6 +173,7 @@ defmodule OpenApiTypesense.Documents do
   - `delete_search_override(%{api_key: xyz, host: ...}, overrideId, opts)`
   - `delete_search_override(Connection.new(), overrideId, opts)`
   """
+  @doc since: "0.4.0"
   @spec delete_search_override(map() | Connection.t(), String.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchOverrideDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -202,10 +212,11 @@ defmodule OpenApiTypesense.Documents do
     * `exclude_fields`: List of fields from the document to exclude in the search result
 
   """
+  @doc since: "0.4.0"
   @spec export_documents(String.t()) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def export_documents(collectionName) do
-    export_documents(Connection.new(), collectionName)
+    export_documents(collectionName, [])
   end
 
   @doc """
@@ -214,6 +225,7 @@ defmodule OpenApiTypesense.Documents do
   - `export_documents(%{api_key: xyz, host: ...}, collectionName)`
   - `export_documents(Connection.new(), collectionName)`
   """
+  @doc since: "0.4.0"
   @spec export_documents(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def export_documents(collectionName, opts) when is_list(opts) and is_binary(collectionName) do
@@ -229,6 +241,7 @@ defmodule OpenApiTypesense.Documents do
   - `export_documents(%{api_key: xyz, host: ...}, collectionName, opts)`
   - `export_documents(Connection.new(), collectionName, opts)`
   """
+  @doc since: "0.4.0"
   @spec export_documents(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def export_documents(conn, collectionName, opts) when not is_struct(conn) and is_map(conn) do
@@ -265,10 +278,11 @@ defmodule OpenApiTypesense.Documents do
     * `exclude_fields`: List of fields that should not be present in the returned document.
 
   """
+  @doc since: "0.4.0"
   @spec get_document(String.t(), String.t()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_document(collectionName, documentId) do
-    get_document(Connection.new(), collectionName, documentId)
+    get_document(collectionName, documentId, [])
   end
 
   @doc """
@@ -277,6 +291,7 @@ defmodule OpenApiTypesense.Documents do
   - `get_document(%{api_key: xyz, host: ...}, collectionName, documentId)`
   - `get_document(Connection.new(), collectionName, documentId)`
   """
+  @doc since: "0.4.0"
   @spec get_document(map() | Connection.t() | String.t(), String.t(), String.t() | keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_document(collectionName, documentId, opts)
@@ -293,6 +308,7 @@ defmodule OpenApiTypesense.Documents do
   - `get_document(%{api_key: xyz, host: ...}, collectionName, documentId, opts)`
   - `get_document(Connection.new(), collectionName, documentId, opts)`
   """
+  @doc since: "0.4.0"
   @spec get_document(map() | Connection.t(), String.t(), String.t(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_document(conn, collectionName, documentId, opts)
@@ -324,11 +340,12 @@ defmodule OpenApiTypesense.Documents do
 
   Retrieve the details of a search override, given its id.
   """
+  @doc since: "0.4.0"
   @spec get_search_override(String.t(), String.t()) ::
           {:ok, OpenApiTypesense.SearchOverride.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_override(collectionName, overrideId) do
-    get_search_override(Connection.new(), collectionName, overrideId)
+    get_search_override(collectionName, overrideId, [])
   end
 
   @doc """
@@ -337,6 +354,7 @@ defmodule OpenApiTypesense.Documents do
   - `get_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId)`
   - `get_search_override(Connection.new(), collectionName, overrideId)`
   """
+  @doc since: "0.4.0"
   @spec get_search_override(
           map() | Connection.t() | String.t(),
           String.t(),
@@ -358,6 +376,7 @@ defmodule OpenApiTypesense.Documents do
   - `get_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId, opts)`
   - `get_search_override(Connection.new(), collectionName, overrideId, opts)`
   """
+  @doc since: "0.4.0"
   @spec get_search_override(map() | Connection.t(), String.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchOverride.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -393,11 +412,12 @@ defmodule OpenApiTypesense.Documents do
     * `offset`: Skip a certain number of results and start after that.
 
   """
+  @doc since: "0.4.0"
   @spec get_search_overrides(String.t()) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_overrides(collectionName) do
-    get_search_overrides(Connection.new(), collectionName)
+    get_search_overrides(collectionName, [])
   end
 
   @doc """
@@ -406,6 +426,7 @@ defmodule OpenApiTypesense.Documents do
   - `get_search_overrides(%{api_key: xyz, host: ...}, collectionName)`
   - `get_search_overrides(Connection.new(), collectionName)`
   """
+  @doc since: "0.4.0"
   @spec get_search_overrides(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -423,6 +444,7 @@ defmodule OpenApiTypesense.Documents do
   - `get_search_overrides(%{api_key: xyz, host: ...}, collectionName, opts)`
   - `get_search_overrides(Connection.new(), collectionName, opts)`
   """
+  @doc since: "0.4.0"
   @spec get_search_overrides(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -467,10 +489,11 @@ defmodule OpenApiTypesense.Documents do
     * `dirty_values`: Dealing with Dirty Data
 
   """
+  @doc since: "0.4.0"
   @spec import_documents(String.t(), list(map())) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def import_documents(collectionName, body) do
-    import_documents(Connection.new(), collectionName, body)
+    import_documents(collectionName, body, [])
   end
 
   @doc """
@@ -479,6 +502,7 @@ defmodule OpenApiTypesense.Documents do
   - `import_documents(%{api_key: xyz, host: ...}, collectionName, payload)`
   - `import_documents(Connection.new(), collectionName, payload)`
   """
+  @doc since: "0.4.0"
   @spec import_documents(
           map() | Connection.t() | String.t(),
           String.t() | list(map()),
@@ -499,6 +523,7 @@ defmodule OpenApiTypesense.Documents do
   - `import_documents(%{api_key: xyz, host: ...}, collectionName, payload, opts)`
   - `import_documents(Connection.new(), collectionName, payload, opts)`
   """
+  @doc since: "0.4.0"
   @spec import_documents(map() | Connection.t(), String.t(), list(map()), keyword()) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def import_documents(conn, collectionName, body, opts)
@@ -550,10 +575,11 @@ defmodule OpenApiTypesense.Documents do
     * `dirty_values`: Dealing with Dirty Data
 
   """
+  @doc since: "0.4.0"
   @spec index_document(String.t(), map()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def index_document(collectionName, body) do
-    index_document(Connection.new(), collectionName, body)
+    index_document(collectionName, body, [])
   end
 
   @doc """
@@ -562,6 +588,7 @@ defmodule OpenApiTypesense.Documents do
   - `index_document(%{api_key: xyz, host: ...}, collectionName, payload)`
   - `index_document(Connection.new(), collectionName, payload)`
   """
+  @doc since: "0.4.0"
   @spec index_document(map() | Connection.t() | String.t(), String.t() | map(), map() | keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def index_document(collectionName, body, opts)
@@ -578,6 +605,7 @@ defmodule OpenApiTypesense.Documents do
   - `index_document(%{api_key: xyz, host: ...}, collectionName, payload, opts)`
   - `index_document(Connection.new(), collectionName, payload, opts)`
   """
+  @doc since: "0.4.0"
   @spec index_document(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def index_document(conn, collectionName, body, opts)
@@ -618,11 +646,12 @@ defmodule OpenApiTypesense.Documents do
     * `x-typesense-api-key`: You can embed a separate search API key for each search within a multi_search request. This is useful when you want to apply different embedded filters for each collection in individual scoped API keys.
 
   """
+  @doc since: "0.4.0"
   @spec multi_search(OpenApiTypesense.MultiSearchSearchesParameter.t()) ::
           {:ok, OpenApiTypesense.MultiSearchResult.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def multi_search(body) do
-    multi_search(Connection.new(), body)
+    multi_search(body, [])
   end
 
   @doc """
@@ -631,6 +660,7 @@ defmodule OpenApiTypesense.Documents do
   - `multi_search(%{api_key: xyz, host: ...}, payload)`
   - `multi_search(Connection.new(), payload)`
   """
+  @doc since: "0.4.0"
   @spec multi_search(map() | Connection.t(), map() | keyword()) ::
           {:ok, OpenApiTypesense.MultiSearchResult.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -647,6 +677,7 @@ defmodule OpenApiTypesense.Documents do
   - `multi_search(%{api_key: xyz, host: ...}, payload, opts)`
   - `multi_search(Connection.new(), payload, opts)`
   """
+  @doc since: "0.4.0"
   @spec multi_search(map() | Connection.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.MultiSearchResult.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -704,12 +735,19 @@ defmodule OpenApiTypesense.Documents do
       iex> params = [q: "duplex", query_by: "house_type"]
       ...> OpenApiTypesense.Documents.search_collection("houses", params)
   """
+  @doc since: "0.4.0"
   @spec search_collection(String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchResult.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def search_collection(collectionName, params) when is_binary(collectionName) do
     search_collection(Connection.new(), collectionName, params)
   end
 
+  @doc """
+  Either one of:
+  - `search_collection(%{api_key: xyz, host: ...}, collectionName, params)`
+  - `search_collection(Connection.new(), collectionName, params)`
+  """
+  @doc since: "0.4.0"
   @spec search_collection(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchResult.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def search_collection(conn, collectionName, params) when not is_struct(conn) and is_map(conn) do
@@ -745,10 +783,11 @@ defmodule OpenApiTypesense.Documents do
     * `dirty_values`: Dealing with Dirty Data
 
   """
+  @doc since: "0.4.0"
   @spec update_document(String.t(), String.t(), map()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_document(collectionName, documentId, body) do
-    update_document(Connection.new(), collectionName, documentId, body)
+    update_document(collectionName, documentId, body, [])
   end
 
   @doc """
@@ -757,6 +796,7 @@ defmodule OpenApiTypesense.Documents do
   - `update_document(%{api_key: xyz, host: ...}, collectionName, documentId)`
   - `update_document(Connection.new(), collectionName, documentId)`
   """
+  @doc since: "0.4.0"
   @spec update_document(
           map() | Connection.t() | String.t(),
           String.t(),
@@ -778,6 +818,7 @@ defmodule OpenApiTypesense.Documents do
   - `update_document(%{api_key: xyz, host: ...}, collectionName, documentId, opts)`
   - `update_document(Connection.new(), collectionName, documentId, opts)`
   """
+  @doc since: "0.4.0"
   @spec update_document(map() | Connection.t(), String.t(), String.t(), map(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_document(conn, collectionName, documentId, body, opts)
@@ -819,18 +860,20 @@ defmodule OpenApiTypesense.Documents do
     * `filter_by`: Filter results by a particular value(s) or logical expressions. multiple conditions with &&.
     * `action`: Additional action to perform
 
-  Either one of:
-  - `update_documents(collectionName, payload, opts)`
-  - `update_documents(%{api_key: xyz, host: ...}, collectionName, payload, opts)`
-  - `update_documents(Connection.new(), collectionName, payload, opts)`
-
   """
+  @doc since: "0.4.0"
   @spec update_documents(String.t(), map(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_documents(collectionName, body, opts) when is_binary(collectionName) do
     update_documents(Connection.new(), collectionName, body, opts)
   end
 
+  @doc """
+  Either one of:
+  - `update_documents(%{api_key: xyz, host: ...}, collectionName, payload, opts)`
+  - `update_documents(Connection.new(), collectionName, payload, opts)`
+  """
+  @doc since: "0.4.0"
   @spec update_documents(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_documents(conn, collectionName, body, opts)
@@ -865,10 +908,11 @@ defmodule OpenApiTypesense.Documents do
 
   Create or update an override to promote certain documents over others. Using overrides, you can include or exclude specific documents for a given query.
   """
+  @doc since: "0.4.0"
   @spec upsert_search_override(String.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_search_override(collectionName, overrideId, body) do
-    upsert_search_override(Connection.new(), collectionName, overrideId, body)
+    upsert_search_override(collectionName, overrideId, body, [])
   end
 
   @doc """
@@ -877,6 +921,7 @@ defmodule OpenApiTypesense.Documents do
   - `upsert_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId, payload)`
   - `upsert_search_override(Connection.new(), collectionName, overrideId, payload)`
   """
+  @doc since: "0.4.0"
   @spec upsert_search_override(
           map() | Connection.t() | String.t(),
           String.t(),
@@ -898,6 +943,7 @@ defmodule OpenApiTypesense.Documents do
   - `upsert_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId, payload, opts)`
   - `upsert_search_override(Connection.new(), collectionName, overrideId, payload, opts)`
   """
+  @doc since: "0.4.0"
   @spec upsert_search_override(map() | Connection.t(), String.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_search_override(conn, collectionName, overrideId, body, opts)

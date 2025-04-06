@@ -1,4 +1,6 @@
 defmodule OpenApiTypesense.Collections do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoints related to collections
   """
@@ -29,11 +31,12 @@ defmodule OpenApiTypesense.Collections do
       iex> OpenApiTypesense.Collections.create_collection(schema)
 
   """
+  @doc since: "0.4.0"
   @spec create_collection(map()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_collection(body) do
-    create_collection(Connection.new(), body)
+    create_collection(body, [])
   end
 
   @doc """
@@ -42,6 +45,7 @@ defmodule OpenApiTypesense.Collections do
   - `create_collection(%{api_key: xyz, host: ...}, schema)`
   - `create_collection(Connection.new(), schema)`
   """
+  @doc since: "0.4.0"
   @spec create_collection(map() | Connection.t(), map() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -58,6 +62,7 @@ defmodule OpenApiTypesense.Collections do
   - `create_collection(%{api_key: 123, host: ...}, schema, opts)`
   - `create_collection(Connection.new(), schema, opts)`
   """
+  @doc since: "0.4.0"
   @spec create_collection(map() | Connection.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -90,10 +95,11 @@ defmodule OpenApiTypesense.Collections do
   @doc """
   Delete an alias
   """
+  @doc since: "0.4.0"
   @spec delete_alias(String.t()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_alias(aliasName) do
-    delete_alias(Connection.new(), aliasName)
+    delete_alias(aliasName, [])
   end
 
   @doc """
@@ -102,6 +108,7 @@ defmodule OpenApiTypesense.Collections do
   - `delete_alias(%{api_key: 123, host: ...}, aliasName)`
   - `delete_alias(Connection.new(), aliasName)`
   """
+  @doc since: "0.4.0"
   @spec delete_alias(String.t() | map() | Connection.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_alias(aliasName, opts) when is_list(opts) and is_binary(aliasName) do
@@ -117,6 +124,7 @@ defmodule OpenApiTypesense.Collections do
   - `delete_alias(%{api_key: 123, host: ...}, aliasName, opts)`
   - `delete_alias(Connection.new(), aliasName, opts)`
   """
+  @doc since: "0.4.0"
   @spec delete_alias(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_alias(conn, aliasName, opts) when not is_struct(conn) and is_map(conn) do
@@ -145,11 +153,12 @@ defmodule OpenApiTypesense.Collections do
 
   Permanently drops a collection. This action cannot be undone. For large collections, this might have an impact on read latencies.
   """
+  @doc since: "0.4.0"
   @spec delete_collection(String.t()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_collection(collectionName) do
-    delete_collection(Connection.new(), collectionName)
+    delete_collection(collectionName, [])
   end
 
   @doc """
@@ -158,6 +167,7 @@ defmodule OpenApiTypesense.Collections do
   - `delete_collection(%{api_key: 123, host: ...}, collectionName)`
   - `delete_collection(Connection.new(), collectionName)`
   """
+  @doc since: "0.4.0"
   @spec delete_collection(String.t() | map() | Connection.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -174,6 +184,7 @@ defmodule OpenApiTypesense.Collections do
   - `delete_collection(%{api_key: 123, host: ...}, collectionName, opts)`
   - `delete_collection(Connection.new(), collectionName, opts)`
   """
+  @doc since: "0.4.0"
   @spec delete_collection(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -203,10 +214,11 @@ defmodule OpenApiTypesense.Collections do
 
   Find out which collection an alias points to by fetching it
   """
+  @doc since: "0.4.0"
   @spec get_alias(String.t()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_alias(aliasName) do
-    get_alias(Connection.new(), aliasName)
+    get_alias(aliasName, [])
   end
 
   @doc """
@@ -215,6 +227,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_alias(%{api_key: 123, host: ...}, aliasName)`
   - `get_alias(Connection.new(), aliasName)`
   """
+  @doc since: "0.4.0"
   @spec get_alias(String.t() | map() | Connection.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_alias(aliasName, opts) when is_list(opts) and is_binary(aliasName) do
@@ -230,6 +243,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_alias(%{api_key: 123, host: ...}, aliasName, opts)`
   - `get_alias(Connection.new(), aliasName, opts)`
   """
+  @doc since: "0.4.0"
   @spec get_alias(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_alias(conn, aliasName, opts) when not is_struct(conn) and is_map(conn) do
@@ -258,11 +272,12 @@ defmodule OpenApiTypesense.Collections do
 
   List all aliases and the corresponding collections that they map to.
   """
+  @doc since: "0.4.0"
   @spec get_aliases ::
           {:ok, OpenApiTypesense.CollectionAliasesResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_aliases do
-    get_aliases(Connection.new())
+    get_aliases([])
   end
 
   @doc """
@@ -271,6 +286,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_aliases(%{api_key: 123, host: ...})`
   - `get_aliases(Connection.new())`
   """
+  @doc since: "0.4.0"
   @spec get_aliases(map() | Connection.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionAliasesResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -287,6 +303,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_aliases(%{api_key: 123, host: ...}, opts)`
   - `get_aliases(Connection.new(), opts)`
   """
+  @doc since: "0.4.0"
   @spec get_aliases(map() | Connection.t(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionAliasesResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -315,11 +332,12 @@ defmodule OpenApiTypesense.Collections do
 
   Retrieve the details of a collection, given its name.
   """
+  @doc since: "0.4.0"
   @spec get_collection(String.t()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_collection(collectionName) do
-    get_collection(Connection.new(), collectionName)
+    get_collection(collectionName, [])
   end
 
   @doc """
@@ -328,6 +346,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_collection(%{api_key: 123, host: ...}, collectionName)`
   - `get_collection(Connection.new(), collectionName)`
   """
+  @doc since: "0.4.0"
   @spec get_collection(map() | Connection.t() | String.t(), String.t() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -344,6 +363,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_collection(%{api_key: 123, host: ...}, collectionName, opts)`
   - `get_collection(Connection.new(), collectionName, opts)`
   """
+  @doc since: "0.4.0"
   @spec get_collection(map() | Connection.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -380,10 +400,13 @@ defmodule OpenApiTypesense.Collections do
     * `exclude_fields`: Exclude the field definitions from being returned in the response.
 
   """
+  @doc since: "0.4.0"
   @spec get_collections ::
           {:ok, [OpenApiTypesense.CollectionResponse.t()]}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_collections, do: get_collections(Connection.new())
+  def get_collections do
+    get_collections([])
+  end
 
   @doc """
   Either one of:
@@ -391,6 +414,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_collections(%{api_key: xyz, host: ...})`
   - `get_collections(exclude_fields: "fields", limit: 10)`
   """
+  @doc since: "0.4.0"
   @spec get_collections(map() | Connection.t() | keyword()) ::
           {:ok, [OpenApiTypesense.CollectionResponse.t()]}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -407,6 +431,7 @@ defmodule OpenApiTypesense.Collections do
   - `get_collections(%{api_key: 123, host: ...}, opts)`
   - `get_collections(Connection.new(), opts)`
   """
+  @doc since: "0.4.0"
   @spec get_collections(map() | Connection.t(), keyword()) ::
           {:ok, [OpenApiTypesense.CollectionResponse.t()]}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -437,11 +462,12 @@ defmodule OpenApiTypesense.Collections do
 
   Update a collection's schema to modify the fields and their types.
   """
+  @doc since: "0.4.0"
   @spec update_collection(String.t(), map()) ::
           {:ok, OpenApiTypesense.CollectionUpdateSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_collection(collectionName, body) do
-    update_collection(Connection.new(), collectionName, body)
+    update_collection(collectionName, body, [])
   end
 
   @doc """
@@ -450,6 +476,7 @@ defmodule OpenApiTypesense.Collections do
   - `update_collection(%{api_key: 123, host: ...}, collectionName, body)`
   - `update_collection(Connection.new(), collectionName, body)`
   """
+  @doc since: "0.4.0"
   @spec update_collection(map() | Connection.t(), String.t() | map(), map() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionUpdateSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -467,6 +494,7 @@ defmodule OpenApiTypesense.Collections do
   - `update_collection(%{api_key: 123, host: ...}, collectionName, body, opts)`
   - `update_collection(Connection.new(), collectionName, body, opts)`
   """
+  @doc since: "0.4.0"
   @spec update_collection(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionUpdateSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -505,10 +533,11 @@ defmodule OpenApiTypesense.Collections do
       iex> OpenApiTypesense.Collections.upsert_alias("foo", body)
 
   """
+  @doc since: "0.4.0"
   @spec upsert_alias(String.t(), map()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_alias(aliasName, body) when is_binary(aliasName) do
-    upsert_alias(Connection.new(), aliasName, body)
+    upsert_alias(aliasName, body, [])
   end
 
   @doc """
@@ -517,6 +546,7 @@ defmodule OpenApiTypesense.Collections do
   - `upsert_alias(Connection.new(), aliasName, body)`
   - `upsert_alias(aliasName, body, opts)`
   """
+  @doc since: "0.4.0"
   @spec upsert_alias(map() | Connection.t(), String.t(), map() | keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_alias(aliasName, body, opts) when is_list(opts) and is_binary(aliasName) do
@@ -532,6 +562,7 @@ defmodule OpenApiTypesense.Collections do
   - `upsert_alias(%{api_key: 123, host: ...}, aliasName, body, opts)`
   - `upsert_alias(Connection.new(), aliasName, body, opts)`
   """
+  @doc since: "0.4.0"
   @spec upsert_alias(map() | Connection.t(), String.t(), map(), keyword()) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_alias(conn, aliasName, body, opts) when not is_struct(conn) and is_map(conn) do

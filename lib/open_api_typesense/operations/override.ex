@@ -1,4 +1,6 @@
 defmodule OpenApiTypesense.Override do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoint related to override
   """
@@ -12,6 +14,7 @@ defmodule OpenApiTypesense.Override do
 
   Retrieve the details of a search override, given its id.
   """
+  @doc since: "0.4.0"
   @spec get_search_override(String.t(), String.t()) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_override(collectionName, overrideId) do
@@ -24,6 +27,7 @@ defmodule OpenApiTypesense.Override do
   - `get_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId)`
   - `get_search_override(Connection.new(), collectionName, overrideId)`
   """
+  @doc since: "0.4.0"
   @spec get_search_override(
           map() | Connection.t() | String.t(),
           String.t(),
@@ -44,6 +48,7 @@ defmodule OpenApiTypesense.Override do
   - `get_search_override(%{api_key: xyz, host: ...}, collectionName, overrideId, opts)`
   - `get_search_override(Connection.new(), collectionName, overrideId, opts)`
   """
+  @doc since: "0.4.0"
   @spec get_search_override(map() | Connection.t(), String.t(), String.t(), keyword()) ::
           {:ok, OpenApiTypesense.SearchOverride.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_search_override(conn, collectionName, overrideId, opts)
