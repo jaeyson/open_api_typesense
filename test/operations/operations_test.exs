@@ -91,7 +91,7 @@ defmodule OperationsTest do
     assert {:ok, %SuccessStatus{success: false}} = Operations.vote(map_conn, [])
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": false, "27.0": false, "26.0": false]
   test "success: get schema changes", %{conn: conn, map_conn: map_conn} do
     assert {:ok, schemas} = Operations.get_schema_changes()
     assert length(schemas) >= 0

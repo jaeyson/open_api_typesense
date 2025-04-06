@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Update to include Typesense [v28.0](https://typesense.org/docs/28.0/api)
 * Removed deprecated functions in `OpenApiTypesense.Client`
 * Bump dependency versions.
+* Renamed `search` to `search_collection` from `Documents` module.
 
 ### Added
 

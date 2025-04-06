@@ -197,7 +197,7 @@ defmodule AnalyticsTest do
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": false]
-  test "success (v27.1): create analytics rule and event", %{conn: conn, map_conn: map_conn} do
+  test "success (v27.0): create analytics rule and event", %{conn: conn, map_conn: map_conn} do
     name = "product_popularity"
 
     event_name = "products_click_event#{System.unique_integer()}"
