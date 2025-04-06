@@ -29,7 +29,7 @@ defmodule DefaultClientTest do
     test "default req options" do
       req = Client.build_req_client(Connection.new(), [])
       assert req.headers == %{"x-typesense-api-key" => ["xyz"]}
-      assert req.options == %{decode_json: [keys: :atoms], retry: false}
+      assert req.options == %{decode_json: [keys: :atoms]}
     end
 
     @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
