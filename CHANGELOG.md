@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 0.7.1 (2025.04.06)
+
+### Fixed
+
+* Parsing results from using multi search [unions](https://typesense.org/docs/28.0/api/federated-multi-search.html#union-search)
+
 ## 0.7.0 (2025.04.06)
 
 ### Changed ([#28](https://github.com/jaeyson/open_api_typesense/pull/28))

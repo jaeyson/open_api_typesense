@@ -205,6 +205,16 @@ defmodule OpenApiTypesense.Client do
     end
   end
 
+  defp parse_values(
+         code,
+         {module, _func_name} = _values,
+         %{hits: results, union_request_params: _} = _body
+       ) do
+    status = if code in 200..299, do: :ok, else: :error
+
+    {status, struct(module, %{results: results})}
+  end
+
   defp parse_values(code, {module, _func_name} = _values, body) do
     status = if code in 200..299, do: :ok, else: :error
 
