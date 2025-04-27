@@ -39,10 +39,8 @@ defmodule ConversationsTest do
     assert {:ok, models} = Conversations.retrieve_all_conversation_models()
     assert length(models) >= 0
     assert {:ok, _} = Conversations.retrieve_all_conversation_models([])
-    assert {:ok, _} = Conversations.retrieve_all_conversation_models(conn)
-    assert {:ok, _} = Conversations.retrieve_all_conversation_models(map_conn)
-    assert {:ok, _} = Conversations.retrieve_all_conversation_models(conn, [])
-    assert {:ok, _} = Conversations.retrieve_all_conversation_models(map_conn, [])
+    assert {:ok, _} = Conversations.retrieve_all_conversation_models(conn: conn)
+    assert {:ok, _} = Conversations.retrieve_all_conversation_models(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -51,10 +49,8 @@ defmodule ConversationsTest do
              Conversations.retrieve_conversation_model("non-existent")
 
     assert {:error, _} = Conversations.retrieve_conversation_model("xyz", [])
-    assert {:error, _} = Conversations.retrieve_conversation_model(conn, "xyz")
-    assert {:error, _} = Conversations.retrieve_conversation_model(map_conn, "xyz")
-    assert {:error, _} = Conversations.retrieve_conversation_model(conn, "xyz", [])
-    assert {:error, _} = Conversations.retrieve_conversation_model(map_conn, "xyz", [])
+    assert {:error, _} = Conversations.retrieve_conversation_model("xyz", conn: conn)
+    assert {:error, _} = Conversations.retrieve_conversation_model("xyz", conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -63,10 +59,8 @@ defmodule ConversationsTest do
              Conversations.delete_conversation_model("non-existent")
 
     assert {:error, _} = Conversations.delete_conversation_model("xyz", [])
-    assert {:error, _} = Conversations.delete_conversation_model(conn, "xyz")
-    assert {:error, _} = Conversations.delete_conversation_model(map_conn, "xyz")
-    assert {:error, _} = Conversations.delete_conversation_model(conn, "xyz", [])
-    assert {:error, _} = Conversations.delete_conversation_model(map_conn, "xyz", [])
+    assert {:error, _} = Conversations.delete_conversation_model("xyz", conn: conn)
+    assert {:error, _} = Conversations.delete_conversation_model("xyz", conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -96,10 +90,8 @@ defmodule ConversationsTest do
            ]) === true
 
     assert {:error, _} = Conversations.create_conversation_model(body, [])
-    assert {:error, _} = Conversations.create_conversation_model(conn, body)
-    assert {:error, _} = Conversations.create_conversation_model(map_conn, body)
-    assert {:error, _} = Conversations.create_conversation_model(conn, body, [])
-    assert {:error, _} = Conversations.create_conversation_model(map_conn, body, [])
+    assert {:error, _} = Conversations.create_conversation_model(body, conn: conn)
+    assert {:error, _} = Conversations.create_conversation_model(body, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -125,9 +117,7 @@ defmodule ConversationsTest do
 
     assert {:error, _} = Conversations.update_conversation_model(model_id, body)
     assert {:error, _} = Conversations.update_conversation_model(model_id, body, [])
-    assert {:error, _} = Conversations.update_conversation_model(conn, model_id, body)
-    assert {:error, _} = Conversations.update_conversation_model(map_conn, model_id, body)
-    assert {:error, _} = Conversations.update_conversation_model(conn, model_id, body, [])
-    assert {:error, _} = Conversations.update_conversation_model(map_conn, model_id, body, [])
+    assert {:error, _} = Conversations.update_conversation_model(model_id, body, conn: conn)
+    assert {:error, _} = Conversations.update_conversation_model(model_id, body, conn: map_conn)
   end
 end

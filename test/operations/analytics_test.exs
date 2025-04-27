@@ -102,12 +102,10 @@ defmodule AnalyticsTest do
 
     assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body)
     assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body, [])
-    assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(conn, body)
-    assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(conn, body, [])
-    assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(map_conn, body)
+    assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body, conn: conn)
 
     assert {:error, %ApiResponse{message: _}} =
-             Analytics.create_analytics_rule(map_conn, body, [])
+             Analytics.create_analytics_rule(body, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -135,16 +133,10 @@ defmodule AnalyticsTest do
              Analytics.upsert_analytics_rule(name, body, [])
 
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
-             Analytics.upsert_analytics_rule(conn, name, body)
+             Analytics.upsert_analytics_rule(name, body, conn: conn)
 
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
-             Analytics.upsert_analytics_rule(map_conn, name, body)
-
-    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
-             Analytics.upsert_analytics_rule(conn, name, body, [])
-
-    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
-             Analytics.upsert_analytics_rule(map_conn, name, body, [])
+             Analytics.upsert_analytics_rule(name, body, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -184,16 +176,10 @@ defmodule AnalyticsTest do
              Analytics.retrieve_analytics_rules([])
 
     assert {:ok, %AnalyticsRulesRetrieveSchema{rules: _}} =
-             Analytics.retrieve_analytics_rules(conn)
+             Analytics.retrieve_analytics_rules(conn: conn)
 
     assert {:ok, %AnalyticsRulesRetrieveSchema{rules: _}} =
-             Analytics.retrieve_analytics_rules(map_conn)
-
-    assert {:ok, %AnalyticsRulesRetrieveSchema{rules: _}} =
-             Analytics.retrieve_analytics_rules(conn, [])
-
-    assert {:ok, %AnalyticsRulesRetrieveSchema{rules: _}} =
-             Analytics.retrieve_analytics_rules(map_conn, [])
+             Analytics.retrieve_analytics_rules(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": false]
@@ -225,16 +211,13 @@ defmodule AnalyticsTest do
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} = Analytics.retrieve_analytics_rule(name, [])
 
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
-             Analytics.retrieve_analytics_rule(conn, name)
+             Analytics.retrieve_analytics_rule(name, conn: conn)
 
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
-             Analytics.retrieve_analytics_rule(conn, name, [])
+             Analytics.retrieve_analytics_rule(name, [])
 
     assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
-             Analytics.retrieve_analytics_rule(map_conn, name)
-
-    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
-             Analytics.retrieve_analytics_rule(map_conn, name, [])
+             Analytics.retrieve_analytics_rule(name, conn: map_conn)
 
     body =
       %{
@@ -258,26 +241,18 @@ defmodule AnalyticsTest do
              Analytics.create_analytics_event(body, [])
 
     assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
-             Analytics.create_analytics_event(conn, body)
+             Analytics.create_analytics_event(body, conn: conn)
 
     assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
-             Analytics.create_analytics_event(map_conn, body)
-
-    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
-             Analytics.create_analytics_event(conn, body, [])
-
-    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
-             Analytics.create_analytics_event(map_conn, body, [])
+             Analytics.create_analytics_event(body, conn: map_conn)
 
     assert {:ok, %AnalyticsRuleDeleteResponse{name: ^name}} =
              Analytics.delete_analytics_rule(name)
 
     assert {:error, %ApiResponse{message: _}} = Analytics.delete_analytics_rule(name, [])
-    assert {:error, %ApiResponse{message: _}} = Analytics.delete_analytics_rule(conn, name)
-    assert {:error, %ApiResponse{message: _}} = Analytics.delete_analytics_rule(map_conn, name)
-    assert {:error, %ApiResponse{message: _}} = Analytics.delete_analytics_rule(conn, name, [])
+    assert {:error, %ApiResponse{message: _}} = Analytics.delete_analytics_rule(name, conn: conn)
 
     assert {:error, %ApiResponse{message: _}} =
-             Analytics.delete_analytics_rule(map_conn, name, [])
+             Analytics.delete_analytics_rule(name, conn: map_conn)
   end
 end

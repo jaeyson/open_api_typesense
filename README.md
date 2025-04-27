@@ -93,6 +93,15 @@ config :open_api_typesense,
   scheme: "https"
 ```
 
+## Using another connection via maps
+
+You might be using a connection that changes dynamically. You can pass it as a map:
+
+```elixir
+custom_conn = %{api_key: "xyz", host: "localhost", port: 8108, scheme: "http"}
+OpenApiTypesense.Health(conn: conn)
+```
+
 ## Using a another HTTP client
 
 In order to use another HTTP client, OpenApiTypesense has a

@@ -61,12 +61,10 @@ defmodule CurationTest do
              Curation.upsert_search_override(schema_name, override_id, body)
 
     assert {:ok, _} = Curation.upsert_search_override(schema_name, override_id, body, [])
-    assert {:ok, _} = Curation.upsert_search_override(conn, schema_name, override_id, body)
-    assert {:ok, _} = Curation.upsert_search_override(map_conn, schema_name, override_id, body)
-    assert {:ok, _} = Curation.upsert_search_override(conn, schema_name, override_id, body, [])
+    assert {:ok, _} = Curation.upsert_search_override(schema_name, override_id, body, conn: conn)
 
     assert {:ok, _} =
-             Curation.upsert_search_override(map_conn, schema_name, override_id, body, [])
+             Curation.upsert_search_override(schema_name, override_id, body, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -81,10 +79,8 @@ defmodule CurationTest do
              Curation.delete_search_override(schema_name, "test")
 
     assert {:error, _} = Curation.delete_search_override(schema_name, "test", [])
-    assert {:error, _} = Curation.delete_search_override(conn, schema_name, "test")
-    assert {:error, _} = Curation.delete_search_override(map_conn, schema_name, "test")
-    assert {:error, _} = Curation.delete_search_override(conn, schema_name, "test", [])
-    assert {:error, _} = Curation.delete_search_override(map_conn, schema_name, "test", [])
+    assert {:error, _} = Curation.delete_search_override(schema_name, "test", conn: conn)
+    assert {:error, _} = Curation.delete_search_override(schema_name, "test", conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -98,9 +94,7 @@ defmodule CurationTest do
 
     assert length(overrides) >= 0
     assert {:ok, _} = Curation.get_search_overrides(schema_name, [])
-    assert {:ok, _} = Curation.get_search_overrides(conn, schema_name)
-    assert {:ok, _} = Curation.get_search_overrides(map_conn, schema_name)
-    assert {:ok, _} = Curation.get_search_overrides(conn, schema_name, [])
-    assert {:ok, _} = Curation.get_search_overrides(map_conn, schema_name, [])
+    assert {:ok, _} = Curation.get_search_overrides(schema_name, conn: conn)
+    assert {:ok, _} = Curation.get_search_overrides(schema_name, conn: map_conn)
   end
 end

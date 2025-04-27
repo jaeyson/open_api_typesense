@@ -110,9 +110,8 @@ defmodule CustomClientTest do
     assert CustomClient === Application.get_env(:open_api_typesense, :client)
 
     assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health()
-    assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health(conn)
-    assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health(map_conn)
-    assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health(conn, [])
-    assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health(map_conn, [])
+    assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health([])
+    assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health(conn: conn)
+    assert {:ok, %{"ok" => true}} = OpenApiTypesense.Health.health(conn: map_conn)
   end
 end

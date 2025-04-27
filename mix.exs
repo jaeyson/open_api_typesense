@@ -54,9 +54,13 @@ defmodule OpenApiTypesense.MixProject do
     File.ls!("lib/open_api_typesense/#{path}")
     |> Enum.map(fn schema_name ->
       module_name =
-        schema_name
-        |> Path.rootname()
-        |> Macro.camelize()
+        if schema_name == "api_stats_response.ex" do
+          "APIStatsResponse"
+        else
+          schema_name
+          |> Path.rootname()
+          |> Macro.camelize()
+        end
 
       Module.concat(OpenApiTypesense, module_name)
     end)

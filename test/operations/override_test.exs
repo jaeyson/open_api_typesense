@@ -18,9 +18,7 @@ defmodule OverrideTest do
              Override.get_search_override("helmets", "custom-helmet")
 
     assert {:error, _} = Override.get_search_override("helmets", "custom-helmet", [])
-    assert {:error, _} = Override.get_search_override(conn, "helmets", "custom-helmet")
-    assert {:error, _} = Override.get_search_override(map_conn, "helmets", "custom-helmet")
-    assert {:error, _} = Override.get_search_override(conn, "helmets", "custom-helmet", [])
-    assert {:error, _} = Override.get_search_override(map_conn, "helmets", "custom-helmet", [])
+    assert {:error, _} = Override.get_search_override("helmets", "custom-helmet", conn: conn)
+    assert {:error, _} = Override.get_search_override("helmets", "custom-helmet", conn: map_conn)
   end
 end

@@ -44,10 +44,8 @@ defmodule SynonymsTest do
     assert length(synonyms) >= 0
 
     assert {:ok, _} = Synonyms.get_search_synonyms(coll_name, [])
-    assert {:ok, _} = Synonyms.get_search_synonyms(conn, coll_name)
-    assert {:ok, _} = Synonyms.get_search_synonyms(map_conn, coll_name)
-    assert {:ok, _} = Synonyms.get_search_synonyms(conn, coll_name, [])
-    assert {:ok, _} = Synonyms.get_search_synonyms(map_conn, coll_name, [])
+    assert {:ok, _} = Synonyms.get_search_synonyms(coll_name, conn: conn)
+    assert {:ok, _} = Synonyms.get_search_synonyms(coll_name, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -68,10 +66,8 @@ defmodule SynonymsTest do
     assert synonym_id === syn.id
 
     assert {:ok, _} = Synonyms.upsert_search_synonym(coll_name, synonym_id, body, [])
-    assert {:ok, _} = Synonyms.upsert_search_synonym(conn, coll_name, synonym_id, body)
-    assert {:ok, _} = Synonyms.upsert_search_synonym(map_conn, coll_name, synonym_id, body)
-    assert {:ok, _} = Synonyms.upsert_search_synonym(conn, coll_name, synonym_id, body, [])
-    assert {:ok, _} = Synonyms.upsert_search_synonym(map_conn, coll_name, synonym_id, body, [])
+    assert {:ok, _} = Synonyms.upsert_search_synonym(coll_name, synonym_id, body, conn: conn)
+    assert {:ok, _} = Synonyms.upsert_search_synonym(coll_name, synonym_id, body, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -93,10 +89,8 @@ defmodule SynonymsTest do
 
     assert {:ok, %{id: ^synonym_id}} = Synonyms.delete_search_synonym(coll_name, synonym_id)
     assert {:error, _} = Synonyms.delete_search_synonym(coll_name, synonym_id, [])
-    assert {:error, _} = Synonyms.delete_search_synonym(conn, coll_name, synonym_id)
-    assert {:error, _} = Synonyms.delete_search_synonym(map_conn, coll_name, synonym_id)
-    assert {:error, _} = Synonyms.delete_search_synonym(conn, coll_name, synonym_id, [])
-    assert {:error, _} = Synonyms.delete_search_synonym(map_conn, coll_name, synonym_id, [])
+    assert {:error, _} = Synonyms.delete_search_synonym(coll_name, synonym_id, conn: conn)
+    assert {:error, _} = Synonyms.delete_search_synonym(coll_name, synonym_id, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -120,9 +114,7 @@ defmodule SynonymsTest do
              Synonyms.get_search_synonym(coll_name, synonym_id)
 
     assert {:ok, _} = Synonyms.get_search_synonym(coll_name, synonym_id, [])
-    assert {:ok, _} = Synonyms.get_search_synonym(conn, coll_name, synonym_id)
-    assert {:ok, _} = Synonyms.get_search_synonym(map_conn, coll_name, synonym_id)
-    assert {:ok, _} = Synonyms.get_search_synonym(conn, coll_name, synonym_id, [])
-    assert {:ok, _} = Synonyms.get_search_synonym(map_conn, coll_name, synonym_id, [])
+    assert {:ok, _} = Synonyms.get_search_synonym(coll_name, synonym_id, conn: conn)
+    assert {:ok, _} = Synonyms.get_search_synonym(coll_name, synonym_id, conn: map_conn)
   end
 end

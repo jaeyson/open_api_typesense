@@ -31,10 +31,8 @@ defmodule StopwordsTest do
 
     assert length(stopwords) >= 0
     assert {:ok, _} = Stopwords.retrieve_stopwords_sets([])
-    assert {:ok, _} = Stopwords.retrieve_stopwords_sets(conn)
-    assert {:ok, _} = Stopwords.retrieve_stopwords_sets(map_conn)
-    assert {:ok, _} = Stopwords.retrieve_stopwords_sets(conn, [])
-    assert {:ok, _} = Stopwords.retrieve_stopwords_sets(map_conn, [])
+    assert {:ok, _} = Stopwords.retrieve_stopwords_sets(conn: conn)
+    assert {:ok, _} = Stopwords.retrieve_stopwords_sets(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -49,10 +47,8 @@ defmodule StopwordsTest do
 
     assert {:ok, %StopwordsSetSchema{id: ^set_id}} = Stopwords.upsert_stopwords_set(set_id, body)
     assert {:ok, _} = Stopwords.upsert_stopwords_set(set_id, body, [])
-    assert {:ok, _} = Stopwords.upsert_stopwords_set(conn, set_id, body)
-    assert {:ok, _} = Stopwords.upsert_stopwords_set(map_conn, set_id, body)
-    assert {:ok, _} = Stopwords.upsert_stopwords_set(conn, set_id, body, [])
-    assert {:ok, _} = Stopwords.upsert_stopwords_set(map_conn, set_id, body, [])
+    assert {:ok, _} = Stopwords.upsert_stopwords_set(set_id, body, conn: conn)
+    assert {:ok, _} = Stopwords.upsert_stopwords_set(set_id, body, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -71,10 +67,8 @@ defmodule StopwordsTest do
              Stopwords.retrieve_stopwords_set(set_id)
 
     assert {:ok, _} = Stopwords.retrieve_stopwords_set(set_id, [])
-    assert {:ok, _} = Stopwords.retrieve_stopwords_set(conn, set_id)
-    assert {:ok, _} = Stopwords.retrieve_stopwords_set(map_conn, set_id)
-    assert {:ok, _} = Stopwords.retrieve_stopwords_set(conn, set_id, [])
-    assert {:ok, _} = Stopwords.retrieve_stopwords_set(map_conn, set_id, [])
+    assert {:ok, _} = Stopwords.retrieve_stopwords_set(set_id, conn: conn)
+    assert {:ok, _} = Stopwords.retrieve_stopwords_set(set_id, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -90,10 +84,8 @@ defmodule StopwordsTest do
     assert {:ok, %StopwordsSetSchema{id: ^set_id}} = Stopwords.upsert_stopwords_set(set_id, body)
     assert {:ok, %Stopwords{id: ^set_id}} = Stopwords.delete_stopwords_set(set_id)
     assert {:error, _} = Stopwords.delete_stopwords_set(set_id, [])
-    assert {:error, _} = Stopwords.delete_stopwords_set(conn, set_id)
-    assert {:error, _} = Stopwords.delete_stopwords_set(map_conn, set_id)
-    assert {:error, _} = Stopwords.delete_stopwords_set(conn, set_id, [])
-    assert {:error, _} = Stopwords.delete_stopwords_set(map_conn, set_id, [])
+    assert {:error, _} = Stopwords.delete_stopwords_set(set_id, conn: conn)
+    assert {:error, _} = Stopwords.delete_stopwords_set(set_id, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]

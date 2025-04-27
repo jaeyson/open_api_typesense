@@ -58,10 +58,8 @@ defmodule DocumentsTest do
              Documents.update_document(coll_name, document_id, body)
 
     assert {:error, _} = Documents.update_document(coll_name, document_id, body, opts)
-    assert {:error, _} = Documents.update_document(conn, coll_name, document_id, body)
-    assert {:error, _} = Documents.update_document(map_conn, coll_name, document_id, body)
-    assert {:error, _} = Documents.update_document(conn, coll_name, document_id, body, opts)
-    assert {:error, _} = Documents.update_document(map_conn, coll_name, document_id, body, opts)
+    assert {:error, _} = Documents.update_document(coll_name, document_id, body, conn: conn)
+    assert {:error, _} = Documents.update_document(coll_name, document_id, body, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -102,9 +100,8 @@ defmodule DocumentsTest do
 
     assert length(hits) === 2
 
-    assert {:ok, _} = Documents.search_collection(coll_name, opts)
-    assert {:ok, _} = Documents.search_collection(conn, coll_name, opts)
-    assert {:ok, _} = Documents.search_collection(map_conn, coll_name, opts)
+    assert {:ok, _} = Documents.search_collection(coll_name, List.flatten([conn: conn], opts))
+    assert {:ok, _} = Documents.search_collection(coll_name, List.flatten([conn: map_conn], opts))
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -125,10 +122,8 @@ defmodule DocumentsTest do
              Documents.import_documents(coll_name, body, opts)
 
     assert {:ok, _} = Documents.import_documents(coll_name, body)
-    assert {:ok, _} = Documents.import_documents(conn, coll_name, body)
-    assert {:ok, _} = Documents.import_documents(map_conn, coll_name, body)
-    assert {:ok, _} = Documents.import_documents(conn, coll_name, body, opts)
-    assert {:ok, _} = Documents.import_documents(map_conn, coll_name, body, opts)
+    assert {:ok, _} = Documents.import_documents(coll_name, body, conn: conn)
+    assert {:ok, _} = Documents.import_documents(coll_name, body, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -150,10 +145,10 @@ defmodule DocumentsTest do
     assert result_two.found === 0
 
     assert {:ok, _} = Documents.multi_search(body, params)
-    assert {:ok, _} = Documents.multi_search(conn, body)
-    assert {:ok, _} = Documents.multi_search(map_conn, body)
-    assert {:ok, _} = Documents.multi_search(conn, body, params)
-    assert {:ok, _} = Documents.multi_search(map_conn, body, params)
+    assert {:ok, _} = Documents.multi_search(body, conn: conn)
+    assert {:ok, _} = Documents.multi_search(body, conn: map_conn)
+    assert {:ok, _} = Documents.multi_search(body, List.flatten([conn: conn], params))
+    assert {:ok, _} = Documents.multi_search(body, List.flatten([conn: map_conn], params))
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -205,10 +200,13 @@ defmodule DocumentsTest do
     assert num_updated > 0
 
     assert {:ok, _} =
-             Documents.update_documents(conn, coll_name, update, filter_by: "shoes_id:>=0")
+             Documents.update_documents(coll_name, update, conn: conn, filter_by: "shoes_id:>=0")
 
     assert {:ok, _} =
-             Documents.update_documents(map_conn, coll_name, update, filter_by: "shoes_id:>=0")
+             Documents.update_documents(coll_name, update,
+               conn: map_conn,
+               filter_by: "shoes_id:>=0"
+             )
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -266,10 +264,8 @@ defmodule DocumentsTest do
 
     assert {:ok, %{shoes_id: ^shoes_id}} = Documents.index_document(coll_name, body)
     assert {:ok, _} = Documents.index_document(coll_name, body, [])
-    assert {:ok, _} = Documents.index_document(conn, coll_name, body)
-    assert {:ok, _} = Documents.index_document(map_conn, coll_name, body)
-    assert {:ok, _} = Documents.index_document(conn, coll_name, body, [])
-    assert {:ok, _} = Documents.index_document(map_conn, coll_name, body, [])
+    assert {:ok, _} = Documents.index_document(coll_name, body, conn: conn)
+    assert {:ok, _} = Documents.index_document(coll_name, body, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -287,10 +283,8 @@ defmodule DocumentsTest do
     assert overrides >= 0
 
     assert {:error, _} = Documents.get_search_overrides("xyz", [])
-    assert {:error, _} = Documents.get_search_overrides(conn, "xyz")
-    assert {:error, _} = Documents.get_search_overrides(map_conn, "xyz")
-    assert {:error, _} = Documents.get_search_overrides(conn, "xyz", [])
-    assert {:error, _} = Documents.get_search_overrides(map_conn, "xyz", [])
+    assert {:error, _} = Documents.get_search_overrides("xyz", conn: conn)
+    assert {:error, _} = Documents.get_search_overrides("xyz", conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -303,10 +297,8 @@ defmodule DocumentsTest do
              Documents.get_search_override(coll_name, "non-existent")
 
     assert {:error, _} = Documents.get_search_override(coll_name, "xyz", [])
-    assert {:error, _} = Documents.get_search_override(conn, coll_name, "xyz")
-    assert {:error, _} = Documents.get_search_override(map_conn, coll_name, "xyz")
-    assert {:error, _} = Documents.get_search_override(conn, coll_name, "xyz", [])
-    assert {:error, _} = Documents.get_search_override(map_conn, coll_name, "xyz", [])
+    assert {:error, _} = Documents.get_search_override(coll_name, "xyz", conn: conn)
+    assert {:error, _} = Documents.get_search_override(coll_name, "xyz", conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -319,10 +311,8 @@ defmodule DocumentsTest do
              Documents.delete_search_override(coll_name, "non-existent")
 
     assert {:error, _} = Documents.delete_search_override(coll_name, "xyz", [])
-    assert {:error, _} = Documents.delete_search_override(conn, coll_name, "xyz")
-    assert {:error, _} = Documents.delete_search_override(map_conn, coll_name, "xyz")
-    assert {:error, _} = Documents.delete_search_override(conn, coll_name, "xyz", [])
-    assert {:error, _} = Documents.delete_search_override(map_conn, coll_name, "xyz", [])
+    assert {:error, _} = Documents.delete_search_override(coll_name, "xyz", conn: conn)
+    assert {:error, _} = Documents.delete_search_override(coll_name, "xyz", conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -353,10 +343,8 @@ defmodule DocumentsTest do
     assert {:error, %ApiResponse{message: ^error}} =
              Documents.delete_document(coll_name, id, [])
 
-    assert {:error, _} = Documents.delete_document(conn, coll_name, id)
-    assert {:error, _} = Documents.delete_document(map_conn, coll_name, id)
-    assert {:error, _} = Documents.delete_document(conn, coll_name, id, [])
-    assert {:error, _} = Documents.delete_document(map_conn, coll_name, id, [])
+    assert {:error, _} = Documents.delete_document(coll_name, id, conn: conn)
+    assert {:error, _} = Documents.delete_document(coll_name, id, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -399,8 +387,8 @@ defmodule DocumentsTest do
              Documents.delete_documents(coll_name, opts)
 
     assert {:ok, _} = Documents.delete_documents(coll_name, opts)
-    assert {:ok, _} = Documents.delete_documents(conn, coll_name, opts)
-    assert {:ok, _} = Documents.delete_documents(map_conn, coll_name, opts)
+    assert {:ok, _} = Documents.delete_documents(coll_name, List.flatten([conn: conn], opts))
+    assert {:ok, _} = Documents.delete_documents(coll_name, List.flatten([conn: map_conn], opts))
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -416,10 +404,8 @@ defmodule DocumentsTest do
              Documents.get_document(coll_name, document_id)
 
     assert {:error, _} = Documents.get_document(coll_name, document_id, [])
-    assert {:error, _} = Documents.get_document(conn, coll_name, document_id)
-    assert {:error, _} = Documents.get_document(map_conn, coll_name, document_id)
-    assert {:error, _} = Documents.get_document(conn, coll_name, document_id, [])
-    assert {:error, _} = Documents.get_document(map_conn, coll_name, document_id, [])
+    assert {:error, _} = Documents.get_document(coll_name, document_id, conn: conn)
+    assert {:error, _} = Documents.get_document(coll_name, document_id, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -430,10 +416,10 @@ defmodule DocumentsTest do
              Documents.export_documents("non-existent-collection")
 
     assert {:error, _} = Documents.export_documents("xyz", opts)
-    assert {:error, _} = Documents.export_documents(conn, "xyz")
-    assert {:error, _} = Documents.export_documents(map_conn, "xyz")
-    assert {:error, _} = Documents.export_documents(conn, "xyz", opts)
-    assert {:error, _} = Documents.export_documents(map_conn, "xyz", opts)
+    assert {:error, _} = Documents.export_documents("xyz", conn: conn)
+    assert {:error, _} = Documents.export_documents("xyz", conn: map_conn)
+    assert {:error, _} = Documents.export_documents("xyz", List.flatten([conn: conn], opts))
+    assert {:error, _} = Documents.export_documents("xyz", List.flatten([conn: map_conn], opts))
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -461,16 +447,12 @@ defmodule DocumentsTest do
              Documents.upsert_search_override(coll_name, "customize-apple", body)
 
     assert {:ok, _} = Documents.upsert_search_override(coll_name, "customize-apple", body, [])
-    assert {:ok, _} = Documents.upsert_search_override(conn, coll_name, "customize-apple", body)
 
     assert {:ok, _} =
-             Documents.upsert_search_override(map_conn, coll_name, "customize-apple", body)
+             Documents.upsert_search_override(coll_name, "customize-apple", body, conn: conn)
 
     assert {:ok, _} =
-             Documents.upsert_search_override(conn, coll_name, "customize-apple", body, [])
-
-    assert {:ok, _} =
-             Documents.upsert_search_override(map_conn, coll_name, "customize-apple", body, [])
+             Documents.upsert_search_override(coll_name, "customize-apple", body, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]

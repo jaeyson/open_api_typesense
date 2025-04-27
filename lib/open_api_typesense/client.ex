@@ -11,7 +11,7 @@ defmodule OpenApiTypesense.Client do
   A callback function for custom HTTP client
   """
   @doc since: "0.2.0"
-  @callback request(conn :: map(), params :: keyword()) :: response()
+  @callback request(params :: map()) :: response()
 
   @typedoc since: "0.2.0"
   @type response() ::
@@ -64,15 +64,22 @@ defmodule OpenApiTypesense.Client do
       {:ok, %OpenApiTypesense.HealthStatus{ok: true}}
   """
   @doc since: "0.2.0"
-  @spec request(map() | Connection.t(), map()) :: response()
-  def request(conn, opts) do
+  @spec request(map()) :: response()
+  def request(params) do
+    conn =
+      if params.opts[:conn] do
+        Connection.new(params.opts[:conn])
+      else
+        Connection.new()
+      end
+
     client = Map.get(conn, :client)
 
     if client do
-      client.request(conn, opts)
+      client.request(conn, params)
     else
-      req_client = build_req_client(conn, opts)
-      req_request(req_client, opts)
+      req_client = build_req_client(conn, params)
+      req_request(req_client, params)
     end
   end
 
@@ -113,9 +120,9 @@ defmodule OpenApiTypesense.Client do
   defp encode_body(opts) do
     if opts[:request] do
       [content_type] = opts[:request]
-      parse_content_type(content_type, opts[:body])
+      parse_content_type(content_type, opts[:args][:body])
     else
-      Jason.encode_to_iodata!(opts[:body])
+      Jason.encode_to_iodata!(opts[:args][:body])
     end
   end
 

@@ -16,10 +16,8 @@ defmodule DebugTest do
   test "success: list stopwords sets", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %Debug{version: _}} = Debug.debug()
     assert {:ok, _} = Debug.debug([])
-    assert {:ok, _} = Debug.debug(conn)
-    assert {:ok, _} = Debug.debug(map_conn)
-    assert {:ok, _} = Debug.debug(conn, [])
-    assert {:ok, _} = Debug.debug(map_conn, [])
+    assert {:ok, _} = Debug.debug(conn: conn)
+    assert {:ok, _} = Debug.debug(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]

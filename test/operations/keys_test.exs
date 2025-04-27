@@ -41,10 +41,8 @@ defmodule KeysTest do
 
     assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(key_id)
     assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(key_id, [])
-    assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(conn, key_id)
-    assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(map_conn, key_id)
-    assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(conn, key_id, [])
-    assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(map_conn, key_id, [])
+    assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(key_id, conn: conn)
+    assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(key_id, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -53,10 +51,8 @@ defmodule KeysTest do
     assert length(keys) >= 0
 
     assert {:ok, %ApiKeysResponse{}} = Keys.get_keys([])
-    assert {:ok, %ApiKeysResponse{}} = Keys.get_keys(conn)
-    assert {:ok, %ApiKeysResponse{}} = Keys.get_keys(map_conn)
-    assert {:ok, %ApiKeysResponse{}} = Keys.get_keys(conn, [])
-    assert {:ok, %ApiKeysResponse{}} = Keys.get_keys(map_conn, [])
+    assert {:ok, %ApiKeysResponse{}} = Keys.get_keys(conn: conn)
+    assert {:ok, %ApiKeysResponse{}} = Keys.get_keys(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -71,10 +67,8 @@ defmodule KeysTest do
 
     assert {:ok, %ApiKeyDeleteResponse{id: ^key_id}} = Keys.delete_key(key_id)
     assert {:error, _} = Keys.delete_key(key_id, [])
-    assert {:error, _} = Keys.delete_key(conn, key_id)
-    assert {:error, _} = Keys.delete_key(map_conn, key_id)
-    assert {:error, _} = Keys.delete_key(conn, key_id, [])
-    assert {:error, _} = Keys.delete_key(map_conn, key_id, [])
+    assert {:error, _} = Keys.delete_key(key_id, conn: conn)
+    assert {:error, _} = Keys.delete_key(key_id, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -85,10 +79,8 @@ defmodule KeysTest do
   } do
     assert {:ok, %ApiKey{}} = Keys.create_key(api_key_schema)
     assert {:ok, %ApiKey{}} = Keys.create_key(api_key_schema, [])
-    assert {:ok, %ApiKey{}} = Keys.create_key(conn, api_key_schema)
-    assert {:ok, %ApiKey{}} = Keys.create_key(map_conn, api_key_schema)
-    assert {:ok, %ApiKey{}} = Keys.create_key(conn, api_key_schema, [])
-    assert {:ok, %ApiKey{}} = Keys.create_key(map_conn, api_key_schema, [])
+    assert {:ok, %ApiKey{}} = Keys.create_key(api_key_schema, conn: conn)
+    assert {:ok, %ApiKey{}} = Keys.create_key(api_key_schema, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
