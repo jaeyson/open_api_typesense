@@ -4,7 +4,7 @@ info:
   description: "An open source search engine for building delightful search experiences."
   version: '28.0'
 externalDocs:
-  description: Find out more about Typsesense
+  description: Find out more about Typesense
   url: https://typesense.org
 security:
   - api_key_header: []
