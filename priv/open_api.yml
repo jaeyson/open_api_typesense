@@ -87,6 +87,28 @@ paths:
                 x-go-type: "[]*CollectionResponse"
                 items:
                   $ref: "#/components/schemas/CollectionResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+      parameters:
+        - name: limit
+          in: query
+          description: Limit results in paginating on collection listing.
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: Skip a certain number of results and start after that.
+          schema:
+            type: string
+        - name: exclude_fields
+          in: query
+          description: Exclude the field definitions from being returned in the response.
+          schema:
+            type: string
     post:
       tags:
         - collections
@@ -115,12 +137,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '409':
           description: Collection already exists
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+      parameters:
+        - name: src_name
+          in: query
+          description: 
+            Clone an existing collection's schema (documents are not copied),
+            overrides and synonyms. The actual documents in the collection are
+            not copied, so this is primarily useful for creating new collections
+            from an existing reference template.
+          schema:
+            type: string
   /collections/{collectionName}:
     get:
       tags:
@@ -182,6 +220,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: The collection was not found
           content:
@@ -210,6 +254,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CollectionResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Collection not found
           content:
@@ -261,8 +311,20 @@ paths:
               schema:
                 type: object
                 description: Can be any key-value pair
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Collection not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '409':
+          description: Document already exists
           content:
             application/json:
               schema:
@@ -283,14 +345,22 @@ paths:
           required: true
           schema:
             type: string
-        - name: updateDocumentsParameters
+        - name: filter_by
+          required: true
           in: query
+          description: >-
+            Filter results by a particular value(s) or logical expressions.
+            multiple conditions with &&.
           schema:
-            type: object
-            properties:
-              filter_by:
-                type: string
-                example: "num_employees:>100 && country: [USA, UK]"
+            type: string
+          example: 'num_employees:>100 && country: [USA, UK]'
+        - name: action
+          in: query
+          description: Additional action to perform
+          schema:
+            type: string
+            example: upsert
+            $ref: "#/components/schemas/IndexAction"
       responses:
         '200':
           description:
@@ -311,13 +381,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponse'
+                $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: The collection was not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponse'
+                $ref: "#/components/schemas/ApiResponse"
       requestBody:
         description: The document fields to be updated
         content:
@@ -344,27 +420,35 @@ paths:
           required: true
           schema:
             type: string
-        - name: deleteDocumentsParameters
+        - name: batch_size
           in: query
+          description: >-
+            Batch size parameter controls the number of documents that should be
+            deleted at a time. A larger value will speed up deletions, but will
+            impact performance of other operations running on the server.
           schema:
-            type: object
-            required:
-              - filter_by
-            properties:
-              filter_by:
-                type: string
-                example: "num_employees:>100 && country: [USA, UK]"
-              batch_size:
-                description:
-                  Batch size parameter controls the number of documents that should be deleted
-                  at a time. A larger value will speed up deletions, but will impact performance
-                  of other operations running on the server.
-                type: integer
-              ignore_not_found:
-                type: boolean
-              truncate:
-                description: When true, removes all documents from the collection while preserving the collection and its schema.
-                type: boolean
+            type: string
+        - name: filter_by
+          in: query
+          description: >-
+            Filter results by a particular value(s) or logical expressions.
+            multiple conditions with &&.
+          required: true
+          example: 'num_employees:>100 && country: [USA, UK]'
+          schema:
+            type: string
+        - name: ignore_not_found
+          in: query
+          description: To ignore an error and treat the deletion as success.
+          schema:
+            type: boolean
+        - name: truncate
+          in: query
+          description:
+            When true, removes all documents from the collection while preserving
+            the collection and its schema.
+          schema:
+            type: boolean
       responses:
         '200':
           description: Documents successfully deleted
@@ -377,6 +461,18 @@ paths:
                 properties:
                   num_deleted:
                     type: integer
+        '400':
+          description: 'Bad request, see error message for details'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Collection not found
           content:
@@ -415,6 +511,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: The collection or field was not found
           content:
@@ -435,6 +537,16 @@ paths:
           required: true
           schema:
             type: string
+        - name: limit
+          in: query
+          description: Limit results in paginating on collection listing.
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: Skip a certain number of results and start after that.
+          schema:
+            type: string
       responses:
         '200':
           description: List of all search overrides
@@ -442,6 +554,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SearchOverridesResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '404':
+          description: List of search overrides not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /collections/{collectionName}/overrides/{overrideId}:
     get:
       tags:
@@ -470,6 +594,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SearchOverride"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '404':
+          description: Search override not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
     put:
       tags:
         - documents
@@ -506,6 +642,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SearchOverride"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Search override not found
           content:
@@ -538,6 +680,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SearchOverrideDeleteResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Search override not found
           content:
@@ -557,6 +705,16 @@ paths:
           required: true
           schema:
             type: string
+        - name: limit
+          in: query
+          description: Limit results in paginating on collection listing.
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: Skip a certain number of results and start after that.
+          schema:
+            type: string
       responses:
         '200':
           description: List of all search synonyms
@@ -564,6 +722,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SearchSynonymsResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Search synonyms was not found
           content:
@@ -597,6 +761,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SearchSynonym"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Search synonym was not found
           content:
@@ -636,6 +806,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SearchSynonym"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Search synonym was not found
           content:
@@ -667,6 +843,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SearchSynonymDeleteResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Search synonym not found
           content:
@@ -688,22 +870,23 @@ paths:
           required: true
           schema:
             type: string
-        - name: exportDocumentsParameters
+        - name: filter_by
           in: query
+          description:
+            Filter conditions for refining your search results. Separate
+            multiple conditions with &&.
           schema:
-            type: object
-            properties:
-              filter_by:
-                description:
-                  Filter conditions for refining your search results. Separate
-                  multiple conditions with &&.
-                type: string
-              include_fields:
-                description: List of fields from the document to include in the search result
-                type: string
-              exclude_fields:
-                description: List of fields from the document to exclude in the search result
-                type: string
+            type: string
+        - name: include_fields
+          in: query
+          description: List of fields from the document to include in the search result
+          schema:
+            type: string
+        - name: exclude_fields
+          in: query
+          description: List of fields from the document to exclude in the search result
+          schema:
+            type: string
 
       responses:
         '200':
@@ -716,6 +899,12 @@ paths:
                   {"id": "124", "company_name": "Stark Industries", "num_employees": 5215, "country": "US"}
                   {"id": "125", "company_name": "Future Technology", "num_employees": 1232,"country": "UK"}
                   {"id": "126", "company_name": "Random Corp.", "num_employees": 531,"country": "AU"}
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: The collection was not found
           content:
@@ -739,28 +928,61 @@ paths:
           required: true
           schema:
             type: string
-        # Do not change the index position of this param
-        - name: importDocumentsParameters
+        - name: batch_size
+          in: query
+          description: >-
+            Batch size parameter controls the number of documents that should be
+            imported at a time. A larger value will speed up imports, but will
+            impact performance of other operations running on the server.
+          schema:
+            type: integer
+        - name: return_id
+          in: query
+          description: >-
+            Returning the id of the imported documents. If you want the import
+            response to return the ingested document's id in the response, you
+            can use the return_id parameter.
+          schema:
+            type: boolean
+        - name: remote_embedding_batch_size
+          description: >-
+            Max size of each batch that will be sent to remote APIs while
+            importing multiple documents at once. Using lower amount will lower
+            timeout risk, but increase number of requests made. Default is 200.
           in: query
           schema:
-            type: object
-            properties:
-              batch_size:
-                type: integer
-              return_id:
-                type: boolean
-                description:
-                  Returning the id of the imported documents. If you want the
-                  import response to return the ingested document's id in the
-                  response, you can use the return_id parameter.
-              remote_embedding_batch_size:
-                type: integer
-              return_doc:
-                type: boolean
-              action:
-                $ref: "#/components/schemas/IndexAction"
-              dirty_values:
-                $ref: "#/components/schemas/DirtyValues"
+            type: integer
+        - name: remote_embedding_timeout_ms
+          description: >-
+            How long to wait until an API call to a remote embedding service is
+            considered a timeout during indexing. Default is 60_000 ms
+          in: query
+          schema:
+            type: integer
+        - name: remote_embedding_num_tries
+          description: >-
+            The number of times to retry an API call to a remote embedding
+            service on failure during indexing. Default is 2.
+          in: query
+          schema:
+            type: integer
+        - name: return_doc
+          description: Returns the entire document back in response.
+          in: query
+          schema:
+            type: boolean
+        - name: action
+          in: query
+          description: Additional action to perform
+          schema:
+            type: string
+            example: upsert
+            $ref: '#/components/schemas/IndexAction'
+        - name: dirty_values
+          in: query
+          description: Dealing with Dirty Data
+          schema:
+            $ref: '#/components/schemas/DirtyValues'
       requestBody:
         description: The json array of documents or the JSONL file to import
         content:
@@ -790,6 +1012,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: The collection was not found
           content:
@@ -800,7 +1028,7 @@ paths:
     get:
       tags:
         - documents
-      summary: Retreive a document
+      summary: Retrieve a document
       description: Fetch an individual document from a collection by using its ID.
       operationId: getDocument
       parameters:
@@ -816,6 +1044,18 @@ paths:
           required: true
           schema:
             type: string
+        - name: include_fields
+          in: query
+          description: List of fields that should be present in the returned document.
+          schema:
+            type: string
+            example: fields
+        - name: exclude_fields
+          in: query
+          description: List of fields that should not be present in the returned document.
+          schema:
+            type: string
+            example: fields
       responses:
         '200':
           description: The document referenced by the ID
@@ -824,6 +1064,12 @@ paths:
               schema:
                 type: object
                 description: Can be any key-value pair
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: The document or collection was not found
           content:
@@ -873,6 +1119,12 @@ paths:
               schema:
                 type: object
                 description: Can be any key-value pair
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: The document or collection was not found
           content:
@@ -898,6 +1150,11 @@ paths:
           required: true
           schema:
             type: string
+        - name: ignore_not_found
+          description: Ignore the error and treat the deletion as success.
+          in: query
+          schema:
+            type: boolean
       responses:
         '200':
           description: The document referenced by the ID was deleted
@@ -906,6 +1163,12 @@ paths:
               schema:
                 type: object
                 description: Can be any key-value pair
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: The document or collection was not found
           content:
@@ -926,6 +1189,12 @@ paths:
                 type: array
                 x-go-type: '[]*ConversationModelSchema'
           description: List of all conversation models
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
       summary: List all conversation models
       tags:
         - conversations
@@ -945,6 +1214,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConversationModelSchema'
           description: Created Conversation Model
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '400':
           content:
             application/json:
@@ -971,6 +1246,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConversationModelSchema'
           description: A conversation model
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '404':
+          description: Model not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
       summary: Retrieve a conversation model
       tags:
         - conversations
@@ -997,6 +1284,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConversationModelSchema'
           description: The conversation model was successfully updated
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '404':
+          description: Model not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
       summary: Update a conversation model
       tags:
         - conversations
@@ -1017,6 +1316,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConversationModelSchema'
           description: The conversation model was successfully deleted
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '404':
+          description: Model not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
       summary: Delete a conversation model
       tags:
         - conversations
@@ -1056,6 +1367,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiKey"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '400':
           description: Bad request, see error message for details
           content:
@@ -1093,6 +1410,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiKey"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: The key was not found
           content:
@@ -1125,6 +1448,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Key not found
           content:
@@ -1145,6 +1474,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CollectionAliasesResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /aliases/{aliasName}:
     put:
       tags:
@@ -1183,6 +1518,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Alias not found
           content:
@@ -1209,6 +1550,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CollectionAlias"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: The alias was not found
           content:
@@ -1234,6 +1581,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CollectionAlias"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Alias not found
           content:
@@ -1257,6 +1610,12 @@ paths:
                 properties:
                   version:
                     type: string
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /health:
     get:
       tags:
@@ -1287,6 +1646,12 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/SchemaChangeStatus"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /operations/snapshot:
     post:
       tags:
@@ -1311,6 +1676,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessStatus"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '409':
+          description: Another snapshot is in progress.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /operations/vote:
     post:
       tags:
@@ -1328,6 +1705,87 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessStatus"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /operations/db/compact:
+    post:
+      tags:
+        - operations
+      summary: Compaction of the underlying RocksDB database
+      description:
+        Typesense uses RocksDB to store your documents on the disk. If you do
+        frequent writes or updates, you could benefit from running a compaction
+        of the underlying RocksDB database. This could reduce the size of the
+        database and decrease read latency. While the database will not block
+        during this operation, we recommend running it during off-peak hours.
+      operationId: compact
+      responses:
+        '200':
+          description: Compacting the database
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessStatus"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /operations/cache/clear:
+    post:
+      tags:
+        - operations
+      summary: Clears the cache
+      description:
+        Responses of search requests that are sent with use_cache parameter are
+        cached in a LRU cache. Clears cache completely.
+      operationId: clearCache
+      responses:
+        '200':
+          description: Cache cleared
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessStatus"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /config:
+    post:
+      tags:
+        - operations
+      summary: Enable logging of requests that take over a defined threshold of time.
+      description: >-
+        Slow requests are logged to the primary log file, with the prefix SLOW
+        REQUEST. Default is -1 which disables slow request logging.
+      operationId: config
+      requestBody:
+        description: Define threshold in ms for logging of requests
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfigSchema"
+      responses:
+        '201':
+          description: Updated slow request log
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessStatus"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /multi_search:
     post:
       operationId: multiSearch
@@ -1338,11 +1796,23 @@ paths:
         This is especially useful to avoid round-trip network latencies incurred otherwise if each of these requests are sent in separate HTTP requests.
         You can also use this feature to do a federated search across multiple collections in a single HTTP request.
       parameters:
-        - name: multiSearchParameters
-          required: true
+        - name: limit_multi_searches
+          required: false
+          description: >-
+            Max number of search requests that can be sent in a multi-search
+            request. Default 50
           in: query
           schema:
-            $ref: "#/components/schemas/MultiSearchParameters"
+            type: string
+        - name: x-typesense-api-key
+          required: false
+          description: >-
+            You can embed a separate search API key for each search within a
+            multi_search request. This is useful when you want to apply different
+            embedded filters for each collection in individual scoped API keys.
+          in: query
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1357,6 +1827,12 @@ paths:
                 $ref: "#/components/schemas/MultiSearchResult"
         '400':
           description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: "Missing API key"
           content:
             application/json:
               schema:
@@ -1388,6 +1864,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /analytics/rules:
     post:
       tags:
@@ -1416,6 +1898,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '404':
+          description: Collection or field missing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
     get:
       tags:
         - analytics
@@ -1430,6 +1924,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AnalyticsRulesRetrieveSchema"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /analytics/rules/{ruleName}:
     put:
       tags:
@@ -1465,6 +1965,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
     get:
       tags:
         - analytics
@@ -1486,6 +1992,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AnalyticsRuleSchema"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Analytics rule not found
           content:
@@ -1534,6 +2046,12 @@ paths:
             application/json:
               schema:
                 type: object
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /stats.json:
     get:
       tags:
@@ -1549,6 +2067,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/APIStatsResponse"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /stopwords:
     get:
       tags:
@@ -1564,6 +2088,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StopwordsSetsRetrieveAllSchema"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /stopwords/{setId}:
     put:
       tags:
@@ -1600,6 +2130,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
     get:
       tags:
         - stopwords
@@ -1622,6 +2158,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StopwordsSetRetrieveSchema"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Stopwords set not found.
           content:
@@ -1657,6 +2199,12 @@ paths:
                   - id
                 example: |
                   {"id": "countries"}
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Stopwords set not found.
           content:
@@ -1677,6 +2225,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PresetsRetrieveSchema'
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /presets/{presetId}:
     get:
       tags:
@@ -1699,6 +2253,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PresetSchema'
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Preset not found.
           content:
@@ -1739,6 +2299,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
     delete:
       tags:
         - presets
@@ -1760,6 +2326,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PresetDeleteSchema'
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Preset not found.
           content:
@@ -1786,6 +2358,12 @@ paths:
                     items:
                       type: string
                     example: ["irregular-plurals", "company-terms"]
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
   /stemming/dictionaries/{dictionaryId}:
     get:
@@ -1809,6 +2387,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StemmingDictionary"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Dictionary not found
           content:
@@ -1853,6 +2437,12 @@ paths:
                   {"word": "children", "root": "child"}
         '400':
           description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: "Missing API key"
           content:
             application/json:
               schema:
@@ -2091,6 +2681,16 @@ components:
         model_name:
           type: string
           example: "ts/whisper/base.en"
+    ConfigSchema:
+      type: object
+      required:
+        - log_slow_requests_time_ms
+      properties:
+        log_slow_requests_time_ms:
+          type: integer
+          description:
+            Enable logging of requests that take over a defined threshold of
+            time in ms.
     CollectionAliasSchema:
       type: object
       required:
