@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 1.0.0 (2025.05.31)
+
+### Changed
+
+* Passing `conn` as part of `opts` when calling a function, as this reduces code duplication. [Issue #26](https://github.com/jaeyson/open_api_typesense/issues/26) [PR #29](https://github.com/jaeyson/open_api_typesense/pull/29)
+
+### Chore
+
+* Bumped dev dependencies
+
 ## 0.7.1 (2025.04.06)
 
 ### Fixed
