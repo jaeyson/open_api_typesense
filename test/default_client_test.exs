@@ -17,10 +17,12 @@ defmodule DefaultClientTest do
         url: "/health",
         method: :get,
         response: [{200, {OpenApiTypesense.HealthStatus, :t}}],
-        opts: []
+        opts: [],
+        conn: conn
       }
 
-      assert {:ok, %OpenApiTypesense.HealthStatus{ok: true}} = Client.request(conn, opts)
+      assert {:ok, %OpenApiTypesense.HealthStatus{ok: true}} =
+               Client.request(opts)
     end
   end
 

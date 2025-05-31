@@ -64,12 +64,10 @@ defmodule CollectionsTest do
 
     assert {:ok, %CollectionResponse{name: ^name}} = Collections.create_collection(schema)
     assert {:error, %ApiResponse{message: _}} = Collections.create_collection(schema, [])
-    assert {:error, %ApiResponse{message: _}} = Collections.create_collection(conn, schema)
-    assert {:error, %ApiResponse{message: _}} = Collections.create_collection(conn, schema, [])
-    assert {:error, %ApiResponse{message: _}} = Collections.create_collection(map_conn, schema)
+    assert {:error, %ApiResponse{message: _}} = Collections.create_collection(schema, conn: conn)
 
     assert {:error, %ApiResponse{message: _}} =
-             Collections.create_collection(map_conn, schema, [])
+             Collections.create_collection(schema, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -79,10 +77,10 @@ defmodule CollectionsTest do
 
     opts = [exclude_fields: "fields", limit: 1]
     assert {:ok, _} = Collections.get_collections(opts)
-    assert {:ok, _} = Collections.get_collections(conn)
-    assert {:ok, _} = Collections.get_collections(map_conn)
-    assert {:ok, _} = Collections.get_collections(conn, opts)
-    assert {:ok, _} = Collections.get_collections(map_conn, limit: 1)
+    assert {:ok, _} = Collections.get_collections(conn: conn)
+    assert {:ok, _} = Collections.get_collections(conn: map_conn)
+    assert {:ok, _} = Collections.get_collections(List.flatten([conn: conn], opts))
+    assert {:ok, _} = Collections.get_collections(conn: map_conn, limit: 1)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -108,16 +106,12 @@ defmodule CollectionsTest do
              Collections.update_collection(name, body)
 
     assert {:error, %ApiResponse{message: _}} = Collections.update_collection(name, body, [])
-    assert {:error, %ApiResponse{message: _}} = Collections.update_collection(conn, name, body)
 
     assert {:error, %ApiResponse{message: _}} =
-             Collections.update_collection(map_conn, name, body)
+             Collections.update_collection(name, body, conn: conn)
 
     assert {:error, %ApiResponse{message: _}} =
-             Collections.update_collection(conn, name, body, [])
-
-    assert {:error, %ApiResponse{message: _}} =
-             Collections.update_collection(map_conn, name, body, [])
+             Collections.update_collection(name, body, conn: map_conn)
 
     Collections.delete_collection(name)
   end
@@ -127,10 +121,8 @@ defmodule CollectionsTest do
     assert {:ok, %CollectionAliasesResponse{aliases: aliases}} = Collections.get_aliases()
     assert length(aliases) >= 0
     assert {:ok, _} = Collections.get_aliases([])
-    assert {:ok, _} = Collections.get_aliases(conn)
-    assert {:ok, _} = Collections.get_aliases(map_conn)
-    assert {:ok, _} = Collections.get_aliases(conn, [])
-    assert {:ok, _} = Collections.get_aliases(map_conn, [])
+    assert {:ok, _} = Collections.get_aliases(conn: conn)
+    assert {:ok, _} = Collections.get_aliases(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -142,10 +134,10 @@ defmodule CollectionsTest do
               }}
 
     assert {:error, %ApiResponse{message: _}} = Collections.delete_collection("xyz", [])
-    assert {:error, %ApiResponse{message: _}} = Collections.delete_collection(conn, "xyz")
-    assert {:error, %ApiResponse{message: _}} = Collections.delete_collection(map_conn, "xyz")
-    assert {:error, %ApiResponse{message: _}} = Collections.delete_collection(conn, "xyz", [])
-    assert {:error, %ApiResponse{message: _}} = Collections.delete_collection(map_conn, "xyz", [])
+    assert {:error, %ApiResponse{message: _}} = Collections.delete_collection("xyz", conn: conn)
+
+    assert {:error, %ApiResponse{message: _}} =
+             Collections.delete_collection("xyz", conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -163,17 +155,15 @@ defmodule CollectionsTest do
              Collections.upsert_alias(alias_name, body)
 
     assert {:ok, %CollectionAlias{}} = Collections.upsert_alias(alias_name, body, [])
-    assert {:ok, %CollectionAlias{}} = Collections.upsert_alias(conn, alias_name, body)
-    assert {:ok, %CollectionAlias{}} = Collections.upsert_alias(map_conn, alias_name, body)
-    assert {:ok, %CollectionAlias{}} = Collections.upsert_alias(conn, alias_name, body, [])
-    assert {:ok, %CollectionAlias{}} = Collections.upsert_alias(map_conn, alias_name, body, [])
+    assert {:ok, %CollectionAlias{}} = Collections.upsert_alias(alias_name, body, conn: conn)
+    assert {:ok, %CollectionAlias{}} = Collections.upsert_alias(alias_name, body, conn: map_conn)
 
     assert {:ok, %CollectionAlias{name: ^alias_name}} = Collections.delete_alias(alias_name)
     assert {:error, %ApiResponse{message: _}} = Collections.delete_alias(alias_name, [])
-    assert {:error, %ApiResponse{message: _}} = Collections.delete_alias(conn, alias_name)
-    assert {:error, %ApiResponse{message: _}} = Collections.delete_alias(map_conn, alias_name)
-    assert {:error, %ApiResponse{message: _}} = Collections.delete_alias(conn, alias_name, [])
-    assert {:error, %ApiResponse{message: _}} = Collections.delete_alias(map_conn, alias_name, [])
+    assert {:error, %ApiResponse{message: _}} = Collections.delete_alias(alias_name, conn: conn)
+
+    assert {:error, %ApiResponse{message: _}} =
+             Collections.delete_alias(alias_name, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -182,10 +172,8 @@ defmodule CollectionsTest do
              {:error, %ApiResponse{message: "Not Found"}}
 
     assert {:error, %ApiResponse{message: _}} = Collections.get_alias("xyz", [])
-    assert {:error, %ApiResponse{message: _}} = Collections.get_alias(conn, "xyz")
-    assert {:error, %ApiResponse{message: _}} = Collections.get_alias(map_conn, "xyz")
-    assert {:error, %ApiResponse{message: _}} = Collections.get_alias(conn, "xyz", [])
-    assert {:error, %ApiResponse{message: _}} = Collections.get_alias(map_conn, "xyz", [])
+    assert {:error, %ApiResponse{message: _}} = Collections.get_alias("xyz", conn: conn)
+    assert {:error, %ApiResponse{message: _}} = Collections.get_alias("xyz", conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -195,9 +183,7 @@ defmodule CollectionsTest do
 
     assert {:error, %ApiResponse{message: _}} = Collections.get_collection("xyz")
     assert {:error, %ApiResponse{message: _}} = Collections.get_collection("xyz", [])
-    assert {:error, %ApiResponse{message: _}} = Collections.get_collection(conn, "xyz")
-    assert {:error, %ApiResponse{message: _}} = Collections.get_collection(map_conn, "xyz")
-    assert {:error, %ApiResponse{message: _}} = Collections.get_collection(conn, "xyz", [])
-    assert {:error, %ApiResponse{message: _}} = Collections.get_collection(map_conn, "xyz", [])
+    assert {:error, %ApiResponse{message: _}} = Collections.get_collection("xyz", conn: conn)
+    assert {:error, %ApiResponse{message: _}} = Collections.get_collection("xyz", conn: map_conn)
   end
 end

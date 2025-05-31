@@ -1,7 +1,7 @@
 defmodule OperationsTest do
   use ExUnit.Case, async: true
 
-  alias OpenApiTypesense.ApiStatsResponse
+  alias OpenApiTypesense.APIStatsResponse
   alias OpenApiTypesense.Connection
   alias OpenApiTypesense.Operations
   alias OpenApiTypesense.SuccessStatus
@@ -17,22 +17,18 @@ defmodule OperationsTest do
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: retrieve api stats", %{conn: conn, map_conn: map_conn} do
-    assert {:ok, %ApiStatsResponse{}} = Operations.retrieve_api_stats()
-    assert {:ok, %ApiStatsResponse{}} = Operations.retrieve_api_stats([])
-    assert {:ok, %ApiStatsResponse{}} = Operations.retrieve_api_stats(conn)
-    assert {:ok, %ApiStatsResponse{}} = Operations.retrieve_api_stats(map_conn)
-    assert {:ok, %ApiStatsResponse{}} = Operations.retrieve_api_stats(conn, [])
-    assert {:ok, %ApiStatsResponse{}} = Operations.retrieve_api_stats(map_conn, [])
+    assert {:ok, %APIStatsResponse{}} = Operations.retrieve_api_stats()
+    assert {:ok, %APIStatsResponse{}} = Operations.retrieve_api_stats([])
+    assert {:ok, %APIStatsResponse{}} = Operations.retrieve_api_stats(conn: conn)
+    assert {:ok, %APIStatsResponse{}} = Operations.retrieve_api_stats(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: retrieve metrics", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %{system_cpu_active_percentage: _}} = Operations.retrieve_metrics()
     assert {:ok, %{system_cpu_active_percentage: _}} = Operations.retrieve_metrics([])
-    assert {:ok, %{system_cpu_active_percentage: _}} = Operations.retrieve_metrics(conn)
-    assert {:ok, %{system_cpu_active_percentage: _}} = Operations.retrieve_metrics(map_conn)
-    assert {:ok, %{system_cpu_active_percentage: _}} = Operations.retrieve_metrics(conn, [])
-    assert {:ok, %{system_cpu_active_percentage: _}} = Operations.retrieve_metrics(map_conn, [])
+    assert {:ok, %{system_cpu_active_percentage: _}} = Operations.retrieve_metrics(conn: conn)
+    assert {:ok, %{system_cpu_active_percentage: _}} = Operations.retrieve_metrics(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -42,30 +38,24 @@ defmodule OperationsTest do
 
     body = %{"log_slow_requests_time_ms" => -1}
     assert {:ok, %SuccessStatus{success: true}} = Operations.config(body, [])
-    assert {:ok, %SuccessStatus{success: true}} = Operations.config(conn, body)
-    assert {:ok, %SuccessStatus{success: true}} = Operations.config(map_conn, body)
-    assert {:ok, %SuccessStatus{success: true}} = Operations.config(conn, body, [])
-    assert {:ok, %SuccessStatus{success: true}} = Operations.config(map_conn, body, [])
+    assert {:ok, %SuccessStatus{success: true}} = Operations.config(body, conn: conn)
+    assert {:ok, %SuccessStatus{success: true}} = Operations.config(body, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: clear cache", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %SuccessStatus{success: true}} = Operations.clear_cache()
     assert {:ok, %SuccessStatus{success: true}} = Operations.clear_cache([])
-    assert {:ok, %SuccessStatus{success: true}} = Operations.clear_cache(conn)
-    assert {:ok, %SuccessStatus{success: true}} = Operations.clear_cache(map_conn)
-    assert {:ok, %SuccessStatus{success: true}} = Operations.clear_cache(conn, [])
-    assert {:ok, %SuccessStatus{success: true}} = Operations.clear_cache(map_conn, [])
+    assert {:ok, %SuccessStatus{success: true}} = Operations.clear_cache(conn: conn)
+    assert {:ok, %SuccessStatus{success: true}} = Operations.clear_cache(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: compact database", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %SuccessStatus{success: true}} = Operations.compact()
     assert {:ok, %SuccessStatus{success: true}} = Operations.compact([])
-    assert {:ok, %SuccessStatus{success: true}} = Operations.compact(conn)
-    assert {:ok, %SuccessStatus{success: true}} = Operations.compact(map_conn)
-    assert {:ok, %SuccessStatus{success: true}} = Operations.compact(conn, [])
-    assert {:ok, %SuccessStatus{success: true}} = Operations.compact(map_conn, [])
+    assert {:ok, %SuccessStatus{success: true}} = Operations.compact(conn: conn)
+    assert {:ok, %SuccessStatus{success: true}} = Operations.compact(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -75,20 +65,22 @@ defmodule OperationsTest do
     assert {:ok, %SuccessStatus{success: true}} = Operations.take_snapshot(params)
 
     Process.sleep(@rate_limit)
-    assert {:ok, %SuccessStatus{success: true}} = Operations.take_snapshot(conn, params)
+
+    assert {:ok, %SuccessStatus{success: true}} =
+             Operations.take_snapshot(List.flatten([conn: conn], params))
 
     Process.sleep(@rate_limit)
-    assert {:ok, %SuccessStatus{success: true}} = Operations.take_snapshot(map_conn, params)
+
+    assert {:ok, %SuccessStatus{success: true}} =
+             Operations.take_snapshot(List.flatten([conn: map_conn], params))
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: re-elect leader", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %SuccessStatus{success: false}} = Operations.vote()
     assert {:ok, %SuccessStatus{success: false}} = Operations.vote([])
-    assert {:ok, %SuccessStatus{success: false}} = Operations.vote(conn)
-    assert {:ok, %SuccessStatus{success: false}} = Operations.vote(map_conn)
-    assert {:ok, %SuccessStatus{success: false}} = Operations.vote(conn, [])
-    assert {:ok, %SuccessStatus{success: false}} = Operations.vote(map_conn, [])
+    assert {:ok, %SuccessStatus{success: false}} = Operations.vote(conn: conn)
+    assert {:ok, %SuccessStatus{success: false}} = Operations.vote(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": false, "27.0": false, "26.0": false]
@@ -97,9 +89,7 @@ defmodule OperationsTest do
     assert length(schemas) >= 0
 
     assert {:ok, _} = Operations.get_schema_changes([])
-    assert {:ok, _} = Operations.get_schema_changes(conn)
-    assert {:ok, _} = Operations.get_schema_changes(map_conn)
-    assert {:ok, _} = Operations.get_schema_changes(conn, [])
-    assert {:ok, _} = Operations.get_schema_changes(map_conn, [])
+    assert {:ok, _} = Operations.get_schema_changes(conn: conn)
+    assert {:ok, _} = Operations.get_schema_changes(conn: map_conn)
   end
 end

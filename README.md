@@ -17,6 +17,22 @@ Restful client for Typesense with adherence to Open API spec 3 (formerly Swagger
 [![Hex.pm](https://img.shields.io/hexpm/l/open_api_typesense)](https://hexdocs.pm/open_api_typesense/license.html)
 [![Latest Typesense compatible](https://img.shields.io/badge/Latest%20Typesense%20compatible-v28.0-%230F35BC)](https://typesense.org/docs/28.0/api)
 
+> #### Upgrading to v1 {: .warning}
+>
+> The breaking change here is `conn` is now part of `opts`
+> when calling functions, see example below:
+
+```elixir
+# pre-v1
+Collections.get_collections(conn, opts)
+
+# v1
+Collections.get_collections(conn: conn)
+
+# another way (v1)
+opts = [limit: 1, conn: conn]
+Collections.get_collections(opts)
+```
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
@@ -25,7 +41,7 @@ by adding `open_api_typesense` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:open_api_typesense, "~> 0.7"}
+    {:open_api_typesense, "~> 1.0"}
 
     # Or from GitHub repository, if you want the latest greatest from main branch
     {:open_api_typesense, git: "https://github.com/jaeyson/open_api_typesense.git"}
@@ -93,7 +109,16 @@ config :open_api_typesense,
   scheme: "https"
 ```
 
-## Using a another HTTP client
+## Using another connection via maps
+
+You might be using a connection that changes dynamically. You can pass it as a map:
+
+```elixir
+custom_conn = %{api_key: "xyz", host: "localhost", port: 8108, scheme: "http"}
+OpenApiTypesense.Health(conn: conn)
+```
+
+## Using another HTTP client
 
 In order to use another HTTP client, OpenApiTypesense has a
 callback function ([Behaviours](https://hexdocs.pm/elixir/typespecs.html#behaviours))

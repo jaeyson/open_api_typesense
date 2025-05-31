@@ -50,7 +50,7 @@ defmodule ConnectionTest do
       scheme: "http"
     }
 
-    assert {:error, @forbidden} == Collections.get_collections(conn)
+    assert {:error, @forbidden} == Collections.get_collections(conn: conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -62,21 +62,21 @@ defmodule ConnectionTest do
       scheme: "http"
     }
 
-    assert {:error, @forbidden} = Collections.get_collections(conn)
+    assert {:error, @forbidden} = Collections.get_collections(conn: conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: health check, with incorrect port number" do
     conn = %{api_key: "xyz", host: "localhost", port: 8100, scheme: "http"}
 
-    assert {:error, "connection refused"} = Health.health(conn)
+    assert {:error, "connection refused"} = Health.health(conn: conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: health check, with incorrect host" do
     conn = %{api_key: "xyz", host: "my_test_host", port: 8108, scheme: "http"}
 
-    assert {:error, "non-existing domain"} = Health.health(conn)
+    assert {:error, "non-existing domain"} = Health.health(conn: conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]

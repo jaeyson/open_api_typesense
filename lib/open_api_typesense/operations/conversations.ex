@@ -5,8 +5,6 @@ defmodule OpenApiTypesense.Conversations do
   Provides API endpoints related to conversations
   """
 
-  alias OpenApiTypesense.Connection
-
   @default_client OpenApiTypesense.Client
 
   @doc """
@@ -15,48 +13,13 @@ defmodule OpenApiTypesense.Conversations do
   Create a Conversation Model
   """
   @doc since: "0.4.0"
-  @spec create_conversation_model(map()) ::
+  @spec create_conversation_model(OpenApiTypesense.ConversationModelCreateSchema.t(), keyword) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def create_conversation_model(body) do
-    create_conversation_model(body, [])
-  end
-
-  @doc """
-  Either one of:
-  - `create_conversation_model(body, opts)`
-  - `create_conversation_model(%{api_key: xyz, host: ...}, body)`
-  - `create_conversation_model(Connection.new(), body)`
-  """
-  @doc since: "0.4.0"
-  @spec create_conversation_model(map() | Connection.t(), map() | keyword()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
-  def create_conversation_model(body, opts) when is_list(opts) do
-    create_conversation_model(Connection.new(), body, opts)
-  end
-
-  def create_conversation_model(conn, body) do
-    create_conversation_model(conn, body, [])
-  end
-
-  @doc """
-  Either one of:
-  - `create_conversation_model(%{api_key: xyz, host: ...}, body, opts)`
-  - `create_conversation_model(Connection.new(), body, opts)`
-  """
-  @doc since: "0.4.0"
-  @spec create_conversation_model(map() | Connection.t(), map(), keyword()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
-  def create_conversation_model(conn, body, opts) when not is_struct(conn) and is_map(conn) do
-    create_conversation_model(Connection.new(conn), body, opts)
-  end
-
-  def create_conversation_model(%Connection{} = conn, body, opts) when is_struct(conn) do
+  def create_conversation_model(body, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(conn, %{
+    client.request(%{
       args: [body: body],
       call: {OpenApiTypesense.Conversations, :create_conversation_model},
       url: "/conversations/models",
@@ -78,48 +41,13 @@ defmodule OpenApiTypesense.Conversations do
   Delete a conversation model
   """
   @doc since: "0.4.0"
-  @spec delete_conversation_model(String.t()) ::
+  @spec delete_conversation_model(String.t(), keyword) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_conversation_model(modelId) do
-    delete_conversation_model(modelId, [])
-  end
-
-  @doc """
-  Either one of:
-  - `delete_conversation_model(modelId, opts)`
-  - `delete_conversation_model(%{api_key: xyz, host: ...}, modelId)`
-  - `delete_conversation_model(Connection.new(), modelId)`
-  """
-  @doc since: "0.4.0"
-  @spec delete_conversation_model(map() | Connection.t(), String.t(), String.t() | keyword()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_conversation_model(modelId, opts) when is_list(opts) and is_binary(modelId) do
-    delete_conversation_model(Connection.new(), modelId, opts)
-  end
-
-  def delete_conversation_model(conn, modelId) do
-    delete_conversation_model(conn, modelId, [])
-  end
-
-  @doc """
-  Either one of:
-  - `delete_conversation_model(%{api_key: xyz, host: ...}, modelId, opts)`
-  - `delete_conversation_model(Connection.new(), modelId, opts)`
-  """
-  @doc since: "0.4.0"
-  @spec delete_conversation_model(map() | Connection.t(), String.t(), keyword()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_conversation_model(conn, modelId, opts) when not is_struct(conn) and is_map(conn) do
-    delete_conversation_model(Connection.new(conn), modelId, opts)
-  end
-
-  def delete_conversation_model(%Connection{} = conn, modelId, opts) when is_struct(conn) do
+  def delete_conversation_model(modelId, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(conn, %{
+    client.request(%{
       args: [modelId: modelId],
       call: {OpenApiTypesense.Conversations, :delete_conversation_model},
       url: "/conversations/models/#{modelId}",
@@ -139,48 +67,13 @@ defmodule OpenApiTypesense.Conversations do
   Retrieve all conversation models
   """
   @doc since: "0.4.0"
-  @spec retrieve_all_conversation_models ::
+  @spec retrieve_all_conversation_models(keyword) ::
           {:ok, [OpenApiTypesense.ConversationModelSchema.t()]}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_all_conversation_models do
-    retrieve_all_conversation_models([])
-  end
-
-  @doc """
-  Either one of:
-  - `retrieve_all_conversation_models(opts)`
-  - `retrieve_all_conversation_models(%{api_key: xyz, host: ...})`
-  - `retrieve_all_conversation_models(Connection.new())`
-  """
-  @doc since: "0.4.0"
-  @spec retrieve_all_conversation_models(map() | Connection.t() | keyword()) ::
-          {:ok, [OpenApiTypesense.ConversationModelSchema.t()]}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_all_conversation_models(opts) when is_list(opts) do
-    retrieve_all_conversation_models(Connection.new(), opts)
-  end
-
-  def retrieve_all_conversation_models(conn) do
-    retrieve_all_conversation_models(conn, [])
-  end
-
-  @doc """
-  Either one of:
-  - `retrieve_all_conversation_models(%{api_key: xyz, host: ...}, opts)`
-  - `retrieve_all_conversation_models(Connection.new(), opts)`
-  """
-  @doc since: "0.4.0"
-  @spec retrieve_all_conversation_models(map() | Connection.t(), keyword()) ::
-          {:ok, [OpenApiTypesense.ConversationModelSchema.t()]}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_all_conversation_models(conn, opts) when not is_struct(conn) and is_map(conn) do
-    retrieve_all_conversation_models(Connection.new(conn), opts)
-  end
-
-  def retrieve_all_conversation_models(%Connection{} = conn, opts) when is_struct(conn) do
+  def retrieve_all_conversation_models(opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(conn, %{
+    client.request(%{
       args: [],
       call: {OpenApiTypesense.Conversations, :retrieve_all_conversation_models},
       url: "/conversations/models",
@@ -199,49 +92,13 @@ defmodule OpenApiTypesense.Conversations do
   Retrieve a conversation model
   """
   @doc since: "0.4.0"
-  @spec retrieve_conversation_model(String.t()) ::
+  @spec retrieve_conversation_model(String.t(), keyword) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_conversation_model(modelId) do
-    retrieve_conversation_model(modelId, [])
-  end
-
-  @doc """
-  Either one of:
-  - `retrieve_conversation_model(modelId, opts)`
-  - `retrieve_conversation_model(%{api_key: xyz, host: ...}, modelId)`
-  - `retrieve_conversation_model(Connection.new(), modelId)`
-  """
-  @doc since: "0.4.0"
-  @spec retrieve_conversation_model(map() | Connection.t() | String.t(), String.t() | keyword()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_conversation_model(modelId, opts) when is_list(opts) and is_binary(modelId) do
-    retrieve_conversation_model(Connection.new(), modelId, opts)
-  end
-
-  def retrieve_conversation_model(conn, modelId) do
-    retrieve_conversation_model(conn, modelId, [])
-  end
-
-  @doc """
-  Either one of:
-  - `retrieve_conversation_model(%{api_key: xyz, host: ...}, modelId, opts)`
-  - `retrieve_conversation_model(Connection.new(), modelId, opts)`
-  """
-  @doc since: "0.4.0"
-  @spec retrieve_conversation_model(map() | Connection.t(), String.t(), keyword()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_conversation_model(conn, modelId, opts)
-      when not is_struct(conn) and is_map(conn) do
-    retrieve_conversation_model(Connection.new(conn), modelId, opts)
-  end
-
-  def retrieve_conversation_model(%Connection{} = conn, modelId, opts) when is_struct(conn) do
+  def retrieve_conversation_model(modelId, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(conn, %{
+    client.request(%{
       args: [modelId: modelId],
       call: {OpenApiTypesense.Conversations, :retrieve_conversation_model},
       url: "/conversations/models/#{modelId}",
@@ -261,53 +118,17 @@ defmodule OpenApiTypesense.Conversations do
   Update a conversation model
   """
   @doc since: "0.4.0"
-  @spec update_conversation_model(String.t(), map()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
-  def update_conversation_model(modelId, body) do
-    update_conversation_model(modelId, body, [])
-  end
-
-  @doc """
-  Either one of:
-  - `update_conversation_model(modelId, body, opts)`
-  - `update_conversation_model(%{api_key: xyz, host: ...}, modelId, body)`
-  - `update_conversation_model(Connection.new(), modelId, body)`
-  """
-  @doc since: "0.4.0"
   @spec update_conversation_model(
-          map() | Connection.t() | String.t(),
-          String.t() | map(),
-          map() | keyword()
+          String.t(),
+          OpenApiTypesense.ConversationModelUpdateSchema.t(),
+          keyword
         ) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def update_conversation_model(modelId, body, opts) when is_list(opts) and is_binary(modelId) do
-    update_conversation_model(Connection.new(), modelId, body, opts)
-  end
-
-  def update_conversation_model(conn, modelId, body) do
-    update_conversation_model(conn, modelId, body, [])
-  end
-
-  @doc """
-  Either one of:
-  - `update_conversation_model(%{api_key: xyz, host: ...}, modelId, body, opts)`
-  - `update_conversation_model(Connection.new(), modelId, body, opts)`
-  """
-  @doc since: "0.4.0"
-  @spec update_conversation_model(map() | Connection.t(), String.t(), map(), keyword()) ::
-          {:ok, OpenApiTypesense.ConversationModelSchema.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
-  def update_conversation_model(conn, modelId, body, opts)
-      when not is_struct(conn) and is_map(conn) do
-    update_conversation_model(Connection.new(conn), modelId, body, opts)
-  end
-
-  def update_conversation_model(%Connection{} = conn, modelId, body, opts) when is_struct(conn) do
+  def update_conversation_model(modelId, body, opts \\ []) do
     client = opts[:client] || @default_client
 
-    client.request(conn, %{
+    client.request(%{
       args: [modelId: modelId, body: body],
       call: {OpenApiTypesense.Conversations, :update_conversation_model},
       url: "/conversations/models/#{modelId}",

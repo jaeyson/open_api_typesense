@@ -3,7 +3,7 @@ defmodule OpenApiTypesense.MixProject do
 
   @source_url "https://github.com/jaeyson/open_api_typesense"
   @hex_url "https://hexdocs.pm/open_api_typesense"
-  @version "0.7.1"
+  @version "1.0.0"
 
   def project do
     [
@@ -54,9 +54,13 @@ defmodule OpenApiTypesense.MixProject do
     File.ls!("lib/open_api_typesense/#{path}")
     |> Enum.map(fn schema_name ->
       module_name =
-        schema_name
-        |> Path.rootname()
-        |> Macro.camelize()
+        if schema_name == "api_stats_response.ex" do
+          "APIStatsResponse"
+        else
+          schema_name
+          |> Path.rootname()
+          |> Macro.camelize()
+        end
 
       Module.concat(OpenApiTypesense, module_name)
     end)

@@ -39,20 +39,16 @@ defmodule PresetsTest do
     assert length(presets) >= 1
 
     assert {:ok, _} = Presets.retrieve_all_presets([])
-    assert {:ok, _} = Presets.retrieve_all_presets(conn)
-    assert {:ok, _} = Presets.retrieve_all_presets(map_conn)
-    assert {:ok, _} = Presets.retrieve_all_presets(conn, [])
-    assert {:ok, _} = Presets.retrieve_all_presets(map_conn, [])
+    assert {:ok, _} = Presets.retrieve_all_presets(conn: conn)
+    assert {:ok, _} = Presets.retrieve_all_presets(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: get a preset", %{conn: conn, map_conn: map_conn} do
     assert {:error, %ApiResponse{message: "Not found."}} = Presets.retrieve_preset("listing_view")
     assert {:error, _} = Presets.retrieve_preset("listing_view", [])
-    assert {:error, _} = Presets.retrieve_preset(conn, "listing_view")
-    assert {:error, _} = Presets.retrieve_preset(map_conn, "listing_view")
-    assert {:error, _} = Presets.retrieve_preset(conn, "listing_view", [])
-    assert {:error, _} = Presets.retrieve_preset(map_conn, "listing_view", [])
+    assert {:error, _} = Presets.retrieve_preset("listing_view", conn: conn)
+    assert {:error, _} = Presets.retrieve_preset("listing_view", conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -70,10 +66,8 @@ defmodule PresetsTest do
              Presets.upsert_preset("restaurant_view", body)
 
     assert {:ok, _} = Presets.upsert_preset("restaurant_view", body, [])
-    assert {:ok, _} = Presets.upsert_preset(conn, "restaurant_view", body)
-    assert {:ok, _} = Presets.upsert_preset(map_conn, "restaurant_view", body)
-    assert {:ok, _} = Presets.upsert_preset(conn, "restaurant_view", body, [])
-    assert {:ok, _} = Presets.upsert_preset(map_conn, "restaurant_view", body, [])
+    assert {:ok, _} = Presets.upsert_preset("restaurant_view", body, conn: conn)
+    assert {:ok, _} = Presets.upsert_preset("restaurant_view", body, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -94,9 +88,7 @@ defmodule PresetsTest do
              Presets.delete_preset("company_view")
 
     assert {:error, _} = Presets.delete_preset("company_view", [])
-    assert {:error, _} = Presets.delete_preset(conn, "company_view")
-    assert {:error, _} = Presets.delete_preset(map_conn, "company_view")
-    assert {:error, _} = Presets.delete_preset(conn, "company_view", [])
-    assert {:error, _} = Presets.delete_preset(map_conn, "company_view", [])
+    assert {:error, _} = Presets.delete_preset("company_view", conn: conn)
+    assert {:error, _} = Presets.delete_preset("company_view", conn: map_conn)
   end
 end

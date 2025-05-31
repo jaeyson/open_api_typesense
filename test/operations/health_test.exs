@@ -15,10 +15,9 @@ defmodule HealthTest do
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: health check", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %HealthStatus{ok: true}} = Health.health()
-    assert {:ok, %HealthStatus{ok: true}} = Health.health(conn)
-    assert {:ok, %HealthStatus{ok: true}} = Health.health(map_conn)
-    assert {:ok, %HealthStatus{ok: true}} = Health.health(conn, [])
-    assert {:ok, %HealthStatus{ok: true}} = Health.health(map_conn, [])
+    assert {:ok, %HealthStatus{ok: true}} = Health.health([])
+    assert {:ok, %HealthStatus{ok: true}} = Health.health(conn: conn)
+    assert {:ok, %HealthStatus{ok: true}} = Health.health(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -31,7 +30,7 @@ defmodule HealthTest do
         scheme: "http"
       })
 
-    assert {:error, "timeout"} = Health.health(conn, [])
+    assert {:error, "timeout"} = Health.health(conn: conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -44,7 +43,7 @@ defmodule HealthTest do
         scheme: "http"
       })
 
-    assert {:error, "connection refused"} = Health.health(conn, [])
+    assert {:error, "connection refused"} = Health.health(conn: conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -64,7 +63,7 @@ defmodule HealthTest do
         scheme: "http"
       })
 
-    assert {:error, "non-existing domain"} = Health.health(conn)
-    assert {:error, "non-existing domain"} = Health.health(map_conn)
+    assert {:error, "non-existing domain"} = Health.health(conn: conn)
+    assert {:error, "non-existing domain"} = Health.health(conn: map_conn)
   end
 end
