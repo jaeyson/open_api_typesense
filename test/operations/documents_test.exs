@@ -41,7 +41,7 @@ defmodule DocumentsTest do
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: update a document", %{coll_name: coll_name} do
     body = %{
-      "shoes_id" => 12299,
+      "shoes_id" => 12_299,
       "shoe_type" => "outdoor",
       "description" => "Under Armour Men's Ignite Select Slide Sandal",
       "price" => "usd 29.99"
