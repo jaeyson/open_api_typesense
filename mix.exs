@@ -20,6 +20,9 @@ defmodule OpenApiTypesense.MixProject do
         "coveralls.post": :test,
         "coveralls.html": :test
       ],
+      dialyzer: [
+        plt_file: {:no_warn, "priv/plts/project.plt"}
+      ],
       description:
         "Restful client for Typesense with adherence to Open API spec 3 (formerly Swagger)",
       docs: docs(),
