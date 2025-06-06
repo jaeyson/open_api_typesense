@@ -245,7 +245,7 @@ defmodule OpenApiTypesense.Documents do
 
   """
   @doc since: "0.4.0"
-  @spec import_documents(String.t(), String.t(), keyword) ::
+  @spec import_documents(String.t(), list(map()), keyword) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def import_documents(collectionName, body, opts \\ []) do
     client = opts[:client] || @default_client
