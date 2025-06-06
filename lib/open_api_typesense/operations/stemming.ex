@@ -54,7 +54,7 @@ defmodule OpenApiTypesense.Stemming do
 
   """
   @doc since: "0.7.0"
-  @spec import_stemming_dictionary(String.t(), keyword) ::
+  @spec import_stemming_dictionary(list(map()), keyword) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def import_stemming_dictionary(body, opts \\ []) do
     client = opts[:client] || @default_client
