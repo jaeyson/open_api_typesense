@@ -90,32 +90,6 @@ jobs:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
 
-      - name: Restore PLT cache
-        id: plt_cache
-        uses: actions/cache/restore@v4
-        with:
-          key: |
-            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-
-          path: |
-            priv/plts
-        if: ${{ matrix.lint }}
-
-      - name: Create PLTs
-        if: ${{ steps.plt_cache.outputs.cache-hit != 'true' && matrix.lint }}
-        run: mix dialyzer --plt
-
-      - name: Save PLT cache
-        id: plt_cache_save
-        uses: actions/cache/save@v4
-        if: ${{ steps.plt_cache.outputs.cache-hit != 'true' && matrix.lint }}
-        with:
-          key: |
-            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-${{ hashFiles('**/mix.lock') }}
-          path: |
-            priv/plts
-
       - name: Cache dependencies/builds
         uses: actions/cache@v4
         with:
@@ -154,6 +128,32 @@ jobs:
       - name: Check format files
         run: mix format --check-formatted
         if: ${{ matrix.lint }}
+
+      - name: Restore PLT cache
+        id: plt_cache
+        uses: actions/cache/restore@v4
+        with:
+          key: |
+            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-
+          path: |
+            priv/plts
+        if: ${{ matrix.lint }}
+
+      - name: Create PLTs
+        if: ${{ steps.plt_cache.outputs.cache-hit != 'true' && matrix.lint }}
+        run: mix dialyzer --plt
+
+      - name: Save PLT cache
+        id: plt_cache_save
+        uses: actions/cache/save@v4
+        if: ${{ steps.plt_cache.outputs.cache-hit != 'true' && matrix.lint }}
+        with:
+          key: |
+            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-${{ hashFiles('**/mix.lock') }}
+          path: |
+            priv/plts
 
       - name: Dialyzer
         run: mix dialyzer --format github --format dialyxir
