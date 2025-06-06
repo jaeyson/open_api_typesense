@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 1.0.1 (2025.06.06)
+
+### Fixed
+
+* Typespecs for Documents and Stemmings. See [`ex_typesense` issue](https://github.com/jaeyson/ex_typesense/issues/80)
+
 ## 1.0.0 (2025.05.31)
 
 ### Changed
