@@ -1,4 +1,8 @@
 defmodule OpenApiTypesense.Converter do
+  @moduledoc """
+  Converting your maps/structs that contains string or mix of atom keys into full atom keyed maps.
+  """
+
   defstruct safe: true,
             underscore: true,
             high_perf: false,
@@ -31,11 +35,11 @@ defmodule OpenApiTypesense.Converter do
     |> List.to_tuple()
   end
 
-  def to_atom_keys(val, _opts = %__MODULE__{}) do
+  def to_atom_keys(val, opts = %__MODULE__{}) when is_struct(opts) do
     val
   end
 
-  def to_atom_keys(val, opts = %{}) do
+  def to_atom_keys(val, opts = %{}) when is_map(opts) do
     to_atom_keys(val, struct(__MODULE__, opts))
   end
 
@@ -52,11 +56,9 @@ defmodule OpenApiTypesense.Converter do
   @spec as_atom(String.t() | atom(), safe? :: boolean(), ignore? :: boolean()) ::
           atom() | String.t()
   defp as_atom(key, true, true) when is_binary(key) do
-    try do
-      as_atom(key, true, false)
-    rescue
-      ArgumentError -> key
-    end
+    as_atom(key, true, false)
+  rescue
+    ArgumentError -> key
   end
 
   defp as_atom(key, true, false) when is_binary(key) do
