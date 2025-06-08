@@ -130,18 +130,20 @@ defmodule OpenApiTypesense.Client do
     Enum.map_join(body, "\n", &Jason.encode_to_iodata!/1)
   end
 
+  defp parse_content_type({"application/json", {mod, :t}}, body) when is_atom(mod) do
+    atom_keys = Map.keys(mod.__struct__()) |> Enum.reject(&(&1 == :__struct__))
+    string_keys = Enum.map(atom_keys, &to_string/1)
+    keys = atom_keys ++ string_keys
+
+    body
+    |> Map.take(keys)
+    |> OpenApiTypesense.Converter.to_atom_keys(safe: false)
+    |> Jason.encode_to_iodata!()
+  end
+
   defp parse_content_type({"application/json", _}, body) do
     Jason.encode_to_iodata!(body)
   end
-
-  # defp parse_content_type({"application/json", {mod, :t}}, body) do
-  #   # Checks if map keys are atom or string
-  #   if Enum.all?(Map.keys(body), &is_atom/1) do
-  #       Jason.encode_to_iodata!(struct(mod, body))
-  #   else
-  #     Jason.encode_to_iodata!(body)
-  #   end
-  # end
 
   # Some resources are missing 4xx descriptions, hence we will set a default
   # instead so we can see the actual error message instead of stacktrace.
