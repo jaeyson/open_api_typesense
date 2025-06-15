@@ -22,7 +22,6 @@ defmodule OpenApiTypesense.MixProject do
       ],
       dialyzer: [
         plt_file: {:no_warn, "priv/plts/project.plt"}
-        # ignore_warnings: ".dialyzer_ignore.exs"
       ],
       description:
         "Restful client for Typesense with adherence to Open API spec 3 (formerly Swagger)",
@@ -52,6 +51,11 @@ defmodule OpenApiTypesense.MixProject do
       {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
       {:oapi_generator,
        git: "https://github.com/jaeyson/open-api-generator",
+       branch: "main",
+       sparse: "optimized",
+       app: false,
+       compile: false,
+       depth: 1,
        only: :dev,
        runtime: false,
        optional: true},
