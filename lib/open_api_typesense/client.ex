@@ -117,10 +117,10 @@ defmodule OpenApiTypesense.Client do
     parse_resp(resp, opts)
   end
 
-  defp parse_resp(%Req.Response{status: code, body: list}, opts)
+  defp parse_resp(%Req.Response{status: code, body: list}, %{response: resp})
        when is_list(list) and code in 200..299 do
     response =
-      Enum.find_value(opts.response, fn {status, [{mod, _t}]} ->
+      Enum.find_value(resp, fn {status, [{mod, _t}]} ->
         if status === code do
           Enum.map(list, fn body ->
             struct(mod, body)
@@ -131,18 +131,21 @@ defmodule OpenApiTypesense.Client do
     {:ok, response}
   end
 
-  defp parse_resp(%Req.Response{status: code, body: body}, opts)
+  defp parse_resp(%Req.Response{status: code, body: body}, %{response: resp})
        when code in 200..299 do
     response =
-      Enum.find_value(opts.response, fn resp ->
-        case resp do
-          {status, {mod, t}} when status === code and t !== :generic ->
+      Enum.find_value(resp, fn resp ->
+        case {resp, body} do
+          {{status, {mod, t}}, _} when status === code and t !== :generic ->
             struct(mod, body)
 
-          {status, :map} when status === code ->
+          {{status, [{_mod, t}]}, nil} when status === code and t !== :generic ->
+            []
+
+          {{status, :map}, _} when status === code ->
             body
 
-          _ ->
+          {_, _} ->
             body
             |> String.splitter("\n")
             |> Enum.map(&Jason.decode!/1)
