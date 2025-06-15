@@ -136,6 +136,9 @@ defmodule OpenApiTypesense.Client do
     response =
       Enum.find_value(resp, fn resp ->
         case {resp, body} do
+          {{status, {:string, :generic}}, ""} when status === code ->
+            body
+
           {{status, {mod, t}}, _} when status === code and t !== :generic ->
             struct(mod, body)
 

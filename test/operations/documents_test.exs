@@ -229,6 +229,22 @@ defmodule DocumentsTest do
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  test "error: importing empty documents", %{coll_name: coll_name} do
+    assert {:ok, ""} = Documents.import_documents(coll_name, [])
+
+    message = [
+      %{
+        "code" => 400,
+        "error" =>
+          "Field `shoes_id` has been declared as a default sorting field, but is not found in the document.",
+        "success" => false
+      }
+    ]
+
+    assert {:ok, message} == Documents.import_documents(coll_name, [%{}])
+  end
+
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: import documents", %{coll_name: coll_name} do
     body =
       [
