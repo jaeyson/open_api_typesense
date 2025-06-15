@@ -52,8 +52,6 @@ defmodule OpenApiTypesense.MixProject do
       {:oapi_generator,
        git: "https://github.com/jaeyson/open-api-generator",
        branch: "main",
-       app: false,
-       compile: false,
        depth: 1,
        only: :dev,
        runtime: false,

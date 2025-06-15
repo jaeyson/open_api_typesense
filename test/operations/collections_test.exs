@@ -44,18 +44,16 @@ defmodule CollectionsTest do
       "default_sorting_field" => "vehicles_id"
     }
 
-    # deleting dups from other Github Action runners
-    Collections.delete_collection(schema["name"])
-
     assert {:ok, %CollectionResponse{}} = Collections.create_collection(schema)
 
     payload = %{"name" => "vehicles_collection"}
 
-    # deleting dups from other Github Action runners
-    Collections.delete_collection(payload["name"])
-
     assert {:ok, %CollectionResponse{}} =
              Collections.create_collection(payload, src_name: schema["name"])
+
+    assert {:ok, _} = Collections.delete_collection(schema["name"])
+
+    assert {:ok, _} = Collections.delete_collection(payload["name"])
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
