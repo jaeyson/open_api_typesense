@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 1.0.3 (2025.06.16)
+
+### Chore
+
+* Add few documents tests
+* Add custom encoder for JSON encoding all schemas.
+* Typespecs and client definitions to use snake casing for consistency.
+* Add custom renderer plugin for OpenAPI code gen.
+* Use fork version for open-api-generator, with added `default` field for generated schema.
+
 ## 1.0.2 (2025.06.08)
 
 ### Fixed
