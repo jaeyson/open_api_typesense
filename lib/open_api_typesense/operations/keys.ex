@@ -13,7 +13,7 @@ defmodule OpenApiTypesense.Keys do
   Create an API Key with fine-grain access control. You can restrict access on both a per-collection and per-action level. The generated key is returned only during creation. You want to store this key carefully in a secure place.
   """
   @doc since: "0.4.0"
-  @spec create_key(OpenApiTypesense.ApiKeySchema.t(), keyword) ::
+  @spec create_key(body :: OpenApiTypesense.ApiKeySchema.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_key(body, opts \\ []) do
     client = opts[:client] || @default_client
@@ -39,16 +39,16 @@ defmodule OpenApiTypesense.Keys do
   Delete an API key given its ID.
   """
   @doc since: "0.4.0"
-  @spec delete_key(integer, keyword) ::
+  @spec delete_key(key_id :: integer, opts :: keyword) ::
           {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_key(keyId, opts \\ []) do
+  def delete_key(key_id, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [keyId: keyId],
+      args: [key_id: key_id],
       call: {OpenApiTypesense.Keys, :delete_key},
-      url: "/keys/#{keyId}",
+      url: "/keys/#{key_id}",
       method: :delete,
       response: [
         {200, {OpenApiTypesense.ApiKeyDeleteResponse, :t}},
@@ -66,15 +66,15 @@ defmodule OpenApiTypesense.Keys do
   Retrieve (metadata about) a key. Only the key prefix is returned when you retrieve a key. Due to security reasons, only the create endpoint returns the full API key.
   """
   @doc since: "0.4.0"
-  @spec get_key(integer, keyword) ::
+  @spec get_key(key_id :: integer, opts :: keyword) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_key(keyId, opts \\ []) do
+  def get_key(key_id, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [keyId: keyId],
+      args: [key_id: key_id],
       call: {OpenApiTypesense.Keys, :get_key},
-      url: "/keys/#{keyId}",
+      url: "/keys/#{key_id}",
       method: :get,
       response: [
         {200, {OpenApiTypesense.ApiKey, :t}},
@@ -89,7 +89,7 @@ defmodule OpenApiTypesense.Keys do
   Retrieve (metadata about) all keys.
   """
   @doc since: "0.4.0"
-  @spec get_keys(keyword) :: {:ok, OpenApiTypesense.ApiKeysResponse.t()} | :error
+  @spec get_keys(opts :: keyword) :: {:ok, OpenApiTypesense.ApiKeysResponse.t()} | :error
   def get_keys(opts \\ []) do
     client = opts[:client] || @default_client
 

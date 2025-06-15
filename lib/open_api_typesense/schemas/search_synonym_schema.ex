@@ -2,11 +2,12 @@ defmodule OpenApiTypesense.SearchSynonymSchema do
   @moduledoc """
   Provides struct and type for a SearchSynonymSchema
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          locale: String.t() | nil,
-          root: String.t() | nil,
-          symbols_to_index: [String.t()] | nil,
+          locale: String.t(),
+          root: String.t(),
+          symbols_to_index: [String.t()],
           synonyms: [String.t()]
         }
 

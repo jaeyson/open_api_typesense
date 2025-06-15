@@ -2,25 +2,26 @@ defmodule OpenApiTypesense.CollectionSchema do
   @moduledoc """
   Provides struct and type for a CollectionSchema
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          default_sorting_field: String.t() | nil,
-          enable_nested_fields: boolean | nil,
+          default_sorting_field: String.t(),
+          enable_nested_fields: boolean,
           fields: [OpenApiTypesense.Field.t()],
           name: String.t(),
-          symbols_to_index: [String.t()] | nil,
-          token_separators: [String.t()] | nil,
-          voice_query_model: OpenApiTypesense.VoiceQueryModelCollectionConfig.t() | nil
+          symbols_to_index: [String.t()],
+          token_separators: [String.t()],
+          voice_query_model: OpenApiTypesense.VoiceQueryModelCollectionConfig.t()
         }
 
   defstruct [
-    :default_sorting_field,
-    :enable_nested_fields,
     :fields,
     :name,
-    :symbols_to_index,
-    :token_separators,
-    :voice_query_model
+    default_sorting_field: "",
+    enable_nested_fields: false,
+    symbols_to_index: [],
+    token_separators: [],
+    voice_query_model: %OpenApiTypesense.VoiceQueryModelCollectionConfig{}
   ]
 
   @doc false

@@ -2,11 +2,12 @@ defmodule OpenApiTypesense.FacetCounts do
   @moduledoc """
   Provides struct and type for a FacetCounts
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          counts: [OpenApiTypesense.FacetCountsCounts.t()] | nil,
-          field_name: String.t() | nil,
-          stats: OpenApiTypesense.FacetCountsStats.t() | nil
+          counts: [OpenApiTypesense.FacetCountsCounts.t()],
+          field_name: String.t(),
+          stats: OpenApiTypesense.FacetCountsStats.t()
         }
 
   defstruct [:counts, :field_name, :stats]

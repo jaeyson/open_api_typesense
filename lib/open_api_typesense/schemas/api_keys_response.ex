@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.ApiKeysResponse do
   @moduledoc """
   Provides struct and type for a ApiKeysResponse
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{keys: [OpenApiTypesense.ApiKey.t()]}
 

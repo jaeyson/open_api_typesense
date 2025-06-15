@@ -2,8 +2,9 @@ defmodule OpenApiTypesense.AnalyticsRulesRetrieveSchema do
   @moduledoc """
   Provides struct and type for a AnalyticsRulesRetrieveSchema
   """
+  use OpenApiTypesense.Encoder
 
-  @type t :: %__MODULE__{rules: [OpenApiTypesense.AnalyticsRuleSchema.t()] | nil}
+  @type t :: %__MODULE__{rules: [OpenApiTypesense.AnalyticsRuleSchema.t()]}
 
   defstruct [:rules]
 

@@ -11,16 +11,20 @@ defmodule OpenApiTypesense.Synonyms do
   Delete a synonym associated with a collection
   """
   @doc since: "0.4.0"
-  @spec delete_search_synonym(String.t(), String.t(), keyword) ::
+  @spec delete_search_synonym(
+          collection_name :: String.t(),
+          synonym_id :: String.t(),
+          opts :: keyword
+        ) ::
           {:ok, OpenApiTypesense.SearchSynonymDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_search_synonym(collectionName, synonymId, opts \\ []) do
+  def delete_search_synonym(collection_name, synonym_id, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [collectionName: collectionName, synonymId: synonymId],
+      args: [collection_name: collection_name, synonym_id: synonym_id],
       call: {OpenApiTypesense.Synonyms, :delete_search_synonym},
-      url: "/collections/#{collectionName}/synonyms/#{synonymId}",
+      url: "/collections/#{collection_name}/synonyms/#{synonym_id}",
       method: :delete,
       response: [
         {200, {OpenApiTypesense.SearchSynonymDeleteResponse, :t}},
@@ -37,15 +41,19 @@ defmodule OpenApiTypesense.Synonyms do
   Retrieve the details of a search synonym, given its id.
   """
   @doc since: "0.4.0"
-  @spec get_search_synonym(String.t(), String.t(), keyword) ::
+  @spec get_search_synonym(
+          collection_name :: String.t(),
+          synonym_id :: String.t(),
+          opts :: keyword
+        ) ::
           {:ok, OpenApiTypesense.SearchSynonym.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_search_synonym(collectionName, synonymId, opts \\ []) do
+  def get_search_synonym(collection_name, synonym_id, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [collectionName: collectionName, synonymId: synonymId],
+      args: [collection_name: collection_name, synonym_id: synonym_id],
       call: {OpenApiTypesense.Synonyms, :get_search_synonym},
-      url: "/collections/#{collectionName}/synonyms/#{synonymId}",
+      url: "/collections/#{collection_name}/synonyms/#{synonym_id}",
       method: :get,
       response: [
         {200, {OpenApiTypesense.SearchSynonym, :t}},
@@ -66,17 +74,17 @@ defmodule OpenApiTypesense.Synonyms do
 
   """
   @doc since: "0.4.0"
-  @spec get_search_synonyms(String.t(), keyword) ::
+  @spec get_search_synonyms(collection_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.SearchSynonymsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_search_synonyms(collectionName, opts \\ []) do
+  def get_search_synonyms(collection_name, opts \\ []) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:limit, :offset])
 
     client.request(%{
-      args: [collectionName: collectionName],
+      args: [collection_name: collection_name],
       call: {OpenApiTypesense.Synonyms, :get_search_synonyms},
-      url: "/collections/#{collectionName}/synonyms",
+      url: "/collections/#{collection_name}/synonyms",
       method: :get,
       query: query,
       response: [
@@ -95,19 +103,19 @@ defmodule OpenApiTypesense.Synonyms do
   """
   @doc since: "0.4.0"
   @spec upsert_search_synonym(
-          String.t(),
-          String.t(),
-          OpenApiTypesense.SearchSynonymSchema.t(),
-          keyword
+          collection_name :: String.t(),
+          synonym_id :: String.t(),
+          body :: OpenApiTypesense.SearchSynonymSchema.t(),
+          opts :: keyword
         ) ::
           {:ok, OpenApiTypesense.SearchSynonym.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_search_synonym(collectionName, synonymId, body, opts \\ []) do
+  def upsert_search_synonym(collection_name, synonym_id, body, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [collectionName: collectionName, synonymId: synonymId, body: body],
+      args: [collection_name: collection_name, synonym_id: synonym_id, body: body],
       call: {OpenApiTypesense.Synonyms, :upsert_search_synonym},
-      url: "/collections/#{collectionName}/synonyms/#{synonymId}",
+      url: "/collections/#{collection_name}/synonyms/#{synonym_id}",
       body: body,
       method: :put,
       request: [{"application/json", {OpenApiTypesense.SearchSynonymSchema, :t}}],

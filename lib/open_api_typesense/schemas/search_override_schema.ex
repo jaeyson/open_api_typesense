@@ -2,20 +2,21 @@ defmodule OpenApiTypesense.SearchOverrideSchema do
   @moduledoc """
   Provides struct and type for a SearchOverrideSchema
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          effective_from_ts: integer | nil,
-          effective_to_ts: integer | nil,
-          excludes: [OpenApiTypesense.SearchOverrideExclude.t()] | nil,
-          filter_by: String.t() | nil,
-          filter_curated_hits: boolean | nil,
-          includes: [OpenApiTypesense.SearchOverrideInclude.t()] | nil,
-          metadata: map | nil,
-          remove_matched_tokens: boolean | nil,
-          replace_query: String.t() | nil,
+          effective_from_ts: integer,
+          effective_to_ts: integer,
+          excludes: [OpenApiTypesense.SearchOverrideExclude.t()],
+          filter_by: String.t(),
+          filter_curated_hits: boolean,
+          includes: [OpenApiTypesense.SearchOverrideInclude.t()],
+          metadata: map,
+          remove_matched_tokens: boolean,
+          replace_query: String.t(),
           rule: OpenApiTypesense.SearchOverrideRule.t(),
-          sort_by: String.t() | nil,
-          stop_processing: boolean | nil
+          sort_by: String.t(),
+          stop_processing: boolean
         }
 
   defstruct [
@@ -28,9 +29,9 @@ defmodule OpenApiTypesense.SearchOverrideSchema do
     :metadata,
     :remove_matched_tokens,
     :replace_query,
-    :rule,
     :sort_by,
-    :stop_processing
+    :stop_processing,
+    rule: %OpenApiTypesense.SearchOverrideRule{}
   ]
 
   @doc false

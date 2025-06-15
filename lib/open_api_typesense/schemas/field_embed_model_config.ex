@@ -2,18 +2,19 @@ defmodule OpenApiTypesense.FieldEmbedModelConfig do
   @moduledoc """
   Provides struct and type for a FieldEmbedModelConfig
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          access_token: String.t() | nil,
-          api_key: String.t() | nil,
-          client_id: String.t() | nil,
-          client_secret: String.t() | nil,
-          indexing_prefix: String.t() | nil,
+          access_token: String.t(),
+          api_key: String.t(),
+          client_id: String.t(),
+          client_secret: String.t(),
+          indexing_prefix: String.t(),
           model_name: String.t(),
-          project_id: String.t() | nil,
-          query_prefix: String.t() | nil,
-          refresh_token: String.t() | nil,
-          url: String.t() | nil
+          project_id: String.t(),
+          query_prefix: String.t(),
+          refresh_token: String.t(),
+          url: String.t()
         }
 
   defstruct [

@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.ApiKeyDeleteResponse do
   @moduledoc """
   Provides struct and type for a ApiKeyDeleteResponse
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{id: integer}
 

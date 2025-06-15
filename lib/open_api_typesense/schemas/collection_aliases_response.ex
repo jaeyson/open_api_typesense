@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.CollectionAliasesResponse do
   @moduledoc """
   Provides struct and type for a CollectionAliasesResponse
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{aliases: [OpenApiTypesense.CollectionAlias.t()]}
 

@@ -2,13 +2,13 @@ defmodule OpenApiTypesense.PresetSchema do
   @moduledoc """
   Provides struct and type for a PresetSchema
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          name: String.t() | nil,
+          name: String.t(),
           value:
             OpenApiTypesense.MultiSearchSearchesParameter.t()
             | OpenApiTypesense.SearchParameters.t()
-            | nil
         }
 
   defstruct [:name, :value]

@@ -2,13 +2,9 @@ defmodule OpenApiTypesense.FacetCountsCounts do
   @moduledoc """
   Provides struct and type for a FacetCountsCounts
   """
+  use OpenApiTypesense.Encoder
 
-  @type t :: %__MODULE__{
-          count: integer | nil,
-          highlighted: String.t() | nil,
-          parent: map | nil,
-          value: String.t() | nil
-        }
+  @type t :: %__MODULE__{count: integer, highlighted: String.t(), parent: map, value: String.t()}
 
   defstruct [:count, :highlighted, :parent, :value]
 

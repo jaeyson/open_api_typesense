@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.StopwordsSetsRetrieveAllSchema do
   @moduledoc """
   Provides struct and type for a StopwordsSetsRetrieveAllSchema
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{stopwords: [OpenApiTypesense.StopwordsSetSchema.t()]}
 

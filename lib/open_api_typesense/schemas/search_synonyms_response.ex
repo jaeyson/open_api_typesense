@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.SearchSynonymsResponse do
   @moduledoc """
   Provides struct and type for a SearchSynonymsResponse
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{synonyms: [OpenApiTypesense.SearchSynonym.t()]}
 

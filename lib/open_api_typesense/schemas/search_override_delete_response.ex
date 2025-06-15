@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.SearchOverrideDeleteResponse do
   @moduledoc """
   Provides struct and type for a SearchOverrideDeleteResponse
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{id: String.t()}
 

@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.ApiResponse do
   @moduledoc """
   Provides struct and type for a ApiResponse
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{message: String.t()}
 

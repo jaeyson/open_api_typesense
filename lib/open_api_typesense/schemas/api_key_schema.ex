@@ -2,13 +2,14 @@ defmodule OpenApiTypesense.ApiKeySchema do
   @moduledoc """
   Provides struct and type for a ApiKeySchema
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
           actions: [String.t()],
           collections: [String.t()],
           description: String.t(),
-          expires_at: integer | nil,
-          value: String.t() | nil
+          expires_at: integer,
+          value: String.t()
         }
 
   defstruct [:actions, :collections, :description, :expires_at, :value]

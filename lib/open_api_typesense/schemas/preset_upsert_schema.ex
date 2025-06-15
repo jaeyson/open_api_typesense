@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.PresetUpsertSchema do
   @moduledoc """
   Provides struct and type for a PresetUpsertSchema
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
           value:

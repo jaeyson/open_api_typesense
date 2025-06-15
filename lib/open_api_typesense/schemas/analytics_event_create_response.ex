@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.AnalyticsEventCreateResponse do
   @moduledoc """
   Provides struct and type for a AnalyticsEventCreateResponse
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{ok: boolean}
 

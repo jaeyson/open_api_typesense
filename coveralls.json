@@ -2,7 +2,8 @@
   "skip_files": [
     "test",
     "deps",
+    "lib/open_api_typesense.ex",
     "lib/open_api_typesense/schemas",
-    "lib/open_api_typesense.ex"
+    "lib/open_api_typesense/encoder.ex"
   ]
 }

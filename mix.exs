@@ -49,7 +49,13 @@ defmodule OpenApiTypesense.MixProject do
       {:req, "~> 0.5"},
       {:excoveralls, "~> 0.18", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
-      {:oapi_generator, "~> 0.2", only: :dev, runtime: false, optional: true},
+      {:oapi_generator,
+       git: "https://github.com/jaeyson/open-api-generator",
+       branch: "main",
+       depth: 1,
+       only: :dev,
+       runtime: false,
+       optional: true},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end

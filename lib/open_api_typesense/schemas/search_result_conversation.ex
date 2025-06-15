@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.SearchResultConversation do
   @moduledoc """
   Provides struct and type for a SearchResultConversation
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
           answer: String.t(),

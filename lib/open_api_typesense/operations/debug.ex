@@ -9,7 +9,7 @@ defmodule OpenApiTypesense.Debug do
 
   @default_client OpenApiTypesense.Client
 
-  @type debug_200_json_resp :: %{version: String.t() | nil}
+  @type debug_200_json_resp :: %{version: String.t()}
 
   @doc """
   Print debugging information
@@ -17,7 +17,7 @@ defmodule OpenApiTypesense.Debug do
   Print debugging information
   """
   @doc since: "0.4.0"
-  @spec debug(keyword) :: {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
+  @spec debug(opts :: keyword) :: {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def debug(opts \\ []) do
     client = opts[:client] || @default_client
 

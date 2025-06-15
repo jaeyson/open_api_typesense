@@ -2,12 +2,13 @@ defmodule OpenApiTypesense.SearchOverrideRule do
   @moduledoc """
   Provides struct and type for a SearchOverrideRule
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          filter_by: String.t() | nil,
-          match: String.t() | nil,
-          query: String.t() | nil,
-          tags: [String.t()] | nil
+          filter_by: String.t(),
+          match: String.t(),
+          query: String.t(),
+          tags: [String.t()]
         }
 
   defstruct [:filter_by, :match, :query, :tags]

@@ -2,9 +2,10 @@ defmodule OpenApiTypesense.SearchGroupedHit do
   @moduledoc """
   Provides struct and type for a SearchGroupedHit
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          found: integer | nil,
+          found: integer,
           group_key: [map],
           hits: [OpenApiTypesense.SearchResultHit.t()]
         }

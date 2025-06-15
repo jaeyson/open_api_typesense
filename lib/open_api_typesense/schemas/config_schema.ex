@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.ConfigSchema do
   @moduledoc """
   Provides struct and type for a ConfigSchema
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{log_slow_requests_time_ms: integer}
 

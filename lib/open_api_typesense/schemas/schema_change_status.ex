@@ -2,12 +2,9 @@ defmodule OpenApiTypesense.SchemaChangeStatus do
   @moduledoc """
   Provides struct and type for a SchemaChangeStatus
   """
+  use OpenApiTypesense.Encoder
 
-  @type t :: %__MODULE__{
-          altered_docs: integer | nil,
-          collection: String.t() | nil,
-          validated_docs: integer | nil
-        }
+  @type t :: %__MODULE__{altered_docs: integer, collection: String.t(), validated_docs: integer}
 
   defstruct [:altered_docs, :collection, :validated_docs]
 

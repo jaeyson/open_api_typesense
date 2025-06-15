@@ -2,17 +2,18 @@ defmodule OpenApiTypesense.ConversationModelUpdateSchema do
   @moduledoc """
   Provides struct and type for a ConversationModelUpdateSchema
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          account_id: String.t() | nil,
-          api_key: String.t() | nil,
-          history_collection: String.t() | nil,
-          id: String.t() | nil,
-          max_bytes: integer | nil,
-          model_name: String.t() | nil,
-          system_prompt: String.t() | nil,
-          ttl: integer | nil,
-          vllm_url: String.t() | nil
+          account_id: String.t(),
+          api_key: String.t(),
+          history_collection: String.t(),
+          id: String.t(),
+          max_bytes: integer,
+          model_name: String.t(),
+          system_prompt: String.t(),
+          ttl: integer,
+          vllm_url: String.t()
         }
 
   defstruct [

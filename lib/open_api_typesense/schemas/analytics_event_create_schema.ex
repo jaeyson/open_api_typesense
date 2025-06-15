@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.AnalyticsEventCreateSchema do
   @moduledoc """
   Provides struct and type for a AnalyticsEventCreateSchema
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{data: map, name: String.t(), type: String.t()}
 

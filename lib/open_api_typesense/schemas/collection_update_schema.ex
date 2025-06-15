@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.CollectionUpdateSchema do
   @moduledoc """
   Provides struct and type for a CollectionUpdateSchema
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{fields: [OpenApiTypesense.Field.t()]}
 

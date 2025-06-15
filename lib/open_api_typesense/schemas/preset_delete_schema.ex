@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.PresetDeleteSchema do
   @moduledoc """
   Provides struct and type for a PresetDeleteSchema
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{name: String.t()}
 

@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.FieldEmbed do
   @moduledoc """
   Provides struct and type for a FieldEmbed
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
           from: [String.t()],
