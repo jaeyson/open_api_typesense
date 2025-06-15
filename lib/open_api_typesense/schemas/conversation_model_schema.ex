@@ -2,8 +2,9 @@ defmodule OpenApiTypesense.ConversationModelSchema do
   @moduledoc """
   Provides struct and type for a ConversationModelSchema
   """
+  use OpenApiTypesense.Encoder
 
-  @type t :: %__MODULE__{id: String.t() | nil}
+  @type t :: %__MODULE__{id: String.t()}
 
   defstruct [:id]
 

@@ -15,16 +15,16 @@ defmodule OpenApiTypesense.Stemming do
   Fetch details of a specific stemming dictionary.
   """
   @doc since: "0.7.0"
-  @spec get_stemming_dictionary(String.t(), keyword) ::
+  @spec get_stemming_dictionary(dictionary_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.StemmingDictionary.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_stemming_dictionary(dictionaryId, opts \\ []) do
+  def get_stemming_dictionary(dictionary_id, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [dictionaryId: dictionaryId],
+      args: [dictionary_id: dictionary_id],
       call: {OpenApiTypesense.Stemming, :get_stemming_dictionary},
-      url: "/stemming/dictionaries/#{dictionaryId}",
+      url: "/stemming/dictionaries/#{dictionary_id}",
       method: :get,
       response: [
         {200, {OpenApiTypesense.StemmingDictionary, :t}},
@@ -54,7 +54,7 @@ defmodule OpenApiTypesense.Stemming do
 
   """
   @doc since: "0.7.0"
-  @spec import_stemming_dictionary(list(map()), keyword) ::
+  @spec import_stemming_dictionary(body :: list(map), opts :: keyword) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def import_stemming_dictionary(body, opts \\ []) do
     client = opts[:client] || @default_client
@@ -78,7 +78,7 @@ defmodule OpenApiTypesense.Stemming do
     })
   end
 
-  @type list_stemming_dictionaries_200_json_resp :: %{dictionaries: [String.t()] | nil}
+  @type list_stemming_dictionaries_200_json_resp :: %{dictionaries: [String.t()]}
 
   @doc """
   List all stemming dictionaries
@@ -86,7 +86,7 @@ defmodule OpenApiTypesense.Stemming do
   Retrieve a list of all available stemming dictionaries.
   """
   @doc since: "0.7.0"
-  @spec list_stemming_dictionaries(keyword) ::
+  @spec list_stemming_dictionaries(opts :: keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def list_stemming_dictionaries(opts \\ []) do
     client = opts[:client] || @default_client

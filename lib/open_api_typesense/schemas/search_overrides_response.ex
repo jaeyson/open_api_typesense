@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.SearchOverridesResponse do
   @moduledoc """
   Provides struct and type for a SearchOverridesResponse
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{overrides: [OpenApiTypesense.SearchOverride.t()]}
 

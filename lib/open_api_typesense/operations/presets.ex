@@ -13,16 +13,16 @@ defmodule OpenApiTypesense.Presets do
   Permanently deletes a preset, given it's name.
   """
   @doc since: "0.4.0"
-  @spec delete_preset(String.t(), keyword) ::
+  @spec delete_preset(preset_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.PresetDeleteSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_preset(presetId, opts \\ []) do
+  def delete_preset(preset_id, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [presetId: presetId],
+      args: [preset_id: preset_id],
       call: {OpenApiTypesense.Presets, :delete_preset},
-      url: "/presets/#{presetId}",
+      url: "/presets/#{preset_id}",
       method: :delete,
       response: [
         {200, {OpenApiTypesense.PresetDeleteSchema, :t}},
@@ -39,7 +39,7 @@ defmodule OpenApiTypesense.Presets do
   Retrieve the details of all presets
   """
   @doc since: "0.4.0"
-  @spec retrieve_all_presets(keyword) ::
+  @spec retrieve_all_presets(opts :: keyword) ::
           {:ok, OpenApiTypesense.PresetsRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_all_presets(opts \\ []) do
@@ -64,15 +64,15 @@ defmodule OpenApiTypesense.Presets do
   Retrieve the details of a preset, given it's name.
   """
   @doc since: "0.4.0"
-  @spec retrieve_preset(String.t(), keyword) ::
+  @spec retrieve_preset(preset_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_preset(presetId, opts \\ []) do
+  def retrieve_preset(preset_id, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [presetId: presetId],
+      args: [preset_id: preset_id],
       call: {OpenApiTypesense.Presets, :retrieve_preset},
-      url: "/presets/#{presetId}",
+      url: "/presets/#{preset_id}",
       method: :get,
       response: [
         {200, {OpenApiTypesense.PresetSchema, :t}},
@@ -89,15 +89,18 @@ defmodule OpenApiTypesense.Presets do
   Create or update an existing preset.
   """
   @doc since: "0.4.0"
-  @spec upsert_preset(String.t(), OpenApiTypesense.PresetUpsertSchema.t(), keyword) ::
-          {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_preset(presetId, body, opts \\ []) do
+  @spec upsert_preset(
+          preset_id :: String.t(),
+          body :: OpenApiTypesense.PresetUpsertSchema.t(),
+          opts :: keyword
+        ) :: {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def upsert_preset(preset_id, body, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [presetId: presetId, body: body],
+      args: [preset_id: preset_id, body: body],
       call: {OpenApiTypesense.Presets, :upsert_preset},
-      url: "/presets/#{presetId}",
+      url: "/presets/#{preset_id}",
       body: body,
       method: :put,
       request: [{"application/json", {OpenApiTypesense.PresetUpsertSchema, :t}}],

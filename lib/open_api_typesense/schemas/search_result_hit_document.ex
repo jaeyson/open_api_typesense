@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.SearchResultHitDocument do
   @moduledoc """
   Provides struct and type for a SearchResultHitDocument
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{}
 

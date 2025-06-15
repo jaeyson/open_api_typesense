@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.SearchResultHitGeoDistanceMeters do
   @moduledoc """
   Provides struct and type for a SearchResultHitGeoDistanceMeters
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{}
 

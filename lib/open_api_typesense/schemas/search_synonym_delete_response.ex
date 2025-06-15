@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.SearchSynonymDeleteResponse do
   @moduledoc """
   Provides struct and type for a SearchSynonymDeleteResponse
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{id: String.t()}
 

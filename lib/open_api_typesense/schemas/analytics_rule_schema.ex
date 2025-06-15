@@ -2,14 +2,15 @@ defmodule OpenApiTypesense.AnalyticsRuleSchema do
   @moduledoc """
   Provides struct and type for a AnalyticsRuleSchema
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          name: String.t() | nil,
-          params: OpenApiTypesense.AnalyticsRuleParameters.t() | nil,
-          type: String.t() | nil
+          name: String.t(),
+          params: OpenApiTypesense.AnalyticsRuleParameters.t(),
+          type: String.t()
         }
 
-  defstruct [:name, :params, :type]
+  defstruct [:name, :type, params: %OpenApiTypesense.AnalyticsRuleParameters{}]
 
   @doc false
   @spec __fields__(atom) :: keyword

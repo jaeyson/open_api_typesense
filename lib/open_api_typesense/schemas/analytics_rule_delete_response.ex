@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.AnalyticsRuleDeleteResponse do
   @moduledoc """
   Provides struct and type for a AnalyticsRuleDeleteResponse
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{name: String.t()}
 

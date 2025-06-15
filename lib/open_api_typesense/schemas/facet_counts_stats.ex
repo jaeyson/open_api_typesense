@@ -2,13 +2,14 @@ defmodule OpenApiTypesense.FacetCountsStats do
   @moduledoc """
   Provides struct and type for a FacetCountsStats
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          avg: number | nil,
-          max: number | nil,
-          min: number | nil,
-          sum: number | nil,
-          total_values: integer | nil
+          avg: number,
+          max: number,
+          min: number,
+          sum: number,
+          total_values: integer
         }
 
   defstruct [:avg, :max, :min, :sum, :total_values]

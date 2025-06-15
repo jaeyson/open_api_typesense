@@ -2,8 +2,9 @@ defmodule OpenApiTypesense.StopwordsSetSchema do
   @moduledoc """
   Provides struct and type for a StopwordsSetSchema
   """
+  use OpenApiTypesense.Encoder
 
-  @type t :: %__MODULE__{id: String.t(), locale: String.t() | nil, stopwords: [String.t()]}
+  @type t :: %__MODULE__{id: String.t(), locale: String.t(), stopwords: [String.t()]}
 
   defstruct [:id, :locale, :stopwords]
 

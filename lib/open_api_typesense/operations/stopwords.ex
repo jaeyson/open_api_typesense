@@ -17,15 +17,15 @@ defmodule OpenApiTypesense.Stopwords do
   Permanently deletes a stopwords set, given it's name.
   """
   @doc since: "0.4.0"
-  @spec delete_stopwords_set(String.t(), keyword) ::
+  @spec delete_stopwords_set(set_id :: String.t(), opts :: keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_stopwords_set(setId, opts \\ []) do
+  def delete_stopwords_set(set_id, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [setId: setId],
+      args: [set_id: set_id],
       call: {OpenApiTypesense.Stopwords, :delete_stopwords_set},
-      url: "/stopwords/#{setId}",
+      url: "/stopwords/#{set_id}",
       method: :delete,
       response: [
         {200, {OpenApiTypesense.Stopwords, :delete_stopwords_set_200_json_resp}},
@@ -42,16 +42,16 @@ defmodule OpenApiTypesense.Stopwords do
   Retrieve the details of a stopwords set, given it's name.
   """
   @doc since: "0.4.0"
-  @spec retrieve_stopwords_set(String.t(), keyword) ::
+  @spec retrieve_stopwords_set(set_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.StopwordsSetRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_stopwords_set(setId, opts \\ []) do
+  def retrieve_stopwords_set(set_id, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [setId: setId],
+      args: [set_id: set_id],
       call: {OpenApiTypesense.Stopwords, :retrieve_stopwords_set},
-      url: "/stopwords/#{setId}",
+      url: "/stopwords/#{set_id}",
       method: :get,
       response: [
         {200, {OpenApiTypesense.StopwordsSetRetrieveSchema, :t}},
@@ -68,7 +68,7 @@ defmodule OpenApiTypesense.Stopwords do
   Retrieve the details of all stopwords sets
   """
   @doc since: "0.4.0"
-  @spec retrieve_stopwords_sets(keyword) ::
+  @spec retrieve_stopwords_sets(opts :: keyword) ::
           {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_stopwords_sets(opts \\ []) do
@@ -93,16 +93,20 @@ defmodule OpenApiTypesense.Stopwords do
   When an analytics rule is created, we give it a name and describe the type, the source collections and the destination collection.
   """
   @doc since: "0.4.0"
-  @spec upsert_stopwords_set(String.t(), OpenApiTypesense.StopwordsSetUpsertSchema.t(), keyword) ::
+  @spec upsert_stopwords_set(
+          set_id :: String.t(),
+          body :: OpenApiTypesense.StopwordsSetUpsertSchema.t(),
+          opts :: keyword
+        ) ::
           {:ok, OpenApiTypesense.StopwordsSetSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_stopwords_set(setId, body, opts \\ []) do
+  def upsert_stopwords_set(set_id, body, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [setId: setId, body: body],
+      args: [set_id: set_id, body: body],
       call: {OpenApiTypesense.Stopwords, :upsert_stopwords_set},
-      url: "/stopwords/#{setId}",
+      url: "/stopwords/#{set_id}",
       body: body,
       method: :put,
       request: [{"application/json", {OpenApiTypesense.StopwordsSetUpsertSchema, :t}}],

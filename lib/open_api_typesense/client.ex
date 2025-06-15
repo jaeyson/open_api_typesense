@@ -114,7 +114,58 @@ defmodule OpenApiTypesense.Client do
 
   defp req_request(req_client, opts) do
     {_req, resp} = Req.Request.run_request(req_client)
-    parse_resp(resp, opts[:response])
+    parse_resp(resp, opts)
+  end
+
+  defp parse_resp(%Req.Response{status: code, body: list}, opts)
+       when is_list(list) and code in 200..299 do
+    response =
+      Enum.find_value(opts.response, fn {status, [{mod, _t}]} ->
+        if status === code do
+          Enum.map(list, fn body ->
+            struct(mod, body)
+          end)
+        end
+      end)
+
+    {:ok, response}
+  end
+
+  defp parse_resp(%Req.Response{status: code, body: body}, opts)
+       when code in 200..299 do
+    response =
+      Enum.find_value(opts.response, fn resp ->
+        case resp do
+          {status, {mod, t}} when status === code and t !== :generic ->
+            struct(mod, body)
+
+          {status, :map} when status === code ->
+            body
+
+          _ ->
+            body
+            |> String.splitter("\n")
+            |> Enum.map(&Jason.decode!/1)
+        end
+      end)
+
+    {:ok, response}
+  end
+
+  defp parse_resp(%Req.Response{status: code, body: body}, %{response: resp}) do
+    message =
+      Enum.find_value(resp, fn {status, type} ->
+        if status === code do
+          {mod, _t} = type
+          struct(mod, body)
+        end
+      end)
+
+    {:error, message}
+  end
+
+  defp parse_resp(error, _opts_resp) do
+    {:error, Exception.message(error)}
   end
 
   defp encode_body(opts) do
@@ -130,103 +181,18 @@ defmodule OpenApiTypesense.Client do
     Enum.map_join(body, "\n", &Jason.encode_to_iodata!/1)
   end
 
-  defp parse_content_type({"application/json", {mod, :t}}, body) when is_atom(mod) do
-    atom_keys = Map.keys(mod.__struct__()) |> Enum.reject(&(&1 == :__struct__))
-    string_keys = Enum.map(atom_keys, &to_string/1)
-    keys = atom_keys ++ string_keys
+  # defp parse_content_type({"application/json", {module, :t}}, body) when is_atom(module) do
+  #   atom_keys = Map.keys(mod.__struct__()) |> Enum.reject(&(&1 == :__struct__))
+  #   string_keys = Enum.map(atom_keys, &to_string/1)
+  #   keys = atom_keys ++ string_keys
 
-    body
-    |> Map.take(keys)
-    |> OpenApiTypesense.Converter.to_atom_keys(safe: false)
-    |> Jason.encode_to_iodata!()
-  end
+  #   body
+  #   |> Map.take(keys)
+  #   |> OpenApiTypesense.Converter.to_atom_keys(safe: false)
+  #   |> Jason.encode_to_iodata!()
+  # end
 
   defp parse_content_type({"application/json", _}, body) do
     Jason.encode_to_iodata!(body)
-  end
-
-  # Some resources are missing 4xx descriptions, hence we will set a default
-  # instead so we can see the actual error message instead of stacktrace.
-  # See https://github.com/typesense/typesense-api-spec/pull/84
-  defp parse_resp(%Req.Response{} = resp, status_type) do
-    {status, type} =
-      status_type
-      |> Enum.find(fn {status, _type} -> status == resp.status end) ||
-        {resp.status, :map}
-
-    parse_values(status, type, resp.body)
-  end
-
-  defp parse_resp(error, _opts_resp) do
-    {:error, Exception.message(error)}
-  end
-
-  @spec parse_values(
-          non_neg_integer(),
-          atom() | list() | tuple(),
-          map() | String.t() | list()
-        ) ::
-          {:ok, any()} | {:error, any()}
-  defp parse_values(code, :map, body) do
-    status = if code in 200..299, do: :ok, else: :error
-
-    {status, body}
-  end
-
-  defp parse_values(code, values, body) when is_list(values) do
-    status = if code in 200..299, do: :ok, else: :error
-
-    resp =
-      values
-      |> Enum.map(fn {module, _func_name} ->
-        cond do
-          is_list(body) ->
-            Enum.map(body, fn single_body ->
-              struct(module, single_body)
-            end)
-
-          is_nil(body) ->
-            []
-
-          true ->
-            struct(module, body)
-        end
-      end)
-      |> List.flatten()
-
-    {status, resp}
-  end
-
-  defp parse_values(code, {module, _func_name} = _values, body) when module == :string do
-    status = if code in 200..299, do: :ok, else: :error
-
-    case status do
-      :ok ->
-        resp =
-          body
-          |> String.splitter("\n")
-          |> Enum.map(&Jason.decode!/1)
-
-        {status, resp}
-
-      :error ->
-        {status, struct(ApiResponse, message: Jason.decode!(body)["error"])}
-    end
-  end
-
-  defp parse_values(
-         code,
-         {module, _func_name} = _values,
-         %{hits: results, union_request_params: _} = _body
-       ) do
-    status = if code in 200..299, do: :ok, else: :error
-
-    {status, struct(module, %{results: results})}
-  end
-
-  defp parse_values(code, {module, _func_name} = _values, body) do
-    status = if code in 200..299, do: :ok, else: :error
-
-    {status, struct(module, body)}
   end
 end

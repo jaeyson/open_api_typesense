@@ -2,15 +2,21 @@ defmodule OpenApiTypesense.AnalyticsRuleParameters do
   @moduledoc """
   Provides struct and type for a AnalyticsRuleParameters
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
           destination: OpenApiTypesense.AnalyticsRuleParametersDestination.t(),
-          expand_query: boolean | nil,
-          limit: integer | nil,
+          expand_query: boolean,
+          limit: integer,
           source: OpenApiTypesense.AnalyticsRuleParametersSource.t()
         }
 
-  defstruct [:destination, :expand_query, :limit, :source]
+  defstruct [
+    :expand_query,
+    :limit,
+    destination: %OpenApiTypesense.AnalyticsRuleParametersDestination{},
+    source: %OpenApiTypesense.AnalyticsRuleParametersSource{}
+  ]
 
   @doc false
   @spec __fields__(atom) :: keyword

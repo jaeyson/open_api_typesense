@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.SearchOverrideInclude do
   @moduledoc """
   Provides struct and type for a SearchOverrideInclude
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{id: String.t(), position: integer}
 

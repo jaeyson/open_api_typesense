@@ -2,8 +2,9 @@ defmodule OpenApiTypesense.AnalyticsRuleParametersDestination do
   @moduledoc """
   Provides struct and type for a AnalyticsRuleParametersDestination
   """
+  use OpenApiTypesense.Encoder
 
-  @type t :: %__MODULE__{collection: String.t(), counter_field: String.t() | nil}
+  @type t :: %__MODULE__{collection: String.t(), counter_field: String.t()}
 
   defstruct [:collection, :counter_field]
 

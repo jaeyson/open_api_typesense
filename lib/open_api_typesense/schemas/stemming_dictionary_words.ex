@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.StemmingDictionaryWords do
   @moduledoc """
   Provides struct and type for a StemmingDictionaryWords
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{root: String.t(), word: String.t()}
 

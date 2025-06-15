@@ -2,6 +2,7 @@ defmodule OpenApiTypesense.HealthStatus do
   @moduledoc """
   Provides struct and type for a HealthStatus
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{ok: boolean}
 

@@ -2,10 +2,11 @@ defmodule OpenApiTypesense.MultiSearchSearchesParameter do
   @moduledoc """
   Provides struct and type for a MultiSearchSearchesParameter
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
           searches: [OpenApiTypesense.MultiSearchCollectionParameters.t()],
-          union: boolean | nil
+          union: boolean
         }
 
   defstruct [:searches, :union]

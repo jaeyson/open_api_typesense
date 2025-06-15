@@ -2,35 +2,34 @@ defmodule OpenApiTypesense.Field do
   @moduledoc """
   Provides struct and type for a Field
   """
+  use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          drop: boolean | nil,
-          embed: OpenApiTypesense.FieldEmbed.t() | nil,
-          facet: boolean | nil,
-          index: boolean | nil,
-          infix: boolean | nil,
-          locale: String.t() | nil,
+          drop: boolean,
+          embed: OpenApiTypesense.FieldEmbed.t(),
+          facet: boolean,
+          index: boolean,
+          infix: boolean,
+          locale: String.t(),
           name: String.t(),
-          num_dim: integer | nil,
-          optional: boolean | nil,
-          range_index: boolean | nil,
-          reference: String.t() | nil,
-          sort: boolean | nil,
-          stem: boolean | nil,
-          stem_dictionary: String.t() | nil,
-          store: boolean | nil,
-          symbols_to_index: [String.t()] | nil,
-          token_separators: [String.t()] | nil,
+          num_dim: integer,
+          optional: boolean,
+          range_index: boolean,
+          reference: String.t(),
+          sort: boolean,
+          stem: boolean,
+          stem_dictionary: String.t(),
+          store: boolean,
+          symbols_to_index: [String.t()],
+          token_separators: [String.t()],
           type: String.t(),
-          vec_dist: String.t() | nil
+          vec_dist: String.t()
         }
 
   defstruct [
     :drop,
     :embed,
     :facet,
-    :index,
-    :infix,
     :locale,
     :name,
     :num_dim,
@@ -41,10 +40,12 @@ defmodule OpenApiTypesense.Field do
     :stem,
     :stem_dictionary,
     :store,
-    :symbols_to_index,
-    :token_separators,
     :type,
-    :vec_dist
+    :vec_dist,
+    index: true,
+    infix: false,
+    symbols_to_index: [],
+    token_separators: []
   ]
 
   @doc false

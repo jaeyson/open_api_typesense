@@ -30,7 +30,7 @@ defmodule OpenApiTypesense.Collections do
 
   """
   @doc since: "0.4.0"
-  @spec create_collection(OpenApiTypesense.CollectionSchema.t(), keyword) ::
+  @spec create_collection(body :: OpenApiTypesense.CollectionSchema.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_collection(body, opts \\ []) do
@@ -59,15 +59,15 @@ defmodule OpenApiTypesense.Collections do
   Delete an alias
   """
   @doc since: "0.4.0"
-  @spec delete_alias(String.t(), keyword) ::
+  @spec delete_alias(alias_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_alias(aliasName, opts \\ []) do
+  def delete_alias(alias_name, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [aliasName: aliasName],
+      args: [alias_name: alias_name],
       call: {OpenApiTypesense.Collections, :delete_alias},
-      url: "/aliases/#{aliasName}",
+      url: "/aliases/#{alias_name}",
       method: :delete,
       response: [
         {200, {OpenApiTypesense.CollectionAlias, :t}},
@@ -84,16 +84,16 @@ defmodule OpenApiTypesense.Collections do
   Permanently drops a collection. This action cannot be undone. For large collections, this might have an impact on read latencies.
   """
   @doc since: "0.4.0"
-  @spec delete_collection(String.t(), keyword) ::
+  @spec delete_collection(collection_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_collection(collectionName, opts \\ []) do
+  def delete_collection(collection_name, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [collectionName: collectionName],
+      args: [collection_name: collection_name],
       call: {OpenApiTypesense.Collections, :delete_collection},
-      url: "/collections/#{collectionName}",
+      url: "/collections/#{collection_name}",
       method: :delete,
       response: [
         {200, {OpenApiTypesense.CollectionResponse, :t}},
@@ -110,15 +110,15 @@ defmodule OpenApiTypesense.Collections do
   Find out which collection an alias points to by fetching it
   """
   @doc since: "0.4.0"
-  @spec get_alias(String.t(), keyword) ::
+  @spec get_alias(alias_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_alias(aliasName, opts \\ []) do
+  def get_alias(alias_name, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [aliasName: aliasName],
+      args: [alias_name: alias_name],
       call: {OpenApiTypesense.Collections, :get_alias},
-      url: "/aliases/#{aliasName}",
+      url: "/aliases/#{alias_name}",
       method: :get,
       response: [
         {200, {OpenApiTypesense.CollectionAlias, :t}},
@@ -135,7 +135,7 @@ defmodule OpenApiTypesense.Collections do
   List all aliases and the corresponding collections that they map to.
   """
   @doc since: "0.4.0"
-  @spec get_aliases(keyword) ::
+  @spec get_aliases(opts :: keyword) ::
           {:ok, OpenApiTypesense.CollectionAliasesResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_aliases(opts \\ []) do
@@ -160,16 +160,16 @@ defmodule OpenApiTypesense.Collections do
   Retrieve the details of a collection, given its name.
   """
   @doc since: "0.4.0"
-  @spec get_collection(String.t(), keyword) ::
+  @spec get_collection(collection_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def get_collection(collectionName, opts \\ []) do
+  def get_collection(collection_name, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [collectionName: collectionName],
+      args: [collection_name: collection_name],
       call: {OpenApiTypesense.Collections, :get_collection},
-      url: "/collections/#{collectionName}",
+      url: "/collections/#{collection_name}",
       method: :get,
       response: [
         {200, {OpenApiTypesense.CollectionResponse, :t}},
@@ -192,7 +192,7 @@ defmodule OpenApiTypesense.Collections do
 
   """
   @doc since: "0.4.0"
-  @spec get_collections(keyword) ::
+  @spec get_collections(opts :: keyword) ::
           {:ok, [OpenApiTypesense.CollectionResponse.t()]}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_collections(opts \\ []) do
@@ -219,16 +219,20 @@ defmodule OpenApiTypesense.Collections do
   Update a collection's schema to modify the fields and their types.
   """
   @doc since: "0.4.0"
-  @spec update_collection(String.t(), OpenApiTypesense.CollectionUpdateSchema.t(), keyword) ::
+  @spec update_collection(
+          collection_name :: String.t(),
+          body :: OpenApiTypesense.CollectionUpdateSchema.t(),
+          opts :: keyword
+        ) ::
           {:ok, OpenApiTypesense.CollectionUpdateSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def update_collection(collectionName, body, opts \\ []) do
+  def update_collection(collection_name, body, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [collectionName: collectionName, body: body],
+      args: [collection_name: collection_name, body: body],
       call: {OpenApiTypesense.Collections, :update_collection},
-      url: "/collections/#{collectionName}",
+      url: "/collections/#{collection_name}",
       body: body,
       method: :patch,
       request: [{"application/json", {OpenApiTypesense.CollectionUpdateSchema, :t}}],
@@ -248,15 +252,19 @@ defmodule OpenApiTypesense.Collections do
   Create or update a collection alias. An alias is a virtual collection name that points to a real collection. If you're familiar with symbolic links on Linux, it's very similar to that. Aliases are useful when you want to reindex your data in the background on a new collection and switch your application to it without any changes to your code.
   """
   @doc since: "0.4.0"
-  @spec upsert_alias(String.t(), OpenApiTypesense.CollectionAliasSchema.t(), keyword) ::
+  @spec upsert_alias(
+          alias_name :: String.t(),
+          body :: OpenApiTypesense.CollectionAliasSchema.t(),
+          opts :: keyword
+        ) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_alias(aliasName, body, opts \\ []) do
+  def upsert_alias(alias_name, body, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [aliasName: aliasName, body: body],
+      args: [alias_name: alias_name, body: body],
       call: {OpenApiTypesense.Collections, :upsert_alias},
-      url: "/aliases/#{aliasName}",
+      url: "/aliases/#{alias_name}",
       body: body,
       method: :put,
       request: [{"application/json", {OpenApiTypesense.CollectionAliasSchema, :t}}],

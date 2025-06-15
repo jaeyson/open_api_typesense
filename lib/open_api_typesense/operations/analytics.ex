@@ -13,7 +13,10 @@ defmodule OpenApiTypesense.Analytics do
   Sending events for analytics e.g rank search results based on popularity.
   """
   @doc since: "0.4.0"
-  @spec create_analytics_event(OpenApiTypesense.AnalyticsEventCreateSchema.t(), keyword) ::
+  @spec create_analytics_event(
+          body :: OpenApiTypesense.AnalyticsEventCreateSchema.t(),
+          opts :: keyword
+        ) ::
           {:ok, OpenApiTypesense.AnalyticsEventCreateResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_analytics_event(body, opts \\ []) do
@@ -41,7 +44,7 @@ defmodule OpenApiTypesense.Analytics do
   When an analytics rule is created, we give it a name and describe the type, the source collections and the destination collection.
   """
   @doc since: "0.4.0"
-  @spec create_analytics_rule(OpenApiTypesense.AnalyticsRuleSchema.t(), keyword) ::
+  @spec create_analytics_rule(body :: OpenApiTypesense.AnalyticsRuleSchema.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_analytics_rule(body, opts \\ []) do
@@ -70,16 +73,16 @@ defmodule OpenApiTypesense.Analytics do
   Permanently deletes an analytics rule, given it's name
   """
   @doc since: "0.4.0"
-  @spec delete_analytics_rule(String.t(), keyword) ::
+  @spec delete_analytics_rule(rule_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.AnalyticsRuleDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def delete_analytics_rule(ruleName, opts \\ []) do
+  def delete_analytics_rule(rule_name, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [ruleName: ruleName],
+      args: [rule_name: rule_name],
       call: {OpenApiTypesense.Analytics, :delete_analytics_rule},
-      url: "/analytics/rules/#{ruleName}",
+      url: "/analytics/rules/#{rule_name}",
       method: :delete,
       response: [
         {200, {OpenApiTypesense.AnalyticsRuleDeleteResponse, :t}},
@@ -95,16 +98,16 @@ defmodule OpenApiTypesense.Analytics do
   Retrieve the details of an analytics rule, given it's name
   """
   @doc since: "0.4.0"
-  @spec retrieve_analytics_rule(String.t(), keyword) ::
+  @spec retrieve_analytics_rule(rule_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def retrieve_analytics_rule(ruleName, opts \\ []) do
+  def retrieve_analytics_rule(rule_name, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [ruleName: ruleName],
+      args: [rule_name: rule_name],
       call: {OpenApiTypesense.Analytics, :retrieve_analytics_rule},
-      url: "/analytics/rules/#{ruleName}",
+      url: "/analytics/rules/#{rule_name}",
       method: :get,
       response: [
         {200, {OpenApiTypesense.AnalyticsRuleSchema, :t}},
@@ -121,7 +124,7 @@ defmodule OpenApiTypesense.Analytics do
   Retrieve the details of all analytics rules
   """
   @doc since: "0.4.0"
-  @spec retrieve_analytics_rules(keyword) ::
+  @spec retrieve_analytics_rules(opts :: keyword) ::
           {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_analytics_rules(opts \\ []) do
@@ -146,16 +149,20 @@ defmodule OpenApiTypesense.Analytics do
   Upserts an analytics rule with the given name.
   """
   @doc since: "0.4.0"
-  @spec upsert_analytics_rule(String.t(), OpenApiTypesense.AnalyticsRuleUpsertSchema.t(), keyword) ::
+  @spec upsert_analytics_rule(
+          rule_name :: String.t(),
+          body :: OpenApiTypesense.AnalyticsRuleUpsertSchema.t(),
+          opts :: keyword
+        ) ::
           {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
-  def upsert_analytics_rule(ruleName, body, opts \\ []) do
+  def upsert_analytics_rule(rule_name, body, opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
-      args: [ruleName: ruleName, body: body],
+      args: [rule_name: rule_name, body: body],
       call: {OpenApiTypesense.Analytics, :upsert_analytics_rule},
-      url: "/analytics/rules/#{ruleName}",
+      url: "/analytics/rules/#{rule_name}",
       body: body,
       method: :put,
       request: [{"application/json", {OpenApiTypesense.AnalyticsRuleUpsertSchema, :t}}],
