@@ -280,7 +280,7 @@ if Mix.env() == :dev do
         |> List.flatten()
         |> Enum.map(fn field ->
           case field.default do
-            {:ref, {_path, [_components, _schemas, mod_name]}} = _ref ->
+            {:ref, {_path, [_components, _schemas, mod_name]}} ->
               ast = {
                 :%,
                 [],
