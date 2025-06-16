@@ -123,11 +123,14 @@ defmodule OpenApiTypesense.Client do
       {nil, _} ->
         Jason.encode_to_iodata!(body)
 
-      {[{"application/octet-stream", {:string, :generic}}], _} ->
+      {[{"application/octet-stream", {:string, :generic}}], body} when not is_binary(body) ->
         Enum.map_join(body, "\n", &Jason.encode_to_iodata!/1)
 
-      {[{"application/json", _}], _} ->
+      {[{"application/json", _}], body} when not is_binary(body) ->
         Jason.encode_to_iodata!(body)
+
+      {_, body} when is_binary(body) ->
+        body
     end
   end
 
