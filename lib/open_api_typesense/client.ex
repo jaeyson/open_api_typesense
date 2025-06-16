@@ -78,8 +78,12 @@ defmodule OpenApiTypesense.Client do
     if client do
       client.request(conn, params)
     else
-      req_client = build_req_client(conn, params)
-      req_request(req_client, params)
+      {_req, resp} =
+        conn
+        |> build_req_client(params)
+        |> Req.Request.run_request()
+
+      parse_resp(resp, params)
     end
   end
 
@@ -112,93 +116,60 @@ defmodule OpenApiTypesense.Client do
     |> Req.Request.put_header("x-typesense-api-key", Map.get(conn, :api_key))
   end
 
-  defp req_request(req_client, opts) do
-    {_req, resp} = Req.Request.run_request(req_client)
-    parse_resp(resp, opts)
-  end
+  defp encode_body(opts) do
+    body = opts[:args][:body]
 
-  defp parse_resp(%Req.Response{status: code, body: list}, %{response: resp})
-       when is_list(list) and code in 200..299 do
-    response =
-      Enum.find_value(resp, fn {status, [{mod, _t}]} ->
-        if status === code do
-          Enum.map(list, fn body ->
-            struct(mod, body)
-          end)
-        end
-      end)
+    case {opts[:request], body} do
+      {nil, _} ->
+        Jason.encode_to_iodata!(body)
 
-    {:ok, response}
-  end
+      {[{"application/octet-stream", {:string, :generic}}], _} ->
+        Enum.map_join(body, "\n", &Jason.encode_to_iodata!/1)
 
-  defp parse_resp(%Req.Response{status: code, body: body}, %{response: resp})
-       when code in 200..299 do
-    response =
-      Enum.find_value(resp, fn resp ->
-        case {resp, body} do
-          {{status, {:string, :generic}}, ""} when status === code ->
-            body
-
-          {{status, {mod, t}}, _} when status === code and t !== :generic ->
-            struct(mod, body)
-
-          {{status, [{_mod, t}]}, nil} when status === code and t !== :generic ->
-            []
-
-          {{status, :map}, _} when status === code ->
-            body
-
-          {_, _} ->
-            body
-            |> String.splitter("\n")
-            |> Enum.map(&Jason.decode!/1)
-        end
-      end)
-
-    {:ok, response}
+      {[{"application/json", _}], _} ->
+        Jason.encode_to_iodata!(body)
+    end
   end
 
   defp parse_resp(%Req.Response{status: code, body: body}, %{response: resp}) do
-    message =
-      Enum.find_value(resp, fn {status, type} ->
-        if status === code do
-          {mod, _t} = type
-          struct(mod, body)
-        end
-      end)
-
-    {:error, message}
+    {_status, mod} = Enum.find(resp, fn {status, _} -> status === code end)
+    parse_body(code, mod, body)
   end
 
   defp parse_resp(error, _opts_resp) do
     {:error, Exception.message(error)}
   end
 
-  defp encode_body(opts) do
-    if opts[:request] do
-      [content_type] = opts[:request]
-      parse_content_type(content_type, opts[:args][:body])
-    else
-      Jason.encode_to_iodata!(opts[:args][:body])
-    end
+  defp parse_body(code, _, %{message: reason}) when code in 400..499 do
+    {:error, struct(OpenApiTypesense.ApiResponse, message: reason)}
   end
 
-  defp parse_content_type({"application/octet-stream", {:string, :generic}}, body) do
-    Enum.map_join(body, "\n", &Jason.encode_to_iodata!/1)
+  defp parse_body(_code, [{mod, _t}], list) when is_list(list) do
+    {:ok, Enum.map(list, &struct(mod, &1))}
   end
 
-  # defp parse_content_type({"application/json", {module, :t}}, body) when is_atom(module) do
-  #   atom_keys = Map.keys(mod.__struct__()) |> Enum.reject(&(&1 == :__struct__))
-  #   string_keys = Enum.map(atom_keys, &to_string/1)
-  #   keys = atom_keys ++ string_keys
+  defp parse_body(_code, {:string, :generic}, "") do
+    {:ok, ""}
+  end
 
-  #   body
-  #   |> Map.take(keys)
-  #   |> OpenApiTypesense.Converter.to_atom_keys(safe: false)
-  #   |> Jason.encode_to_iodata!()
-  # end
+  defp parse_body(_code, {:string, :generic}, body) do
+    body =
+      body
+      |> String.splitter("\n")
+      |> Enum.map(&Jason.decode!/1)
 
-  defp parse_content_type({"application/json", _}, body) do
-    Jason.encode_to_iodata!(body)
+    {:ok, body}
+  end
+
+  defp parse_body(_code, :map, body) do
+    {:ok, body}
+  end
+
+  defp parse_body(_code, _, nil) do
+    {:ok, []}
+  end
+
+  defp parse_body(_code, {mod, _t}, body) do
+    {:ok, struct(mod, body)}
   end
 end

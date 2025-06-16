@@ -8,7 +8,6 @@ if Mix.env() == :dev do
     alias OpenAPI.Processor.Operation.Param
     alias OpenAPI.Processor.Schema
     alias OpenAPI.Processor.Schema.Field
-    alias OpenAPI.Renderer.File
     alias OpenAPI.Renderer.State
     alias OpenAPI.Renderer.Util
 
@@ -281,10 +280,7 @@ if Mix.env() == :dev do
         |> List.flatten()
         |> Enum.map(fn field ->
           case field.default do
-            {:ref, {_path, [_components, _schemas, mod_name]}} = ref ->
-              # mod_name = Module.concat(OpenApiTypesense, String.to_atom(mod_name))
-              # ast = {{:., [], [mod_name, :__struct__]}, [], []}
-
+            {:ref, {_path, [_components, _schemas, mod_name]}} = _ref ->
               ast = {
                 :%,
                 [],
@@ -299,8 +295,6 @@ if Mix.env() == :dev do
               }
 
               {String.to_atom(field.name), quote(do: unquote(ast))}
-
-            # {String.to_atom(field.name), mod_name.__struct__()}
 
             nil ->
               String.to_atom(field.name)

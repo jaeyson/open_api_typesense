@@ -7,5 +7,6 @@ config :open_api_typesense,
   scheme: "http",
   # see https://hexdocs.pm/req/Req.html#new/1
   options: [
+    max_retries: 0,
     retry: false
   ]

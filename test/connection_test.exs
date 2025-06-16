@@ -18,7 +18,10 @@ defmodule ConnectionTest do
              host: "localhost",
              port: 8108,
              scheme: "http",
-             options: [retry: false]
+             options: [
+               max_retries: 0,
+               retry: false
+             ]
            }
   end
 
@@ -37,7 +40,10 @@ defmodule ConnectionTest do
              host: "otherhost",
              port: 9200,
              scheme: "https",
-             options: [retry: false]
+             options: [
+               max_retries: 0,
+               retry: false
+             ]
            }
   end
 
