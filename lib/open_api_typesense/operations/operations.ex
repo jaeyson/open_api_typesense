@@ -75,6 +75,7 @@ defmodule OpenApiTypesense.Operations do
       request: [{"application/json", {OpenApiTypesense.ConfigSchema, :t}}],
       response: [
         {201, {OpenApiTypesense.SuccessStatus, :t}},
+        {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -177,6 +178,7 @@ defmodule OpenApiTypesense.Operations do
       query: query,
       response: [
         {201, {OpenApiTypesense.SuccessStatus, :t}},
+        {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {409, {OpenApiTypesense.ApiResponse, :t}}
       ],

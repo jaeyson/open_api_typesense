@@ -274,6 +274,21 @@ if Mix.env() == :dev do
 
     @spec render_schema_struct(state :: State.t(), schemas :: [Schema.t()]) :: Macro.t()
     def render_schema_struct(state, schemas) do
+      check_empty_fields =
+        hd(schemas)
+        |> Map.from_struct()
+        |> Map.update!(:fields, fn fields ->
+          Enum.filter(fields, fn field ->
+            case field.type do
+              {:array, ref} when is_reference(ref) ->
+                true
+
+              _ ->
+                false
+            end
+          end)
+        end)
+
       fields =
         Enum.map(schemas, & &1.fields)
         |> List.insert_at(0, extra_fields(state))
@@ -306,10 +321,66 @@ if Mix.env() == :dev do
         |> Enum.sort()
         |> Enum.dedup()
 
-      quote do
-        defstruct unquote(fields)
+      case check_empty_fields do
+        %{fields: impl_fields} = schema when impl_fields != [] ->
+          declare_defstruct =
+            quote do
+              defstruct unquote(fields)
+            end
+
+          mod = Module.concat(OpenApiTypesense, schema.module_name)
+
+          declare_defimpl =
+            quote do
+              defimpl Poison.Decoder, for: unquote(mod) do
+                def decode(value, %{as: struct}) do
+                  mod =
+                    case struct do
+                      [m] -> m
+                      m -> m
+                    end
+
+                  filtered_type =
+                    mod.__struct__.__fields__()
+                    |> Enum.filter(fn {_field, v} ->
+                      case v do
+                        [{mod, :t}] when is_atom(mod) -> true
+                        _ -> false
+                      end
+                    end)
+
+                  case filtered_type do
+                    [{_key, [{module, :t}]} | _rest] = list
+                    when is_list(list) and is_atom(module) ->
+                      Enum.reduce(list, value, fn {key, [{mod, :t}]}, acc ->
+                        Map.update!(acc, key, fn data ->
+                          body = OpenApiTypesense.Converter.to_atom_keys(data || [], safe: false)
+
+                          case body do
+                            [] ->
+                              []
+
+                            _ ->
+                              Enum.map(body, &struct(mod, &1))
+                          end
+                        end)
+                      end)
+
+                    [] ->
+                      value
+                  end
+                end
+              end
+            end
+
+          [declare_defstruct, declare_defimpl]
+
+        _ ->
+          quote do
+            defstruct unquote(fields)
+          end
+          |> Util.put_newlines()
       end
-      |> Util.put_newlines()
     end
 
     @spec extra_fields(State.t()) :: [Field.t()]

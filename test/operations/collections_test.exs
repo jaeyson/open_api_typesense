@@ -66,6 +66,10 @@ defmodule CollectionsTest do
 
     assert {:error, %ApiResponse{message: _}} =
              Collections.create_collection(schema, conn: map_conn)
+
+    assert {:ok,
+            [%OpenApiTypesense.CollectionResponse{fields: [%OpenApiTypesense.Field{} | _]} | _]} =
+             Collections.get_collections()
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]

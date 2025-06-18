@@ -35,7 +35,7 @@ defmodule DefaultClientTest do
         )
 
       assert req.options == %{
-               decode_json: [keys: :atoms],
+               decode_body: false,
                cache: false,
                retry: true,
                max_retries: 0

@@ -109,7 +109,7 @@ defmodule OpenApiTypesense.Client do
       method: Access.get(opts, :method, :get),
       body: encode_body(opts),
       url: url,
-      decode_json: [keys: :atoms]
+      decode_body: false
     ]
     |> Req.new()
     |> Req.Request.merge_options(req_options)
@@ -143,12 +143,21 @@ defmodule OpenApiTypesense.Client do
     {:error, Exception.message(error)}
   end
 
-  defp parse_body(code, _, %{message: reason}) when code in 400..499 do
-    {:error, struct(OpenApiTypesense.ApiResponse, message: reason)}
+  defp parse_body(code, {mod, :t}, body) when code in 400..499 do
+    payload =
+      body
+      |> Jason.decode!()
+      |> OpenApiTypesense.Converter.to_atom_keys()
+
+    {:error, struct(mod, payload)}
   end
 
-  defp parse_body(_code, [{mod, _t}], list) when is_list(list) do
-    {:ok, Enum.map(list, &struct(mod, &1))}
+  defp parse_body(_code, [{_mod, _t}], "null") do
+    {:ok, []}
+  end
+
+  defp parse_body(_code, [{mod, _t}], body) when is_binary(body) do
+    {:ok, Poison.decode!(body, as: [mod.__struct__()])}
   end
 
   defp parse_body(_code, {:string, :generic}, "") do
@@ -156,23 +165,14 @@ defmodule OpenApiTypesense.Client do
   end
 
   defp parse_body(_code, {:string, :generic}, body) do
-    body =
-      body
-      |> String.splitter("\n")
-      |> Enum.map(&Jason.decode!/1)
-
-    {:ok, body}
+    {:ok, String.split(body, "\n") |> Enum.map(&Jason.decode!/1)}
   end
 
   defp parse_body(_code, :map, body) do
-    {:ok, body}
-  end
-
-  defp parse_body(_code, _, nil) do
-    {:ok, []}
+    {:ok, Jason.decode!(body, keys: :atoms)}
   end
 
   defp parse_body(_code, {mod, _t}, body) do
-    {:ok, struct(mod, body)}
+    {:ok, Poison.decode!(body, as: mod.__struct__())}
   end
 end

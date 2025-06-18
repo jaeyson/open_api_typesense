@@ -121,6 +121,7 @@ defmodule OpenApiTypesense.Synonyms do
       request: [{"application/json", {OpenApiTypesense.SearchSynonymSchema, :t}}],
       response: [
         {200, {OpenApiTypesense.SearchSynonym, :t}},
+        {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
