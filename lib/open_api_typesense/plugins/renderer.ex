@@ -344,8 +344,6 @@ if Mix.env() == :dev do
 
     @spec check_empty_fields(schemas :: [Schema.t()]) :: map()
     defp check_empty_fields(schemas) do
-      dbg(schemas)
-
       hd(schemas)
       |> Map.from_struct()
       |> Map.update!(:fields, fn fields ->
