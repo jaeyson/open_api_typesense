@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 1.0.4 (2025.06.18)
+
+### Fixed
+* Refactor `renderer.ex`, `client.ex` and operation schemas for consistently returning appropriate types [PR #33](https://github.com/jaeyson/open_api_typesense/pull/33).
+
+### Added
+* [Poison](https://hex.pm/packages/poison) library for custom json decoder.
+* Use fork version of [`open-api-generator`](https://github.com/jaeyson/open-api-generator), for adding `default` value in `defstruct` declarations.
+* Module (`OpenApiTypesense.Converter`) for maps/structs with mixed keys to full atom key conversions. 
+
 ## 1.0.3 (2025.06.16)
 
 ### Chore
