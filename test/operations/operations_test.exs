@@ -60,6 +60,13 @@ defmodule OperationsTest do
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: take snapshot", %{conn: conn, map_conn: map_conn} do
+    # we have to add sleep timer for github actions
+    # otherwise it will return like:
+    # {:error,
+    #  %OpenApiTypesense.ApiResponse{
+    #    message: "Another snapshot is in progress."
+    #  }}
+
     params = [snapshot_path: "/tmp/typesense-data-snapshot"]
 
     assert {:ok, %SuccessStatus{success: true}} = Operations.take_snapshot(params)

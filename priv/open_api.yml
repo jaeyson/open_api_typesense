@@ -180,6 +180,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CollectionResponse"
+        '401':
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Collection not found
           content:
@@ -311,6 +317,12 @@ paths:
               schema:
                 type: object
                 description: Can be any key-value pair
+        '400':
+          description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: Missing API key
           content:
@@ -642,6 +654,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SearchOverride"
+        '400':
+          description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: Missing API key
           content:
@@ -806,6 +824,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SearchSynonym"
+        '400':
+          description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: Missing API key
           content:
@@ -1119,6 +1143,12 @@ paths:
               schema:
                 type: object
                 description: Can be any key-value pair
+        '400':
+          description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: Missing API key
           content:
@@ -1214,18 +1244,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConversationModelSchema'
           description: Created Conversation Model
+        '400':
+          description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: Missing API key
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
-        '400':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
-          description: Bad request, see error message for details
       tags:
         - conversations
   /conversations/models/{modelId}:
@@ -1284,6 +1314,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConversationModelSchema'
           description: The conversation model was successfully updated
+        '400':
+          description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: Missing API key
           content:
@@ -1367,14 +1403,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiKey"
-        '401':
-          description: Missing API key
+        '400':
+          description: Bad request, see error message for details
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
-        '400':
-          description: Bad request, see error message for details
+        '401':
+          description: Missing API key
           content:
             application/json:
               schema:
@@ -1676,6 +1712,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessStatus"
+        '400':
+          description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: "Missing API key"
           content:
@@ -1780,6 +1822,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessStatus"
+        '400':
+          description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: "Missing API key"
           content:
@@ -2025,6 +2073,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AnalyticsRuleDeleteResponse"
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '404':
           description: Analytics rule not found
           content:

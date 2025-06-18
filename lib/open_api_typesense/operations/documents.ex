@@ -316,6 +316,7 @@ defmodule OpenApiTypesense.Documents do
       request: [{"application/json", :map}],
       response: [
         {201, :map},
+        {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}},
         {409, {OpenApiTypesense.ApiResponse, :t}}
@@ -444,6 +445,7 @@ defmodule OpenApiTypesense.Documents do
       request: [{"application/json", :map}],
       response: [
         {200, :map},
+        {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
@@ -514,6 +516,7 @@ defmodule OpenApiTypesense.Documents do
       request: [{"application/json", {OpenApiTypesense.SearchOverrideSchema, :t}}],
       response: [
         {200, {OpenApiTypesense.SearchOverride, :t}},
+        {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],

@@ -86,6 +86,7 @@ defmodule OpenApiTypesense.Analytics do
       method: :delete,
       response: [
         {200, {OpenApiTypesense.AnalyticsRuleDeleteResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts

@@ -173,6 +173,7 @@ defmodule OpenApiTypesense.Collections do
       method: :get,
       response: [
         {200, {OpenApiTypesense.CollectionResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts

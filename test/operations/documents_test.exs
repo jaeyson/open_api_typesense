@@ -240,6 +240,41 @@ defmodule DocumentsTest do
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  test "success: import documents where payload is type of string", %{coll_name: coll_name} do
+    body =
+      [
+        %{
+          "shoes_id" => 557,
+          "shoe_type" => "slippers",
+          "description" => """
+          Frykun Non Slip Shower Shoes Bathroom Slippers for Pool Camping Open-toe
+          - Non-slip design
+          - Comfortable and lightweight
+          - Premium material
+          - Waterproof and quick-drying
+          - Perfect for any occasion
+          """,
+          "price" => "usd 13.99"
+        },
+        %{
+          "shoes_id" => 2_118,
+          "shoe_type" => "slippers",
+          "description" => """
+          BRONAX Pillow Slippers for Women and Men, House Slides Shower Sandals | Cushioned Thick Sole
+          - For the perfect fit, kindly check out the size guide presented on the product page
+          - With 1.7 inch - 4.5cm thick sole that provides ultimate support and comfort to your feet
+          - Rebound sole is lightweight and compression resistant, providing superior stability and shock absorption
+          - The supportive nature of EVA material is suitable in relieving foot pain and other conditions that feet might be affected by
+          - ATTENTION:The EVA material may shrink and deform at high temperatures, please do not expose them to the sun for a long time
+          """,
+          "price" => "usd 24.99"
+        }
+      ]
+      |> Enum.map_join("\n", &Jason.encode_to_iodata!/1)
+
+    assert {:ok, _} = Documents.import_documents(coll_name, body)
+  end
+
   test "success: import documents", %{coll_name: coll_name} do
     body =
       [

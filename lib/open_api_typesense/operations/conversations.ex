@@ -140,6 +140,7 @@ defmodule OpenApiTypesense.Conversations do
       request: [{"application/json", {OpenApiTypesense.ConversationModelUpdateSchema, :t}}],
       response: [
         {200, {OpenApiTypesense.ConversationModelSchema, :t}},
+        {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
