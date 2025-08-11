@@ -4,9 +4,9 @@ defmodule OpenApiTypesense.CollectionUpdateSchema do
   """
   use OpenApiTypesense.Encoder
 
-  @type t :: %__MODULE__{fields: [OpenApiTypesense.Field.t()]}
+  @type t :: %__MODULE__{fields: [OpenApiTypesense.Field.t()], metadata: map}
 
-  defstruct [:fields]
+  defstruct [:fields, :metadata]
 
   defimpl(Poison.Decoder, for: OpenApiTypesense.CollectionUpdateSchema) do
     def decode(value, %{as: struct}) do
@@ -49,6 +49,6 @@ defmodule OpenApiTypesense.CollectionUpdateSchema do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [fields: [{OpenApiTypesense.Field, :t}]]
+    [fields: [{OpenApiTypesense.Field, :t}], metadata: :map]
   end
 end

@@ -92,6 +92,7 @@ defmodule OpenApiTypesense.Curation do
       request: [{"application/json", {OpenApiTypesense.SearchOverrideSchema, :t}}],
       response: [
         {200, {OpenApiTypesense.SearchOverride, :t}},
+        {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],

@@ -9,6 +9,7 @@ defmodule OpenApiTypesense.CollectionResponse do
           default_sorting_field: String.t(),
           enable_nested_fields: boolean,
           fields: [OpenApiTypesense.Field.t()],
+          metadata: map,
           name: String.t(),
           num_documents: integer,
           symbols_to_index: [String.t()],
@@ -19,6 +20,7 @@ defmodule OpenApiTypesense.CollectionResponse do
   defstruct [
     :created_at,
     :fields,
+    :metadata,
     :name,
     :num_documents,
     default_sorting_field: "",
@@ -74,6 +76,7 @@ defmodule OpenApiTypesense.CollectionResponse do
       default_sorting_field: {:string, :generic},
       enable_nested_fields: :boolean,
       fields: [{OpenApiTypesense.Field, :t}],
+      metadata: :map,
       name: {:string, :generic},
       num_documents: :integer,
       symbols_to_index: [string: :generic],

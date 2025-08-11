@@ -156,7 +156,7 @@ defmodule OpenApiTypesense.Client do
     {:ok, []}
   end
 
-  defp parse_body(_code, [{mod, _t}], body) when is_binary(body) do
+  defp parse_body(_code, [{mod, _t}], body) do
     {:ok, Poison.decode!(body, as: [mod.__struct__()])}
   end
 

@@ -8,6 +8,7 @@ Restful client for Typesense with adherence to Open API spec 3 (formerly Swagger
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/965dd3f8866d49c3b3e82edd0f6270cb)](https://app.codacy.com/gh/jaeyson/open_api_typesense/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![codescenene Average Code Health](https://codescene.io/projects/63240/status-badges/average-code-health)](https://codescene.io/projects/63240)
 
+[![CI v29.0](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v29.0.yml/badge.svg)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v29.0.yml)
 [![CI v28.0](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v28.0.yml/badge.svg)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v28.0.yml)
 [![CI v27.1](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v27.1.yml/badge.svg)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v27.1.yml)
 [![CI v27.0](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v27.0.yml/badge.svg)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v27.0.yml)
@@ -32,6 +33,9 @@ Collections.get_collections(conn: conn)
 # another way (v1)
 opts = [limit: 1, conn: conn]
 Collections.get_collections(opts)
+
+# or (v1)
+Collections.get_collections(limit: 1, conn: conn)
 ```
 ## Installation
 
@@ -41,7 +45,7 @@ by adding `open_api_typesense` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:open_api_typesense, "~> 1.0"}
+    {:open_api_typesense, "~> 1.1"}
 
     # Or from GitHub repository, if you want the latest greatest from main branch
     {:open_api_typesense, git: "https://github.com/jaeyson/open_api_typesense.git"}

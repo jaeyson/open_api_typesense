@@ -8,6 +8,7 @@ defmodule OpenApiTypesense.CollectionSchema do
           default_sorting_field: String.t(),
           enable_nested_fields: boolean,
           fields: [OpenApiTypesense.Field.t()],
+          metadata: map,
           name: String.t(),
           symbols_to_index: [String.t()],
           token_separators: [String.t()],
@@ -16,6 +17,7 @@ defmodule OpenApiTypesense.CollectionSchema do
 
   defstruct [
     :fields,
+    :metadata,
     :name,
     default_sorting_field: "",
     enable_nested_fields: false,
@@ -69,6 +71,7 @@ defmodule OpenApiTypesense.CollectionSchema do
       default_sorting_field: {:string, :generic},
       enable_nested_fields: :boolean,
       fields: [{OpenApiTypesense.Field, :t}],
+      metadata: :map,
       name: {:string, :generic},
       symbols_to_index: [string: :generic],
       token_separators: [string: :generic],
