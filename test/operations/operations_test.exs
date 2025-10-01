@@ -34,12 +34,16 @@ defmodule OperationsTest do
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: toggle threshold time for request log", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %SuccessStatus{success: true}} =
-             Operations.config(%{"log_slow_requests_time_ms" => 2_000})
+             Operations.toggle_slow_request_log(%{"log-slow-requests-time-ms" => 2_000})
 
-    body = %{"log_slow_requests_time_ms" => -1}
-    assert {:ok, %SuccessStatus{success: true}} = Operations.config(body, [])
-    assert {:ok, %SuccessStatus{success: true}} = Operations.config(body, conn: conn)
-    assert {:ok, %SuccessStatus{success: true}} = Operations.config(body, conn: map_conn)
+    body = %{"log-slow-requests-time-ms" => -1}
+    assert {:ok, %SuccessStatus{success: true}} = Operations.toggle_slow_request_log(body, [])
+
+    assert {:ok, %SuccessStatus{success: true}} =
+             Operations.toggle_slow_request_log(body, conn: conn)
+
+    assert {:ok, %SuccessStatus{success: true}} =
+             Operations.toggle_slow_request_log(body, conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -52,10 +56,10 @@ defmodule OperationsTest do
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: compact database", %{conn: conn, map_conn: map_conn} do
-    assert {:ok, %SuccessStatus{success: true}} = Operations.compact()
-    assert {:ok, %SuccessStatus{success: true}} = Operations.compact([])
-    assert {:ok, %SuccessStatus{success: true}} = Operations.compact(conn: conn)
-    assert {:ok, %SuccessStatus{success: true}} = Operations.compact(conn: map_conn)
+    assert {:ok, %SuccessStatus{success: true}} = Operations.compact_db()
+    assert {:ok, %SuccessStatus{success: true}} = Operations.compact_db([])
+    assert {:ok, %SuccessStatus{success: true}} = Operations.compact_db(conn: conn)
+    assert {:ok, %SuccessStatus{success: true}} = Operations.compact_db(conn: map_conn)
   end
 
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]

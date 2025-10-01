@@ -1,18 +1,14 @@
-defmodule OpenApiTypesense.CollectionUpdateSchema do
+defmodule OpenApiTypesense.AnalyticsEventsResponse do
   @moduledoc """
-  Provides struct and type for a CollectionUpdateSchema
+  Provides struct and type for a AnalyticsEventsResponse
   """
   use OpenApiTypesense.Encoder
 
-  @type t :: %__MODULE__{
-          fields: [OpenApiTypesense.Field.t()],
-          metadata: map,
-          synonym_sets: [String.t()]
-        }
+  @type t :: %__MODULE__{events: [OpenApiTypesense.AnalyticsEventsResponseEvents.t()]}
 
-  defstruct [:fields, :metadata, :synonym_sets]
+  defstruct [:events]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.CollectionUpdateSchema) do
+  defimpl(Poison.Decoder, for: OpenApiTypesense.AnalyticsEventsResponse) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do
@@ -53,6 +49,6 @@ defmodule OpenApiTypesense.CollectionUpdateSchema do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [fields: [{OpenApiTypesense.Field, :t}], metadata: :map, synonym_sets: [string: :generic]]
+    [events: [{OpenApiTypesense.AnalyticsEventsResponseEvents, :t}]]
   end
 end

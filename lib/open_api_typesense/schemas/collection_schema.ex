@@ -11,6 +11,7 @@ defmodule OpenApiTypesense.CollectionSchema do
           metadata: map,
           name: String.t(),
           symbols_to_index: [String.t()],
+          synonym_sets: [String.t()],
           token_separators: [String.t()],
           voice_query_model: OpenApiTypesense.VoiceQueryModelCollectionConfig.t()
         }
@@ -19,6 +20,7 @@ defmodule OpenApiTypesense.CollectionSchema do
     :fields,
     :metadata,
     :name,
+    :synonym_sets,
     default_sorting_field: "",
     enable_nested_fields: false,
     symbols_to_index: [],
@@ -74,6 +76,7 @@ defmodule OpenApiTypesense.CollectionSchema do
       metadata: :map,
       name: {:string, :generic},
       symbols_to_index: [string: :generic],
+      synonym_sets: [string: :generic],
       token_separators: [string: :generic],
       voice_query_model: {OpenApiTypesense.VoiceQueryModelCollectionConfig, :t}
     ]

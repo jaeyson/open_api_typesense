@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Typesense API
   description: "An open source search engine for building delightful search experiences."
-  version: '28.0'
+  version: '30.0'
   license:
     name: GPL-3.0
     url: https://opensource.org/licenses/GPL-3.0
@@ -20,7 +20,7 @@ servers:
         default: "8108"
         description: The port of your Typesense server
 externalDocs:
-  description: Find out more about Typsesense
+  description: Find out more about Typesense
   url: https://typesense.org
 security:
   - api_key_header: []
@@ -1261,7 +1261,7 @@ paths:
               $ref: '#/components/schemas/ConversationModelCreateSchema'
         required: true
       responses:
-        '200':
+        '201':
           content:
             application/json:
               schema:
@@ -1272,7 +1272,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ApiResponse"
+                $ref: '#/components/schemas/ApiResponse'
         '401':
           description: Missing API key
           content:
@@ -1776,21 +1776,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
-  /operations/db/compact:
+  /operations/cache/clear:
     post:
       tags:
         - operations
-      summary: Compaction of the underlying RocksDB database
+      summary: Clear the cached responses of search requests in the LRU cache.
       description:
-        Typesense uses RocksDB to store your documents on the disk. If you do
-        frequent writes or updates, you could benefit from running a compaction
-        of the underlying RocksDB database. This could reduce the size of the
-        database and decrease read latency. While the database will not block
-        during this operation, we recommend running it during off-peak hours.
-      operationId: compact
+        Clear the cached responses of search requests that are sent with `use_cache` parameter in the LRU cache.
+      operationId: clearCache
       responses:
         '200':
-          description: Compacting the database
+          description: Clear cache succeeded.
           content:
             application/json:
               schema:
@@ -1801,18 +1797,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
-  /operations/cache/clear:
+  /operations/db/compact:
     post:
       tags:
         - operations
-      summary: Clears the cache
+      summary: Compacting the on-disk database
       description:
-        Responses of search requests that are sent with use_cache parameter are
-        cached in a LRU cache. Clears cache completely.
-      operationId: clearCache
+        Typesense uses RocksDB to store your documents on the disk. If you do frequent writes or updates, you could benefit from running a compaction of the underlying RocksDB database.
+        This could reduce the size of the database and decrease read latency. While the database will not block during this operation, we recommend running it during off-peak hours.
+      operationId: compactDb
       responses:
         '200':
-          description: Cache cleared
+          description: Compacting the on-disk database succeeded.
           content:
             application/json:
               schema:
@@ -1827,17 +1823,24 @@ paths:
     post:
       tags:
         - operations
-      summary: Enable logging of requests that take over a defined threshold of time.
-      description: >-
-        Slow requests are logged to the primary log file, with the prefix SLOW
-        REQUEST. Default is -1 which disables slow request logging.
-      operationId: config
+      summary: Toggle Slow Request Log
+      description:
+        Enable logging of requests that take over a defined threshold of time.
+        Default is `-1` which disables slow request logging.
+        Slow requests are logged to the primary log file, with the prefix SLOW REQUEST.
+      operationId: toggleSlowRequestLog
       requestBody:
-        description: Define threshold in ms for logging of requests
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ConfigSchema"
+              type: object
+              properties:
+                log-slow-requests-time-ms:
+                  type: integer
+              required:
+                - log-slow-requests-time-ms
+              example: |
+                {"log-slow-requests-time-ms": 2000}
       responses:
         '201':
           description: Updated slow request log
@@ -1913,17 +1916,17 @@ paths:
       tags:
         - analytics
       summary: Create an analytics event
-      description: Sending events for analytics e.g rank search results based on popularity.
+      description: Submit a single analytics event. The event must correspond to an existing analytics rule by name.
       operationId: createAnalyticsEvent
       requestBody:
-        description: The Analytics event to be created
+        description: The analytics event to be created
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AnalyticsEventCreateSchema'
+              $ref: '#/components/schemas/AnalyticsEvent'
         required: true
       responses:
-        '201':
+        '200':
           description: Analytics event successfully created
           content:
             application/json:
@@ -1941,28 +1944,105 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+    get:
+      tags:
+        - analytics
+      summary: Retrieve analytics events
+      description: Retrieve the most recent events for a user and rule.
+      operationId: getAnalyticsEvents
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: name
+          in: query
+          description: Analytics rule name
+          required: true
+          schema:
+            type: string
+        - name: n
+          in: query
+          description: Number of events to return (max 1000)
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Events fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsEventsResponse'
+        '400':
+          description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /analytics/flush:
+    post:
+      tags:
+        - analytics
+      summary: Flush in-memory analytics to disk
+      description: Triggers a flush of analytics data to persistent storage.
+      operationId: flushAnalytics
+      responses:
+        '200':
+          description: Flush triggered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsEventCreateResponse'
+  /analytics/status:
+    get:
+      tags:
+        - analytics
+      summary: Get analytics subsystem status
+      description: Returns sizes of internal analytics buffers and queues.
+      operationId: getAnalyticsStatus
+      responses:
+        '200':
+          description: Status fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsStatus'
   /analytics/rules:
     post:
       tags:
         - analytics
-      summary: Creates an analytics rule
-      description:
-        When an analytics rule is created, we give it a name and describe the type, the source collections and the destination collection.
+      summary: Create analytics rule(s)
+      description: Create one or more analytics rules. You can send a single rule object or an array of rule objects.
       operationId: createAnalyticsRule
       requestBody:
-        description: The Analytics rule to be created
+        description: The analytics rule(s) to be created
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AnalyticsRuleSchema"
+              oneOf:
+                - $ref: "#/components/schemas/AnalyticsRuleCreate"
+                - type: array
+                  items:
+                    $ref: "#/components/schemas/AnalyticsRuleCreate"
         required: true
       responses:
-        '201':
-          description: Analytics rule successfully created
+        '200':
+          description: Analytics rule(s) successfully created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AnalyticsRuleSchema"
+                oneOf:
+                  - $ref: "#/components/schemas/AnalyticsRule"
+                  - type: array
+                    items:
+                      anyOf:
+                        - $ref: "#/components/schemas/AnalyticsRule"
+                        - type: object
+                          properties:
+                            error:
+                              type: string
         '400':
           description: Bad request, see error message for details
           content:
@@ -1984,17 +2064,25 @@ paths:
     get:
       tags:
         - analytics
-      summary: Retrieves all analytics rules
-      description:
-        Retrieve the details of all analytics rules
+      summary: Retrieve analytics rules
+      description: Retrieve all analytics rules. Use the optional rule_tag filter to narrow down results.
       operationId: retrieveAnalyticsRules
+      parameters:
+        - in: query
+          name: rule_tag
+          schema:
+            type: string
+          required: false
+          description: Filter rules by rule_tag
       responses:
         '200':
           description: Analytics rules fetched
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AnalyticsRulesRetrieveSchema"
+                type: array
+                items:
+                  $ref: "#/components/schemas/AnalyticsRule"
         '401':
           description: "Missing API key"
           content:
@@ -2021,7 +2109,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AnalyticsRuleUpsertSchema"
+              $ref: "#/components/schemas/AnalyticsRuleUpdate"
         required: true
       responses:
         '200':
@@ -2029,7 +2117,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AnalyticsRuleSchema"
+                $ref: "#/components/schemas/AnalyticsRule"
         '400':
           description: Bad request, see error message for details
           content:
@@ -2062,7 +2150,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AnalyticsRuleSchema"
+                $ref: "#/components/schemas/AnalyticsRule"
         '401':
           description: "Missing API key"
           content:
@@ -2095,7 +2183,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AnalyticsRuleDeleteResponse"
+                $ref: "#/components/schemas/AnalyticsRule"
         '401':
           description: "Missing API key"
           content:
@@ -2371,7 +2459,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/PresetSchema'
         '400':
-          description: Bad request, see error message for details.
+          description: Bad request, see error message for details
           content:
             application/json:
               schema:
@@ -2566,18 +2654,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NLSearchModelSchema'
-        '401':
-          description: "Missing API key"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
         '400':
           description: Bad request, see error message for details
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '409':
+          description: Model already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /nl_search_models/{modelId}:
     get:
       tags:
@@ -2736,6 +2830,12 @@ components:
             minLength: 1
             maxLength: 1
           default: []
+        synonym_sets:
+          type: array
+          description: List of synonym set names to associate with this collection
+          items:
+            type: string
+            example: "synonym_set_1"
         enable_nested_fields:
           type: boolean
           description:
@@ -2780,6 +2880,12 @@ components:
               facet: true
           items:
             $ref: "#/components/schemas/Field"
+        synonym_sets:
+          type: array
+          description: List of synonym set names to associate with this collection
+          items:
+            type: string
+            example: "synonym_set_1"
         metadata:
           type: object
           description: >
@@ -2930,18 +3036,7 @@ components:
       properties:
         model_name:
           type: string
-          default: ""
           example: "ts/whisper/base.en"
-    ConfigSchema:
-      type: object
-      required:
-        - log_slow_requests_time_ms
-      properties:
-        log_slow_requests_time_ms:
-          type: integer
-          description:
-            Enable logging of requests that take over a defined threshold of
-            time in ms.
     CollectionAliasSchema:
       type: object
       required:
@@ -3015,6 +3110,10 @@ components:
           description: Returned only for union query response.
           items:
             $ref: "#/components/schemas/SearchRequestParams"
+        metadata:
+          type: object
+          description: Custom JSON object that can be returned in the search response
+          additionalProperties: true
     SearchRequestParams:
       type: object
       required:
@@ -3445,24 +3544,6 @@ components:
           x-go-type: "[]*ApiKey"
           items:
             $ref: "#/components/schemas/ApiKey"
-    ScopedKeyParameters:
-      type: object
-      properties:
-        filter_by:
-          type: string
-        expires_at:
-          type: integer
-          format: int64
-    SnapshotParameters:
-      type: object
-      properties:
-        snapshot_path:
-          type: string
-    ErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
     MultiSearchResult:
       type: object
       required:
@@ -3555,7 +3636,7 @@ components:
 
         filter_by:
           description:
-            Filter conditions for refining youropen api validator search results. Separate
+            Filter conditions for refining your open api validator search results. Separate
             multiple conditions with &&.
           type: string
           example: "num_employees:>100 && country: [USA, UK]"
@@ -3677,11 +3758,23 @@ components:
           type: boolean
           default: true
 
+        enable_analytics:
+          description: >
+            Flag for enabling/disabling analytics aggregation for specific search
+            queries (for e.g. those originating from a test script).
+          type: boolean
+          default: true
+
         snippet_threshold:
           description: >
             Field values under this length will be fully highlighted, instead of showing
             a snippet of relevant portion. Default: 30
           type: integer
+
+        synonym_sets:
+          type: string
+          description: List of synonym set names to associate with this search query
+          example: "synonym_set_1,synonym_set_2"
 
         drop_tokens_threshold:
           description: >
@@ -3691,13 +3784,7 @@ components:
             are dropped first. Set to 0 to disable. Default: 10
           type: integer
         drop_tokens_mode:
-          description: >
-            Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document.
-            Values: right_to_left (default), left_to_right, both_sides:3
-            A note on both_sides:3 - for queries upto 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results.
-            If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
-          type: string
-          default: "right_to_left"
+          $ref: "#/components/schemas/DropTokensMode"
         typo_tokens_threshold:
           description: >
             If the number of results found for a specific query is less than this number,
@@ -4074,13 +4161,7 @@ components:
             are dropped first. Set to 0 to disable. Default: 10
           type: integer
         drop_tokens_mode:
-          description: >
-            Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document.
-            Values: right_to_left (default), left_to_right, both_sides:3
-            A note on both_sides:3 - for queries upto 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results.
-            If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
-          type: string
-          default: "right_to_left"
+          $ref: "#/components/schemas/DropTokensMode"
         typo_tokens_threshold:
           description: >
             If the number of results found for a specific query is less than this number,
@@ -4100,6 +4181,14 @@ components:
           type: boolean
           description: >
             If you have some synonyms defined but want to disable all of them for a particular search query, set enable_synonyms to false. Default: true
+
+        enable_analytics:
+          description: >
+            Flag for enabling/disabling analytics aggregation for specific search
+            queries (for e.g. those originating from a test script).
+          type: boolean
+          default: true
+
         synonym_prefix:
           type: boolean
           description: >
@@ -4338,105 +4427,133 @@ components:
       properties:
         ok:
           type: boolean
-    AnalyticsEventCreateSchema:
+    AnalyticsEvent:
       type: object
       required:
-        - type
         - name
+        - event_type
         - data
       properties:
-        type:
-          type: string
         name:
           type: string
+          description: Name of the analytics rule this event corresponds to
+        event_type:
+          type: string
+          description: Type of event (e.g., click, conversion, query, visit)
         data:
           type: object
-    AnalyticsRuleUpsertSchema:
+          description: Event payload
+          properties:
+            user_id:
+              type: string
+            doc_id:
+              type: string
+            doc_ids:
+              type: array
+              items:
+                type: string
+            q:
+              type: string
+            analytics_tag:
+              type: string
+    AnalyticsEventsResponse:
       type: object
       required:
-        - type
-        - params
+        - events
       properties:
-        type:
-          type: string
-          enum:
-            - popular_queries
-            - nohits_queries
-            - counter
-        params:
-          $ref: "#/components/schemas/AnalyticsRuleParameters"
-    AnalyticsRuleParameters:
-      type: object
-      required:
-        - source
-        - destination
-      properties:
-        source:
-          $ref: '#/components/schemas/AnalyticsRuleParametersSource'
-        destination:
-          $ref: '#/components/schemas/AnalyticsRuleParametersDestination'
-        limit:
-          type: integer
-        expand_query:
-          type: boolean
-    AnalyticsRuleParametersSource:
-      type: object
-      required:
-        - collections
-      properties:
-        collections:
-          type: array
-          items:
-            type: string
         events:
           type: array
           items:
             type: object
-            required:
-              - type
-              - weight
-              - name
             properties:
-              type:
-                type: string
-              weight:
-                type: number
-                format: float
-              name:
-                type: string
-    AnalyticsRuleParametersDestination:
-      type: object
-      required:
-        - collection
-      properties:
-        collection:
-          type: string
-        counter_field:
-          type: string
-    AnalyticsRuleDeleteResponse:
+              name: { type: string }
+              event_type: { type: string }
+              collection: { type: string }
+              timestamp: { type: integer, format: int64 }
+              user_id: { type: string }
+              doc_id: { type: string }
+              doc_ids:
+                type: array
+                items: { type: string }
+              query: { type: string }
+    AnalyticsRuleCreate:
       type: object
       required:
         - name
+        - type
+        - collection
+        - event_type
       properties:
         name:
           type: string
-    AnalyticsRuleSchema:
-      allOf:
-        - $ref: '#/components/schemas/AnalyticsRuleUpsertSchema'
-        - type: object
-          required:
-            - name
+        type:
+          type: string
+          enum: [popular_queries, nohits_queries, counter, log]
+        collection:
+          type: string
+        event_type:
+          type: string
+        rule_tag:
+          type: string
+        params:
+          type: object
           properties:
-            name:
+            destination_collection:
               type: string
-    AnalyticsRulesRetrieveSchema:
+            limit:
+              type: integer
+            capture_search_requests:
+              type: boolean
+            meta_fields:
+              type: array
+              items: { type: string }
+            expand_query:
+              type: boolean
+            counter_field:
+              type: string
+            weight:
+              type: integer
+    AnalyticsRuleUpdate:
+      type: object
+      description: Fields allowed to update on an analytics rule
+      properties:
+        name:
+          type: string
+        rule_tag:
+          type: string
+        params:
+          type: object
+          properties:
+            destination_collection:
+              type: string
+            limit:
+              type: integer
+            capture_search_requests:
+              type: boolean
+            meta_fields:
+              type: array
+              items: { type: string }
+            expand_query:
+              type: boolean
+            counter_field:
+              type: string
+            weight:
+              type: integer
+    AnalyticsRule:
+      allOf:
+        - $ref: '#/components/schemas/AnalyticsRuleCreate'
+        - type: object
+    AnalyticsStatus:
       type: object
       properties:
-        rules:
-          type: array
-          items:
-            $ref: "#/components/schemas/AnalyticsRuleSchema"
-          x-go-type: '[]*AnalyticsRuleSchema'
+        popular_prefix_queries: { type: integer }
+        nohits_prefix_queries: { type: integer }
+        log_prefix_queries: { type: integer }
+        query_log_events: { type: integer }
+        query_counter_events: { type: integer }
+        doc_log_events: { type: integer }
+        doc_counter_events: { type: integer }
+    
     APIStatsResponse:
       type: object
       properties:
@@ -4569,13 +4686,19 @@ components:
       type: string
       enum: [create, update, upsert, emplace]
     DropTokensMode:
-      type: string
-      enum: [right_to_left, left_to_right, both_sides:3]
-      description: >
-        Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document.
-        Values: right_to_left (default), left_to_right, both_sides:3
-        A note on both_sides:3 - for queries upto 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results.
-        If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
+      type: object 
+      properties:
+        match:
+          type: string
+          description: >
+            Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document.
+            Values: right_to_left (default), left_to_right, both_sides:3
+            A note on both_sides:3 - for queries up to 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results.
+            If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
+          enum:
+            - right_to_left
+            - left_to_right
+            - both_sides:3
     ConversationModelCreateSchema:
       required:
         - model_name
@@ -4758,6 +4881,77 @@ components:
         id:
           type: string
           description: ID of the deleted NL search model
+
+    SynonymItemSchema:
+      type: object
+      required:
+        - id
+        - synonyms
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the synonym item
+        synonyms:
+          type: array
+          description: Array of words that should be considered as synonyms
+          items:
+            type: string
+        root:
+          type: string
+          description: For 1-way synonyms, indicates the root word that words in the synonyms parameter map to
+        locale:
+          type: string
+          description: Locale for the synonym, leave blank to use the standard tokenizer
+        symbols_to_index:
+          type: array
+          description: By default, special characters are dropped from synonyms. Use this attribute to specify which special characters should be indexed as is
+          items:
+            type: string
+
+    SynonymSetCreateSchema:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          description: Array of synonym items
+          items:
+            $ref: "#/components/schemas/SynonymItemSchema"
+
+    SynonymSetSchema:
+      allOf:
+        - $ref: "#/components/schemas/SynonymSetCreateSchema"
+        - type: object
+          required:
+            - name
+          properties:
+            name:
+              type: string
+              description: Name of the synonym set
+
+    SynonymSetsRetrieveSchema:
+      type: object
+      required:
+        - synonym_sets
+      properties:
+        synonym_sets:
+          type: array
+          description: Array of synonym sets
+          items:
+            $ref: "#/components/schemas/SynonymSetSchema"
+
+    SynonymSetRetrieveSchema:
+      $ref: "#/components/schemas/SynonymSetCreateSchema"
+
+    SynonymSetDeleteSchema:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Name of the deleted synonym set
 
   securitySchemes:
     api_key_header:

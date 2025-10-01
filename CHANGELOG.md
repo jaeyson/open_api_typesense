@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 1.1.1 ???
+
+### Added
+
+* `NlSearchModels` operation
+* `Analytics.flush_analytics/1`
+* `Analytics.get_analytics_status/1`
+* `Analytics.get_analytics_events/1`
+
+### Chore
+
+* update `priv/open_api.yml` to https://github.com/typesense/typesense-api-spec/commit/eac4e46bc934dd1f621406602c2c46184961788f
+* Changed `DropTokensMode` schema from string to object.
+
+### Removed
+
+* `Operations.config/2`. Use `Operations.toggle_slow_request_log/2`
+
 ## 1.0.4 (2025.06.18)
 
 ### Fixed

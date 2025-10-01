@@ -171,7 +171,7 @@ defmodule CollectionsTest do
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: get a non-existing alias", %{conn: conn, map_conn: map_conn} do
     assert Collections.get_alias("non-existing-alias") ==
-             {:error, %ApiResponse{message: "Not Found"}}
+             {:error, %ApiResponse{message: "Collection not found"}}
 
     assert {:error, %ApiResponse{message: _}} = Collections.get_alias("xyz", [])
     assert {:error, %ApiResponse{message: _}} = Collections.get_alias("xyz", conn: conn)
@@ -181,7 +181,7 @@ defmodule CollectionsTest do
   @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: get a non-existing collection", %{conn: conn, map_conn: map_conn} do
     assert Collections.get_collection("non-existing-collection") ==
-             {:error, %ApiResponse{message: "Not Found"}}
+             {:error, %ApiResponse{message: "Collection not found"}}
 
     assert {:error, %ApiResponse{message: _}} = Collections.get_collection("xyz")
     assert {:error, %ApiResponse{message: _}} = Collections.get_collection("xyz", [])

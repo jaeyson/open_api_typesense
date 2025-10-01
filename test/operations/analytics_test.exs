@@ -2,6 +2,7 @@ defmodule AnalyticsTest do
   use ExUnit.Case, async: true
 
   alias OpenApiTypesense.Analytics
+  alias OpenApiTypesense.AnalyticsRule
   alias OpenApiTypesense.AnalyticsRuleSchema
   alias OpenApiTypesense.AnalyticsRulesRetrieveSchema
   alias OpenApiTypesense.ApiResponse
@@ -126,16 +127,16 @@ defmodule AnalyticsTest do
         }
       }
 
-    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+    assert {:ok, %AnalyticsRule{name: ^name}} =
              Analytics.upsert_analytics_rule(name, body)
 
-    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+    assert {:ok, %AnalyticsRule{name: ^name}} =
              Analytics.upsert_analytics_rule(name, body, [])
 
-    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+    assert {:ok, %AnalyticsRule{name: ^name}} =
              Analytics.upsert_analytics_rule(name, body, conn: conn)
 
-    assert {:ok, %AnalyticsRuleSchema{name: ^name}} =
+    assert {:ok, %AnalyticsRule{name: ^name}} =
              Analytics.upsert_analytics_rule(name, body, conn: map_conn)
   end
 

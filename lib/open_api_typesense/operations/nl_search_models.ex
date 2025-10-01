@@ -32,7 +32,8 @@ defmodule OpenApiTypesense.NlSearchModels do
       response: [
         {201, {OpenApiTypesense.NLSearchModelSchema, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
-        {401, {OpenApiTypesense.ApiResponse, :t}}
+        {401, {OpenApiTypesense.ApiResponse, :t}},
+        {409, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })

@@ -10,7 +10,7 @@ defmodule OpenApiTypesense.Analytics do
   @doc """
   Create an analytics event
 
-  Sending events for analytics e.g rank search results based on popularity.
+  Submit a single analytics event. The event must correspond to an existing analytics rule by name.
   """
   @doc since: "0.4.0"
   @spec create_analytics_event(
@@ -28,9 +28,9 @@ defmodule OpenApiTypesense.Analytics do
       url: "/analytics/events",
       body: body,
       method: :post,
-      request: [{"application/json", {OpenApiTypesense.AnalyticsEventCreateSchema, :t}}],
+      request: [{"application/json", {OpenApiTypesense.AnalyticsEvent, :t}}],
       response: [
-        {201, {OpenApiTypesense.AnalyticsEventCreateResponse, :t}},
+        {200, {OpenApiTypesense.AnalyticsEventCreateResponse, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
@@ -39,13 +39,17 @@ defmodule OpenApiTypesense.Analytics do
   end
 
   @doc """
-  Creates an analytics rule
+  Create analytics rule(s)
 
-  When an analytics rule is created, we give it a name and describe the type, the source collections and the destination collection.
+  Create one or more analytics rules. You can send a single rule object or an array of rule objects.
   """
   @doc since: "0.4.0"
-  @spec create_analytics_rule(body :: OpenApiTypesense.AnalyticsRuleSchema.t(), opts :: keyword) ::
-          {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
+  @spec create_analytics_rule(
+          body ::
+            OpenApiTypesense.AnalyticsRuleCreate.t() | [OpenApiTypesense.AnalyticsRuleCreate.t()],
+          opts :: keyword
+        ) ::
+          {:ok, OpenApiTypesense.AnalyticsRule.t() | [map | OpenApiTypesense.AnalyticsRule.t()]}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_analytics_rule(body, opts \\ []) do
     client = opts[:client] || @default_client
@@ -56,9 +60,21 @@ defmodule OpenApiTypesense.Analytics do
       url: "/analytics/rules",
       body: body,
       method: :post,
-      request: [{"application/json", {OpenApiTypesense.AnalyticsRuleSchema, :t}}],
+      request: [
+        {"application/json",
+         {:union,
+          [
+            {OpenApiTypesense.AnalyticsRuleCreate, :t},
+            [{OpenApiTypesense.AnalyticsRuleCreate, :t}]
+          ]}}
+      ],
       response: [
-        {201, {OpenApiTypesense.AnalyticsRuleSchema, :t}},
+        {200,
+         {:union,
+          [
+            {OpenApiTypesense.AnalyticsRule, :t},
+            [union: [:map, {OpenApiTypesense.AnalyticsRule, :t}]]
+          ]}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
@@ -74,8 +90,7 @@ defmodule OpenApiTypesense.Analytics do
   """
   @doc since: "0.4.0"
   @spec delete_analytics_rule(rule_name :: String.t(), opts :: keyword) ::
-          {:ok, OpenApiTypesense.AnalyticsRuleDeleteResponse.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.AnalyticsRule.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_analytics_rule(rule_name, opts \\ []) do
     client = opts[:client] || @default_client
 
@@ -85,10 +100,86 @@ defmodule OpenApiTypesense.Analytics do
       url: "/analytics/rules/#{rule_name}",
       method: :delete,
       response: [
-        {200, {OpenApiTypesense.AnalyticsRuleDeleteResponse, :t}},
+        {200, {OpenApiTypesense.AnalyticsRule, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
+      opts: opts
+    })
+  end
+
+  @doc """
+  Flush in-memory analytics to disk
+
+  Triggers a flush of analytics data to persistent storage.
+  """
+  @doc since: "1.1.0"
+  @spec flush_analytics(opts :: keyword) ::
+          {:ok, OpenApiTypesense.AnalyticsEventCreateResponse.t()} | :error
+  def flush_analytics(opts \\ []) do
+    client = opts[:client] || @default_client
+
+    client.request(%{
+      args: [],
+      call: {OpenApiTypesense.Analytics, :flush_analytics},
+      url: "/analytics/flush",
+      method: :post,
+      response: [{200, {OpenApiTypesense.AnalyticsEventCreateResponse, :t}}],
+      opts: opts
+    })
+  end
+
+  @doc """
+  Retrieve analytics events
+
+  Retrieve the most recent events for a user and rule.
+
+  ## Options
+
+    * `user_id`
+    * `name`: Analytics rule name
+    * `n`: Number of events to return (max 1000)
+
+  """
+  @doc since: "1.1.0"
+  @spec get_analytics_events(opts :: keyword) ::
+          {:ok, OpenApiTypesense.AnalyticsEventsResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
+  def get_analytics_events(opts \\ []) do
+    client = opts[:client] || @default_client
+    query = Keyword.take(opts, [:n, :name, :user_id])
+
+    client.request(%{
+      args: [],
+      call: {OpenApiTypesense.Analytics, :get_analytics_events},
+      url: "/analytics/events",
+      method: :get,
+      query: query,
+      response: [
+        {200, {OpenApiTypesense.AnalyticsEventsResponse, :t}},
+        {400, {OpenApiTypesense.ApiResponse, :t}}
+      ],
+      opts: opts
+    })
+  end
+
+  @doc """
+  Get analytics subsystem status
+
+  Returns sizes of internal analytics buffers and queues.
+  """
+  @doc since: "1.1.0"
+  @spec get_analytics_status(opts :: keyword) ::
+          {:ok, OpenApiTypesense.AnalyticsStatus.t()} | :error
+  def get_analytics_status(opts \\ []) do
+    client = opts[:client] || @default_client
+
+    client.request(%{
+      args: [],
+      call: {OpenApiTypesense.Analytics, :get_analytics_status},
+      url: "/analytics/status",
+      method: :get,
+      response: [{200, {OpenApiTypesense.AnalyticsStatus, :t}}],
       opts: opts
     })
   end
@@ -100,8 +191,7 @@ defmodule OpenApiTypesense.Analytics do
   """
   @doc since: "0.4.0"
   @spec retrieve_analytics_rule(rule_name :: String.t(), opts :: keyword) ::
-          {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.AnalyticsRule.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_analytics_rule(rule_name, opts \\ []) do
     client = opts[:client] || @default_client
 
@@ -111,7 +201,7 @@ defmodule OpenApiTypesense.Analytics do
       url: "/analytics/rules/#{rule_name}",
       method: :get,
       response: [
-        {200, {OpenApiTypesense.AnalyticsRuleSchema, :t}},
+        {200, {OpenApiTypesense.AnalyticsRule, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
@@ -120,24 +210,30 @@ defmodule OpenApiTypesense.Analytics do
   end
 
   @doc """
-  Retrieves all analytics rules
+  Retrieve analytics rules
 
-  Retrieve the details of all analytics rules
+  Retrieve all analytics rules. Use the optional rule_tag filter to narrow down results.
+
+  ## Options
+
+    * `rule_tag`: Filter rules by rule_tag
+
   """
   @doc since: "0.4.0"
   @spec retrieve_analytics_rules(opts :: keyword) ::
-          {:ok, OpenApiTypesense.AnalyticsRulesRetrieveSchema.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, [OpenApiTypesense.AnalyticsRule.t()]} | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_analytics_rules(opts \\ []) do
     client = opts[:client] || @default_client
+    query = Keyword.take(opts, [:rule_tag])
 
     client.request(%{
       args: [],
       call: {OpenApiTypesense.Analytics, :retrieve_analytics_rules},
       url: "/analytics/rules",
       method: :get,
+      query: query,
       response: [
-        {200, {OpenApiTypesense.AnalyticsRulesRetrieveSchema, :t}},
+        {200, [{OpenApiTypesense.AnalyticsRule, :t}]},
         {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -152,11 +248,10 @@ defmodule OpenApiTypesense.Analytics do
   @doc since: "0.4.0"
   @spec upsert_analytics_rule(
           rule_name :: String.t(),
-          body :: OpenApiTypesense.AnalyticsRuleUpsertSchema.t(),
+          body :: OpenApiTypesense.AnalyticsRuleUpdate.t(),
           opts :: keyword
         ) ::
-          {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
-          | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.AnalyticsRule.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_analytics_rule(rule_name, body, opts \\ []) do
     client = opts[:client] || @default_client
 
@@ -166,9 +261,9 @@ defmodule OpenApiTypesense.Analytics do
       url: "/analytics/rules/#{rule_name}",
       body: body,
       method: :put,
-      request: [{"application/json", {OpenApiTypesense.AnalyticsRuleUpsertSchema, :t}}],
+      request: [{"application/json", {OpenApiTypesense.AnalyticsRuleUpdate, :t}}],
       response: [
-        {200, {OpenApiTypesense.AnalyticsRuleSchema, :t}},
+        {200, {OpenApiTypesense.AnalyticsRule, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
