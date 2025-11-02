@@ -1,17 +1,21 @@
 name: LLM
 on:
-  push:
-    push:
-      branches: ["main"]
-    pull_request:
-      branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ci_workflow:
     uses: ./.github/workflows/ci_v29.0.yml
     secrets: inherit
 
-  staging_deploy:
+  llm:
+    if: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && github.repository == 'jaeyson/open_api_typesense' }}
     runs-on: ubuntu-latest
+    environment: review
     needs: [ci_workflow]
 
     env:

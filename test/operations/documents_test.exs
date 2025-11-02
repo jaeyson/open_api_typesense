@@ -38,7 +38,7 @@ defmodule DocumentsTest do
     %{coll_name: name, conn: conn, map_conn: map_conn}
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: update a document", %{coll_name: coll_name} do
     body = %{
       "shoes_id" => 12_299,
@@ -57,7 +57,7 @@ defmodule DocumentsTest do
              Documents.update_document(coll_name, document_id, body)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: update a non-existent document", %{
     coll_name: coll_name,
     conn: conn,
@@ -81,7 +81,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.update_document(coll_name, document_id, body, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: search a document", %{coll_name: coll_name, conn: conn, map_conn: map_conn} do
     body =
       [
@@ -123,7 +123,7 @@ defmodule DocumentsTest do
     assert {:ok, _} = Documents.search_collection(coll_name, List.flatten([conn: map_conn], opts))
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: update non-existent documents", %{
     coll_name: coll_name,
     conn: conn,
@@ -145,7 +145,7 @@ defmodule DocumentsTest do
     assert {:ok, _} = Documents.import_documents(coll_name, body, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: multi-search with no documents", %{conn: conn, map_conn: map_conn} do
     body =
       %{
@@ -170,7 +170,7 @@ defmodule DocumentsTest do
     assert {:ok, _} = Documents.multi_search(body, List.flatten([conn: map_conn], params))
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: update documents by query", %{
     coll_name: coll_name,
     conn: conn,
@@ -228,7 +228,7 @@ defmodule DocumentsTest do
              )
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: importing empty documents", %{coll_name: coll_name} do
     assert {:ok, ""} = Documents.import_documents(coll_name, [])
 
@@ -239,8 +239,8 @@ defmodule DocumentsTest do
              Documents.import_documents(coll_name, [%{}])
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
-  test "success: import documents where payload is type of string", %{coll_name: coll_name} do
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  test "success: import documents where payload is JSONL", %{coll_name: coll_name} do
     body =
       [
         %{
@@ -275,6 +275,7 @@ defmodule DocumentsTest do
     assert {:ok, _} = Documents.import_documents(coll_name, body)
   end
 
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: import documents", %{coll_name: coll_name} do
     body =
       [
@@ -309,7 +310,7 @@ defmodule DocumentsTest do
     assert {:ok, _} = Documents.import_documents(coll_name, body, action: "create")
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: index a document", %{coll_name: coll_name, conn: conn, map_conn: map_conn} do
     shoes_id = 220
 
@@ -333,7 +334,7 @@ defmodule DocumentsTest do
     assert {:ok, _} = Documents.index_document(coll_name, body, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list collection overrides", %{
     coll_name: coll_name,
     conn: conn,
@@ -352,7 +353,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.get_search_overrides("xyz", conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: get a non-existent override", %{
     coll_name: coll_name,
     conn: conn,
@@ -366,7 +367,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.get_search_override(coll_name, "xyz", conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: delete a non-existent override", %{
     coll_name: coll_name,
     conn: conn,
@@ -380,7 +381,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.delete_search_override(coll_name, "xyz", conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: delete a document", %{coll_name: coll_name, conn: conn, map_conn: map_conn} do
     shoes_id = 420
 
@@ -412,7 +413,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.delete_document(coll_name, id, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: delete all documents", %{coll_name: coll_name, conn: conn, map_conn: map_conn} do
     body =
       [
@@ -456,7 +457,7 @@ defmodule DocumentsTest do
     assert {:ok, _} = Documents.delete_documents(coll_name, List.flatten([conn: map_conn], opts))
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: get a non-existent document", %{
     coll_name: coll_name,
     conn: conn,
@@ -473,7 +474,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.get_document(coll_name, document_id, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: export document from a non-existent collection", %{conn: conn, map_conn: map_conn} do
     opts = [exclude_fields: "fields"]
 
@@ -487,7 +488,7 @@ defmodule DocumentsTest do
     assert {:error, _} = Documents.export_documents("xyz", List.flatten([conn: map_conn], opts))
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: upsert a search override", %{
     coll_name: coll_name,
     conn: conn,
@@ -520,7 +521,7 @@ defmodule DocumentsTest do
              Documents.upsert_search_override(coll_name, "customize-apple", body, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "field" do
     assert [num_deleted: :integer] = Documents.__fields__(:delete_documents_200_json_resp)
     assert [num_updated: :integer] = Documents.__fields__(:update_documents_200_json_resp)

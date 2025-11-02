@@ -15,7 +15,7 @@ defmodule OperationsTest do
     %{conn: conn, map_conn: map_conn}
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: retrieve api stats", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %APIStatsResponse{}} = Operations.retrieve_api_stats()
     assert {:ok, %APIStatsResponse{}} = Operations.retrieve_api_stats([])
@@ -23,7 +23,7 @@ defmodule OperationsTest do
     assert {:ok, %APIStatsResponse{}} = Operations.retrieve_api_stats(conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: retrieve metrics", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %{system_cpu_active_percentage: _}} = Operations.retrieve_metrics()
     assert {:ok, %{system_cpu_active_percentage: _}} = Operations.retrieve_metrics([])
@@ -31,7 +31,7 @@ defmodule OperationsTest do
     assert {:ok, %{system_cpu_active_percentage: _}} = Operations.retrieve_metrics(conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: toggle threshold time for request log", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %SuccessStatus{success: true}} =
              Operations.toggle_slow_request_log(%{"log-slow-requests-time-ms" => 2_000})
@@ -46,7 +46,7 @@ defmodule OperationsTest do
              Operations.toggle_slow_request_log(body, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: clear cache", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %SuccessStatus{success: true}} = Operations.clear_cache()
     assert {:ok, %SuccessStatus{success: true}} = Operations.clear_cache([])
@@ -54,7 +54,7 @@ defmodule OperationsTest do
     assert {:ok, %SuccessStatus{success: true}} = Operations.clear_cache(conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: compact database", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %SuccessStatus{success: true}} = Operations.compact_db()
     assert {:ok, %SuccessStatus{success: true}} = Operations.compact_db([])
@@ -62,7 +62,7 @@ defmodule OperationsTest do
     assert {:ok, %SuccessStatus{success: true}} = Operations.compact_db(conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: take snapshot", %{conn: conn, map_conn: map_conn} do
     # we have to add sleep timer for github actions
     # otherwise it will return like:
@@ -86,7 +86,7 @@ defmodule OperationsTest do
              Operations.take_snapshot(List.flatten([conn: map_conn], params))
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: re-elect leader", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %SuccessStatus{success: false}} = Operations.vote()
     assert {:ok, %SuccessStatus{success: false}} = Operations.vote([])
@@ -94,7 +94,7 @@ defmodule OperationsTest do
     assert {:ok, %SuccessStatus{success: false}} = Operations.vote(conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": false, "27.0": false, "26.0": false]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: get schema changes", %{conn: conn, map_conn: map_conn} do
     assert {:ok, schemas} = Operations.get_schema_changes()
     assert length(schemas) >= 0

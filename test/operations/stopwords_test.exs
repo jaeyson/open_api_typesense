@@ -24,7 +24,7 @@ defmodule StopwordsTest do
     %{conn: conn, map_conn: map_conn}
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list stopwords sets", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %StopwordsSetsRetrieveAllSchema{stopwords: stopwords}} =
              Stopwords.retrieve_stopwords_sets()
@@ -35,7 +35,7 @@ defmodule StopwordsTest do
     assert {:ok, _} = Stopwords.retrieve_stopwords_sets(conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: add stopwords", %{conn: conn, map_conn: map_conn} do
     set_id = "stopword_set_countries"
 
@@ -51,7 +51,7 @@ defmodule StopwordsTest do
     assert {:ok, _} = Stopwords.upsert_stopwords_set(set_id, body, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: retrieve specific stopwords set", %{conn: conn, map_conn: map_conn} do
     set_id = "stopword_set_names"
 
@@ -71,7 +71,7 @@ defmodule StopwordsTest do
     assert {:ok, _} = Stopwords.retrieve_stopwords_set(set_id, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: delete specific stopwords set", %{conn: conn, map_conn: map_conn} do
     set_id = "stopword_set_companies"
 
@@ -88,7 +88,7 @@ defmodule StopwordsTest do
     assert {:error, _} = Stopwords.delete_stopwords_set(set_id, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "field" do
     assert [id: {:string, :generic}] = Stopwords.__fields__(:delete_stopwords_set_200_json_resp)
   end
