@@ -79,7 +79,7 @@ defmodule AnalyticsTest do
     %{conn: conn, map_conn: map_conn}
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: create analytics rule with non-existent collection", %{
     conn: conn,
     map_conn: map_conn

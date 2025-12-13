@@ -168,8 +168,18 @@ defmodule CollectionsTest do
              Collections.delete_alias(alias_name, conn: map_conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: get a non-existing alias", %{conn: conn, map_conn: map_conn} do
+    assert Collections.get_alias("non-existing-alias") ==
+             {:error, %ApiResponse{message: "Not Found"}}
+
+    assert {:error, %ApiResponse{message: _}} = Collections.get_alias("xyz", [])
+    assert {:error, %ApiResponse{message: _}} = Collections.get_alias("xyz", conn: conn)
+    assert {:error, %ApiResponse{message: _}} = Collections.get_alias("xyz", conn: map_conn)
+  end
+
+  @tag ["29.0": true]
+  test "error: get a non-existing alias (> v28.0)", %{conn: conn, map_conn: map_conn} do
     assert Collections.get_alias("non-existing-alias") ==
              {:error, %ApiResponse{message: "Collection not found"}}
 
@@ -178,8 +188,19 @@ defmodule CollectionsTest do
     assert {:error, %ApiResponse{message: _}} = Collections.get_alias("xyz", conn: map_conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: get a non-existing collection", %{conn: conn, map_conn: map_conn} do
+    assert Collections.get_collection("non-existing-collection") ==
+             {:error, %ApiResponse{message: "Not Found"}}
+
+    assert {:error, %ApiResponse{message: _}} = Collections.get_collection("xyz")
+    assert {:error, %ApiResponse{message: _}} = Collections.get_collection("xyz", [])
+    assert {:error, %ApiResponse{message: _}} = Collections.get_collection("xyz", conn: conn)
+    assert {:error, %ApiResponse{message: _}} = Collections.get_collection("xyz", conn: map_conn)
+  end
+
+  @tag ["29.0": true]
+  test "error: get a non-existing collection (> v28.0)", %{conn: conn, map_conn: map_conn} do
     assert Collections.get_collection("non-existing-collection") ==
              {:error, %ApiResponse{message: "Collection not found"}}
 

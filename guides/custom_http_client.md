@@ -16,7 +16,7 @@ config :open_api_typesense,
 ## [`:httpc`](https://www.erlang.org/doc/apps/inets/httpc.html)
 
 ```elixir
-defmodule CustomClient do
+defmodule MyApp.CustomClient do
   @behaviour OpenApiTypesense.Client
   
   @impl OpenApiTypesense.Client
