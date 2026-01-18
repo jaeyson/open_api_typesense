@@ -17,6 +17,8 @@ Restful client for Typesense with adherence to Open API spec 3 (formerly Swagger
 [![Hex.pm](https://img.shields.io/hexpm/l/open_api_typesense)](https://hexdocs.pm/open_api_typesense/license.html)
 [![Latest Typesense compatible](https://img.shields.io/badge/Latest%20Typesense%20compatible-v28.0-%230F35BC)](https://typesense.org/docs/28.0/api)
 
+**Note**: the only place where ai is used/integrated is in PR reviews. I am NOT interested in adding/integrating ai generated code in my codebase, as this little library can be fit in my mental model. ai has it’s own great use case, it’s just that I wanted to be hands-on with these projects.
+
 > #### Upgrading to v1 {: .warning}
 >
 > The breaking change here is `conn` is now part of `opts`
