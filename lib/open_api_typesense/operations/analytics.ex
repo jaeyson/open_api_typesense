@@ -69,7 +69,7 @@ defmodule OpenApiTypesense.Analytics do
           ]}}
       ],
       response: [
-        {200,
+        {201,
          {:union,
           [
             {OpenApiTypesense.AnalyticsRule, :t},

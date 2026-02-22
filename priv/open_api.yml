@@ -2028,7 +2028,7 @@ paths:
                     $ref: "#/components/schemas/AnalyticsRuleCreate"
         required: true
       responses:
-        '200':
+        '201':
           description: Analytics rule(s) successfully created
           content:
             application/json:

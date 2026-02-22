@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Chore
 
-* update `priv/open_api.yml` to https://github.com/typesense/typesense-api-spec/commit/eac4e46bc934dd1f621406602c2c46184961788f
+* update `priv/open_api.yml` to <https://github.com/typesense/typesense-api-spec/commit/eac4e46bc934dd1f621406602c2c46184961788f>
 * Changed `DropTokensMode` schema from string to object.
 
 ### Removed
