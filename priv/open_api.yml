@@ -1711,6 +1711,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+        '404':
+          description: Schema changes not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /operations/snapshot:
     post:
       tags:
@@ -1926,7 +1932,7 @@ paths:
               $ref: '#/components/schemas/AnalyticsEvent'
         required: true
       responses:
-        '200':
+        '201':
           description: Analytics event successfully created
           content:
             application/json:

@@ -135,9 +135,6 @@ defmodule OpenApiTypesense.Client do
   end
 
   defp parse_resp(%Req.Response{status: code, body: body}, %{response: resp}) do
-    IO.inspect(code)
-    IO.inspect(body)
-    IO.inspect(resp)
     {_status, mod} = Enum.find(resp, fn {status, _} -> status === code end)
     parse_body(code, mod, body)
   end

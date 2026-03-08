@@ -1,6 +1,7 @@
 defmodule OperationsTest do
   use ExUnit.Case, async: true
 
+  alias OpenApiTypesense.ApiResponse
   alias OpenApiTypesense.APIStatsResponse
   alias OpenApiTypesense.Connection
   alias OpenApiTypesense.Operations
@@ -94,13 +95,23 @@ defmodule OperationsTest do
     assert {:ok, %SuccessStatus{success: false}} = Operations.vote(conn: map_conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
-  test "success: get schema changes", %{conn: conn, map_conn: map_conn} do
+  @tag ["29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
+  test "success: (v28.0) get schema changes", %{conn: conn, map_conn: map_conn} do
     assert {:ok, schemas} = Operations.get_schema_changes()
     assert length(schemas) >= 0
 
     assert {:ok, _} = Operations.get_schema_changes([])
     assert {:ok, _} = Operations.get_schema_changes(conn: conn)
     assert {:ok, _} = Operations.get_schema_changes(conn: map_conn)
+  end
+
+  @tag ["29.0": false, "28.0": false, "27.1": true, "27.0": true, "26.0": true]
+  test "error: no schema changes", %{conn: conn, map_conn: map_conn} do
+    assert {:error, %ApiResponse{message: "Not Found"}} = Operations.get_schema_changes()
+    assert {:error, %ApiResponse{message: _message}} = Operations.get_schema_changes([])
+    assert {:error, %ApiResponse{message: _message}} = Operations.get_schema_changes(conn: conn)
+
+    assert {:error, %ApiResponse{message: _message}} =
+             Operations.get_schema_changes(conn: map_conn)
   end
 end

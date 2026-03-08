@@ -72,9 +72,15 @@ defmodule StemmingTest do
     assert {:ok, %Stemming{}} = Stemming.list_stemming_dictionaries(conn: map_conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
-  test "error: non-existent stemming dictionary" do
+  @tag ["29.0": true, "28.0": false, "27.1": false, "27.0": false, "26.0": false]
+  test "error: (v29.0) non-existent stemming dictionary" do
     assert {:error, %ApiResponse{message: "Collection not found"}} =
+             Stemming.get_stemming_dictionary("non-existent")
+  end
+
+  @tag ["29.0": false, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
+  test "error: (v28.0) non-existent stemming dictionary" do
+    assert {:error, %ApiResponse{message: "Not Found"}} =
              Stemming.get_stemming_dictionary("non-existent")
   end
 

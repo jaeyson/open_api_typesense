@@ -3,14 +3,11 @@ defmodule AnalyticsTest do
 
   alias OpenApiTypesense.Analytics
   alias OpenApiTypesense.AnalyticsRule
-  alias OpenApiTypesense.AnalyticsRuleSchema
-  alias OpenApiTypesense.AnalyticsRulesRetrieveSchema
   alias OpenApiTypesense.ApiResponse
   alias OpenApiTypesense.Collections
   alias OpenApiTypesense.CollectionResponse
   alias OpenApiTypesense.Connection
   alias OpenApiTypesense.AnalyticsEventCreateResponse
-  alias OpenApiTypesense.AnalyticsRuleDeleteResponse
 
   setup_all do
     conn = Connection.new()
@@ -204,17 +201,17 @@ defmodule AnalyticsTest do
       }
 
     assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.create_analytics_rule(body)
-    # assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.retrieve_analytics_rule(name)
-    # assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.retrieve_analytics_rule(name, [])
+    assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.retrieve_analytics_rule(name)
+    assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.retrieve_analytics_rule(name, [])
 
-    # assert {:ok, %AnalyticsRule{name: ^name}} =
-    #          Analytics.retrieve_analytics_rule(name, conn: conn)
+    assert {:ok, %AnalyticsRule{name: ^name}} =
+             Analytics.retrieve_analytics_rule(name, conn: conn)
 
-    # assert {:ok, %AnalyticsRule{name: ^name}} =
-    #          Analytics.retrieve_analytics_rule(name, [])
+    assert {:ok, %AnalyticsRule{name: ^name}} =
+             Analytics.retrieve_analytics_rule(name, [])
 
-    # assert {:ok, %AnalyticsRule{name: ^name}} =
-    #          Analytics.retrieve_analytics_rule(name, conn: map_conn)
+    assert {:ok, %AnalyticsRule{name: ^name}} =
+             Analytics.retrieve_analytics_rule(name, conn: map_conn)
 
     body =
       %{
@@ -234,22 +231,26 @@ defmodule AnalyticsTest do
     assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
              Analytics.create_analytics_event(body)
 
-    # assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
-    #          Analytics.create_analytics_event(body, [])
+    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
+             Analytics.create_analytics_event(body, [])
 
-    # assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
-    #          Analytics.create_analytics_event(body, conn: conn)
+    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
+             Analytics.create_analytics_event(body, conn: conn)
 
-    # assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
-    #          Analytics.create_analytics_event(body, conn: map_conn)
+    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
+             Analytics.create_analytics_event(body, conn: map_conn)
 
-    # assert {:ok, %AnalyticsRuleDeleteResponse{name: ^name}} =
-    #          Analytics.delete_analytics_rule(name)
+    assert {:ok, %AnalyticsRule{name: ^name}} =
+             Analytics.delete_analytics_rule(name)
 
-    # assert {:error, %ApiResponse{message: _}} = Analytics.delete_analytics_rule(name, [])
-    # assert {:error, %ApiResponse{message: _}} = Analytics.delete_analytics_rule(name, conn: conn)
+    reason = "Rule not found."
 
-    # assert {:error, %ApiResponse{message: _}} =
-    #          Analytics.delete_analytics_rule(name, conn: map_conn)
+    assert {:error, %ApiResponse{message: ^reason}} = Analytics.delete_analytics_rule(name, [])
+
+    assert {:error, %ApiResponse{message: ^reason}} =
+             Analytics.delete_analytics_rule(name, conn: conn)
+
+    assert {:error, %ApiResponse{message: ^reason}} =
+             Analytics.delete_analytics_rule(name, conn: map_conn)
   end
 end

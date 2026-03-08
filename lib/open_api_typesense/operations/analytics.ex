@@ -30,7 +30,7 @@ defmodule OpenApiTypesense.Analytics do
       method: :post,
       request: [{"application/json", {OpenApiTypesense.AnalyticsEvent, :t}}],
       response: [
-        {200, {OpenApiTypesense.AnalyticsEventCreateResponse, :t}},
+        {201, {OpenApiTypesense.AnalyticsEventCreateResponse, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}}
       ],

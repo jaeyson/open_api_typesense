@@ -74,7 +74,8 @@ defmodule OpenApiTypesense.Operations do
       method: :get,
       response: [
         {200, [{OpenApiTypesense.SchemaChangeStatus, :t}]},
-        {401, {OpenApiTypesense.ApiResponse, :t}}
+        {401, {OpenApiTypesense.ApiResponse, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })

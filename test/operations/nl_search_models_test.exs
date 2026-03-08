@@ -18,6 +18,6 @@ defmodule NlSearchModelsTest do
   @tag [nls: true]
   # test "success: get a specific key", %{conn: conn, map_conn: map_conn} do
   test "success: get a specific key" do
-    assert 1 === false
+    assert 1 === 2
   end
 end
