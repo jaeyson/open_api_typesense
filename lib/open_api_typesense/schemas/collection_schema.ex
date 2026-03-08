@@ -8,15 +8,19 @@ defmodule OpenApiTypesense.CollectionSchema do
           default_sorting_field: String.t(),
           enable_nested_fields: boolean,
           fields: [OpenApiTypesense.Field.t()],
+          metadata: map,
           name: String.t(),
           symbols_to_index: [String.t()],
+          synonym_sets: [String.t()],
           token_separators: [String.t()],
           voice_query_model: OpenApiTypesense.VoiceQueryModelCollectionConfig.t()
         }
 
   defstruct [
     :fields,
+    :metadata,
     :name,
+    :synonym_sets,
     default_sorting_field: "",
     enable_nested_fields: false,
     symbols_to_index: [],
@@ -69,8 +73,10 @@ defmodule OpenApiTypesense.CollectionSchema do
       default_sorting_field: {:string, :generic},
       enable_nested_fields: :boolean,
       fields: [{OpenApiTypesense.Field, :t}],
+      metadata: :map,
       name: {:string, :generic},
       symbols_to_index: [string: :generic],
+      synonym_sets: [string: :generic],
       token_separators: [string: :generic],
       voice_query_model: {OpenApiTypesense.VoiceQueryModelCollectionConfig, :t}
     ]

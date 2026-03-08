@@ -34,7 +34,7 @@ defmodule CurationTest do
     %{schema_name: name, conn: conn, map_conn: map_conn}
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: upsert search override", %{
     schema_name: schema_name,
     conn: conn,
@@ -67,7 +67,7 @@ defmodule CurationTest do
              Curation.upsert_search_override(schema_name, override_id, body, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: delete search override", %{
     schema_name: schema_name,
     conn: conn,
@@ -83,7 +83,7 @@ defmodule CurationTest do
     assert {:error, _} = Curation.delete_search_override(schema_name, "test", conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list collection overrides", %{
     schema_name: schema_name,
     conn: conn,
@@ -92,7 +92,6 @@ defmodule CurationTest do
     assert {:ok, %SearchOverridesResponse{overrides: overrides}} =
              Curation.get_search_overrides(schema_name)
 
-    assert length(overrides) >= 0
     assert {:ok, _} = Curation.get_search_overrides(schema_name, [])
     assert {:ok, _} = Curation.get_search_overrides(schema_name, conn: conn)
     assert {:ok, _} = Curation.get_search_overrides(schema_name, conn: map_conn)

@@ -8,8 +8,6 @@ defmodule OpenApiTypesense.Conversations do
   @default_client OpenApiTypesense.Client
 
   @doc """
-  post `/conversations/models`
-
   Create a Conversation Model
   """
   @doc since: "0.4.0"
@@ -40,8 +38,6 @@ defmodule OpenApiTypesense.Conversations do
 
   @doc """
   Delete a conversation model
-
-  Delete a conversation model
   """
   @doc since: "0.4.0"
   @spec delete_conversation_model(model_id :: String.t(), opts :: keyword) ::
@@ -65,8 +61,6 @@ defmodule OpenApiTypesense.Conversations do
   end
 
   @doc """
-  List all conversation models
-
   Retrieve all conversation models
   """
   @doc since: "0.4.0"
@@ -91,8 +85,6 @@ defmodule OpenApiTypesense.Conversations do
 
   @doc """
   Retrieve a conversation model
-
-  Retrieve a conversation model
   """
   @doc since: "0.4.0"
   @spec retrieve_conversation_model(model_id :: String.t(), opts :: keyword) ::
@@ -116,8 +108,6 @@ defmodule OpenApiTypesense.Conversations do
   end
 
   @doc """
-  Update a conversation model
-
   Update a conversation model
   """
   @doc since: "0.4.0"

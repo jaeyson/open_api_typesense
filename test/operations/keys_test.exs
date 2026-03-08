@@ -29,7 +29,7 @@ defmodule KeysTest do
     %{api_key_schema: api_key_schema, conn: conn, map_conn: map_conn}
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: get a specific key", %{
     api_key_schema: api_key_schema,
     conn: conn,
@@ -45,17 +45,16 @@ defmodule KeysTest do
     assert {:ok, %ApiKey{id: ^key_id}} = Keys.get_key(key_id, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list API keys", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %ApiKeysResponse{keys: keys}} = Keys.get_keys()
-    assert length(keys) >= 0
 
     assert {:ok, %ApiKeysResponse{}} = Keys.get_keys([])
     assert {:ok, %ApiKeysResponse{}} = Keys.get_keys(conn: conn)
     assert {:ok, %ApiKeysResponse{}} = Keys.get_keys(conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: delete an API key", %{
     api_key_schema: api_key_schema,
     conn: conn,
@@ -71,7 +70,7 @@ defmodule KeysTest do
     assert {:error, _} = Keys.delete_key(key_id, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: create an search-only API key", %{
     api_key_schema: api_key_schema,
     conn: conn,
@@ -83,7 +82,7 @@ defmodule KeysTest do
     assert {:ok, %ApiKey{}} = Keys.create_key(api_key_schema, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: create an admin API key", %{api_key_schema: api_key_schema} do
     body =
       api_key_schema

@@ -34,16 +34,15 @@ defmodule ConversationsTest do
     %{conn: conn, map_conn: map_conn}
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list conversation models", %{conn: conn, map_conn: map_conn} do
     assert {:ok, models} = Conversations.retrieve_all_conversation_models()
-    assert length(models) >= 0
     assert {:ok, _} = Conversations.retrieve_all_conversation_models([])
     assert {:ok, _} = Conversations.retrieve_all_conversation_models(conn: conn)
     assert {:ok, _} = Conversations.retrieve_all_conversation_models(conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: get a non-existent conversation model", %{conn: conn, map_conn: map_conn} do
     assert {:error, %ApiResponse{message: "Model not found"}} =
              Conversations.retrieve_conversation_model("non-existent")
@@ -53,7 +52,7 @@ defmodule ConversationsTest do
     assert {:error, _} = Conversations.retrieve_conversation_model("xyz", conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: delete a conversation model", %{conn: conn, map_conn: map_conn} do
     assert {:error, %ApiResponse{message: "Model not found"}} =
              Conversations.delete_conversation_model("non-existent")
@@ -63,7 +62,7 @@ defmodule ConversationsTest do
     assert {:error, _} = Conversations.delete_conversation_model("xyz", conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: create a conversation model with incorrect API key", %{
     conn: conn,
     map_conn: map_conn
@@ -94,7 +93,7 @@ defmodule ConversationsTest do
     assert {:error, _} = Conversations.create_conversation_model(body, conn: map_conn)
   end
 
-  @tag ["28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: update a conversation model with incorrect API key", %{
     conn: conn,
     map_conn: map_conn

@@ -156,8 +156,16 @@ defmodule OpenApiTypesense.Client do
     {:ok, []}
   end
 
-  defp parse_body(_code, [{mod, _t}], body) when is_binary(body) do
-    {:ok, Poison.decode!(body, as: [mod.__struct__()])}
+  defp parse_body(_code, [{mod, _t}], body) do
+    regex = ~r/\"rules\":\s*(?<rules>\[.*\])/
+
+    case Regex.named_captures(regex, body) do
+      %{"rules" => rules_string} ->
+        {:ok, Poison.decode!(rules_string, as: [mod.__struct__()])}
+
+      nil ->
+        {:ok, Poison.decode!(body, as: [mod.__struct__()])}
+    end
   end
 
   defp parse_body(_code, {:string, :generic}, "") do
@@ -170,6 +178,24 @@ defmodule OpenApiTypesense.Client do
 
   defp parse_body(_code, :map, body) do
     {:ok, Jason.decode!(body, keys: :atoms)}
+  end
+
+  defp parse_body(_code, {:union, [{mod, _t} | _rest]}, body) do
+    case Poison.decode!(body) do
+      list when is_list(list) ->
+        Enum.map(list, fn el ->
+          case Poison.decode(el, as: mod.__struct__()) do
+            {:ok, result} ->
+              {:ok, result}
+
+            _ ->
+              {:ok, el}
+          end
+        end)
+
+      map when is_map(map) ->
+        {:ok, Poison.decode!(body, as: mod.__struct__())}
+    end
   end
 
   defp parse_body(_code, {mod, _t}, body) do

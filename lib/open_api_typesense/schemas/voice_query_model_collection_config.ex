@@ -6,7 +6,7 @@ defmodule OpenApiTypesense.VoiceQueryModelCollectionConfig do
 
   @type t :: %__MODULE__{model_name: String.t()}
 
-  defstruct model_name: ""
+  defstruct [:model_name]
 
   @doc false
   @spec __fields__(atom) :: keyword

@@ -8,9 +8,9 @@ defmodule OpenApiTypesense.Operations do
   @default_client OpenApiTypesense.Client
 
   @doc """
-  Clears the cache
+  Clear the cached responses of search requests in the LRU cache.
 
-  Responses of search requests that are sent with use_cache parameter are cached in a LRU cache. Clears cache completely.
+  Clear the cached responses of search requests that are sent with `use_cache` parameter in the LRU cache.
   """
   @doc since: "0.4.2"
   @spec clear_cache(opts :: keyword) ::
@@ -32,50 +32,23 @@ defmodule OpenApiTypesense.Operations do
   end
 
   @doc """
-  Compaction of the underlying RocksDB database
+  Compacting the on-disk database
 
   Typesense uses RocksDB to store your documents on the disk. If you do frequent writes or updates, you could benefit from running a compaction of the underlying RocksDB database. This could reduce the size of the database and decrease read latency. While the database will not block during this operation, we recommend running it during off-peak hours.
   """
   @doc since: "0.4.2"
-  @spec compact(opts :: keyword) ::
+  @spec compact_db(opts :: keyword) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def compact(opts \\ []) do
+  def compact_db(opts \\ []) do
     client = opts[:client] || @default_client
 
     client.request(%{
       args: [],
-      call: {OpenApiTypesense.Operations, :compact},
+      call: {OpenApiTypesense.Operations, :compact_db},
       url: "/operations/db/compact",
       method: :post,
       response: [
         {200, {OpenApiTypesense.SuccessStatus, :t}},
-        {401, {OpenApiTypesense.ApiResponse, :t}}
-      ],
-      opts: opts
-    })
-  end
-
-  @doc """
-  Enable logging of requests that take over a defined threshold of time.
-
-  Slow requests are logged to the primary log file, with the prefix SLOW REQUEST. Default is -1 which disables slow request logging.
-  """
-  @doc since: "0.4.2"
-  @spec config(body :: OpenApiTypesense.ConfigSchema.t(), opts :: keyword) ::
-          {:ok, OpenApiTypesense.SuccessStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
-  def config body, opts \\ [] do
-    client = opts[:client] || @default_client
-
-    client.request(%{
-      args: [body: body],
-      call: {OpenApiTypesense.Operations, :config},
-      url: "/config",
-      body: body,
-      method: :post,
-      request: [{"application/json", {OpenApiTypesense.ConfigSchema, :t}}],
-      response: [
-        {201, {OpenApiTypesense.SuccessStatus, :t}},
-        {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
@@ -101,7 +74,8 @@ defmodule OpenApiTypesense.Operations do
       method: :get,
       response: [
         {200, [{OpenApiTypesense.SchemaChangeStatus, :t}]},
-        {401, {OpenApiTypesense.ApiResponse, :t}}
+        {401, {OpenApiTypesense.ApiResponse, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })
@@ -181,6 +155,42 @@ defmodule OpenApiTypesense.Operations do
         {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {409, {OpenApiTypesense.ApiResponse, :t}}
+      ],
+      opts: opts
+    })
+  end
+
+  @doc """
+  Toggle Slow Request Log
+
+  Enable logging of requests that take over a defined threshold of time. Default is `-1` which disables slow request logging. Slow requests are logged to the primary log file, with the prefix SLOW REQUEST.
+
+  ## Required body
+
+    * `log-slow-requests-time-ms`: Defaults to `-1`
+
+                
+  ## Example
+      iex> body = %{"log-slow-requests-time-ms" => 2_000}
+      iex> OpenApiTypesense.Operations.toggle_slow_request_log(body)
+  """
+  @doc since: "1.1.0"
+  @spec toggle_slow_request_log(body :: map, opts :: keyword) ::
+          {:ok, OpenApiTypesense.SuccessStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+  def toggle_slow_request_log(body, opts \\ []) do
+    client = opts[:client] || @default_client
+
+    client.request(%{
+      args: [body: body],
+      call: {OpenApiTypesense.Operations, :toggle_slow_request_log},
+      url: "/config",
+      body: body,
+      method: :post,
+      request: [{"application/json", :map}],
+      response: [
+        {201, {OpenApiTypesense.SuccessStatus, :t}},
+        {400, {OpenApiTypesense.ApiResponse, :t}},
+        {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })

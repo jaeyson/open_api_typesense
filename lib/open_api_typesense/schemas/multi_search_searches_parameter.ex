@@ -9,7 +9,7 @@ defmodule OpenApiTypesense.MultiSearchSearchesParameter do
           union: boolean
         }
 
-  defstruct [:searches, :union]
+  defstruct [:searches, union: false]
 
   defimpl(Poison.Decoder, for: OpenApiTypesense.MultiSearchSearchesParameter) do
     def decode(value, %{as: struct}) do

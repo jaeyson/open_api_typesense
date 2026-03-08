@@ -9,6 +9,8 @@ defmodule OpenApiTypesense.SearchResultHit do
           geo_distance_meters: OpenApiTypesense.SearchResultHitGeoDistanceMeters.t(),
           highlight: map,
           highlights: [OpenApiTypesense.SearchHighlight.t()],
+          hybrid_search_info: OpenApiTypesense.SearchResultHitHybridSearchInfo.t(),
+          search_index: integer,
           text_match: integer,
           text_match_info: OpenApiTypesense.SearchResultHitTextMatchInfo.t(),
           vector_distance: number
@@ -19,6 +21,8 @@ defmodule OpenApiTypesense.SearchResultHit do
     :geo_distance_meters,
     :highlight,
     :highlights,
+    :hybrid_search_info,
+    :search_index,
     :text_match,
     :text_match_info,
     :vector_distance
@@ -70,6 +74,8 @@ defmodule OpenApiTypesense.SearchResultHit do
       geo_distance_meters: {OpenApiTypesense.SearchResultHitGeoDistanceMeters, :t},
       highlight: :map,
       highlights: [{OpenApiTypesense.SearchHighlight, :t}],
+      hybrid_search_info: {OpenApiTypesense.SearchResultHitHybridSearchInfo, :t},
+      search_index: :integer,
       text_match: :integer,
       text_match_info: {OpenApiTypesense.SearchResultHitTextMatchInfo, :t},
       vector_distance: :number

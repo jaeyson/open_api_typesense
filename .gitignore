@@ -36,5 +36,7 @@ open_api_typesense-*.tar
 .elixir_ls
 **.DS_Store
 
+*.env
+
 /priv/plts/*.plt
 /priv/plts/*.plt.hash
