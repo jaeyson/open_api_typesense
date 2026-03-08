@@ -167,8 +167,6 @@ defmodule AnalyticsTest do
   test "success: list analytics rules", %{conn: conn, map_conn: map_conn} do
     assert {:ok, rules} = Analytics.retrieve_analytics_rules()
 
-    assert length(rules) >= 0
-
     assert {:ok, _} = Analytics.retrieve_analytics_rules([])
 
     assert {:ok, _} = Analytics.retrieve_analytics_rules(conn: conn)

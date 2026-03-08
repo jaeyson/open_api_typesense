@@ -92,7 +92,6 @@ defmodule CurationTest do
     assert {:ok, %SearchOverridesResponse{overrides: overrides}} =
              Curation.get_search_overrides(schema_name)
 
-    assert length(overrides) >= 0
     assert {:ok, _} = Curation.get_search_overrides(schema_name, [])
     assert {:ok, _} = Curation.get_search_overrides(schema_name, conn: conn)
     assert {:ok, _} = Curation.get_search_overrides(schema_name, conn: map_conn)

@@ -29,7 +29,6 @@ defmodule StopwordsTest do
     assert {:ok, %StopwordsSetsRetrieveAllSchema{stopwords: stopwords}} =
              Stopwords.retrieve_stopwords_sets()
 
-    assert length(stopwords) >= 0
     assert {:ok, _} = Stopwords.retrieve_stopwords_sets([])
     assert {:ok, _} = Stopwords.retrieve_stopwords_sets(conn: conn)
     assert {:ok, _} = Stopwords.retrieve_stopwords_sets(conn: map_conn)

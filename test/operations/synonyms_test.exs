@@ -41,8 +41,6 @@ defmodule SynonymsTest do
     assert {:ok, %SearchSynonymsResponse{synonyms: synonyms}} =
              Synonyms.get_search_synonyms(coll_name)
 
-    assert length(synonyms) >= 0
-
     assert {:ok, _} = Synonyms.get_search_synonyms(coll_name, [])
     assert {:ok, _} = Synonyms.get_search_synonyms(coll_name, conn: conn)
     assert {:ok, _} = Synonyms.get_search_synonyms(coll_name, conn: map_conn)

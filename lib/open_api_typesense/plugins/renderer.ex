@@ -105,15 +105,17 @@ if Mix.env() == :dev do
           {:method, unquote(request_method)}
         end
 
+      # if length(request_body) > 0 do
       body =
-        if length(request_body) > 0 do
+        if not Enum.empty?(request_body) do
           quote do
             {:body, body}
           end
         end
 
+      # if length(query_params) > 0 do
       query =
-        if length(query_params) > 0 do
+        if not Enum.empty?(query_params) do
           quote do
             {:query, query}
           end
@@ -126,8 +128,9 @@ if Mix.env() == :dev do
           config(state)[:operation_call][:request]
         )
 
+      # if length(responses) > 0 do
       responses =
-        if length(responses) > 0 do
+        unless Enum.empty?(responses) do
           items =
             responses
             |> Enum.sort_by(fn {status_or_default, _schemas} -> status_or_default end)
@@ -178,8 +181,9 @@ if Mix.env() == :dev do
           )
         end
 
+      # if length(request_body) > 0 do
       request_body =
-        if length(request_body) > 0 do
+        unless Enum.empty?(request_body) do
           body_type = {:union, Enum.map(request_body, fn {_content_type, type} -> type end)}
           quote(do: body :: unquote(Util.to_type(state, body_type)))
         end
@@ -204,8 +208,9 @@ if Mix.env() == :dev do
         end)
         |> Enum.split_with(fn {status, _schemas} -> status < 300 end)
 
+      # if length(success) > 0 do
       ok =
-        if length(success) > 0 do
+        if success !== [] do
           type =
             success
             |> Enum.map(fn {_state, schemas} -> Map.values(schemas) end)
@@ -221,7 +226,8 @@ if Mix.env() == :dev do
         if error_type = config(state)[:types][:error] do
           quote(do: {:error, unquote(Util.to_type(state, error_type))})
         else
-          if length(error) > 0 do
+          # if length(error) > 0 do
+          if error !== [] do
             type =
               error
               |> Enum.map(fn {_state, schemas} -> Map.values(schemas) end)

@@ -36,7 +36,7 @@ defmodule PresetsTest do
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list presets", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %PresetsRetrieveSchema{presets: presets}} = Presets.retrieve_all_presets()
-    assert length(presets) >= 1
+    refute Enum.empty?(presets)
 
     assert {:ok, _} = Presets.retrieve_all_presets([])
     assert {:ok, _} = Presets.retrieve_all_presets(conn: conn)
