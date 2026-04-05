@@ -13,6 +13,6 @@ defmodule OpenApiTypesense.VoiceQueryModelCollectionConfig do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [model_name: {:string, :generic}]
+    [model_name: :string]
   end
 end

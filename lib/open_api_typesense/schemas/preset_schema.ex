@@ -19,7 +19,7 @@ defmodule OpenApiTypesense.PresetSchema do
 
   def __fields__(:t) do
     [
-      name: {:string, :generic},
+      name: :string,
       value:
         {:union,
          [

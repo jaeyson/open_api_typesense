@@ -126,6 +126,9 @@ defmodule OpenApiTypesense.Client do
       {[{"application/octet-stream", {:string, :generic}}], body} when not is_binary(body) ->
         Enum.map_join(body, "\n", &Jason.encode_to_iodata!/1)
 
+      {[{"application/octet-stream", :string}], body} when not is_binary(body) ->
+        Enum.map_join(body, "\n", &Jason.encode_to_iodata!/1)
+
       {[{"application/json", _}], body} when not is_binary(body) ->
         Jason.encode_to_iodata!(body)
 
@@ -172,7 +175,15 @@ defmodule OpenApiTypesense.Client do
     {:ok, ""}
   end
 
+  defp parse_body(_code, :string, "") do
+    {:ok, ""}
+  end
+
   defp parse_body(_code, {:string, :generic}, body) do
+    {:ok, String.split(body, "\n") |> Enum.map(&Jason.decode!/1)}
+  end
+
+  defp parse_body(_code, :string, body) do
     {:ok, String.split(body, "\n") |> Enum.map(&Jason.decode!/1)}
   end
 
@@ -198,7 +209,14 @@ defmodule OpenApiTypesense.Client do
     end
   end
 
-  defp parse_body(_code, {mod, _t}, body) do
+  defp parse_body(code, {mod, :t}, body) do
     {:ok, Poison.decode!(body, as: mod.__struct__())}
+  end
+
+  defp parse_body(code, {mod, t} = type, body) do
+    dbg(code)
+    dbg(type)
+    dbg(body)
+    {:ok, Poison.decode!(body)}
   end
 end

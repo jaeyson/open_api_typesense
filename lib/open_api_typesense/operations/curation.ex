@@ -1,6 +1,4 @@
 defmodule OpenApiTypesense.Curation do
-  @moduledoc since: "0.4.0"
-
   @moduledoc """
   Provides API endpoints related to curation
   """
@@ -10,7 +8,6 @@ defmodule OpenApiTypesense.Curation do
   @doc """
   Delete an override associated with a collection
   """
-  @doc since: "0.4.0"
   @spec delete_search_override(
           collection_name :: String.t(),
           override_id :: String.t(),
@@ -44,7 +41,6 @@ defmodule OpenApiTypesense.Curation do
     * `offset`: Skip a certain number of results and start after that.
 
   """
-  @doc since: "0.4.0"
   @spec get_search_overrides(collection_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -71,8 +67,13 @@ defmodule OpenApiTypesense.Curation do
   Create or update an override to promote certain documents over others
 
   Create or update an override to promote certain documents over others. Using overrides, you can include or exclude specific documents for a given query.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The search override object to be created/updated
   """
-  @doc since: "0.4.0"
   @spec upsert_search_override(
           collection_name :: String.t(),
           override_id :: String.t(),

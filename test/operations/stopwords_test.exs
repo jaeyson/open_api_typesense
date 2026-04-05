@@ -40,8 +40,8 @@ defmodule StopwordsTest do
 
     body =
       %{
-        "stopwords" => ["Germany", "France", "Italy", "United States"],
-        "locale" => "en"
+        stopwords: ["Germany", "France", "Italy", "United States"],
+        locale: "en"
       }
 
     assert {:ok, %StopwordsSetSchema{id: ^set_id}} = Stopwords.upsert_stopwords_set(set_id, body)
@@ -56,13 +56,13 @@ defmodule StopwordsTest do
 
     body =
       %{
-        "stopwords" => ["Bustin Jieber", "Pelvis Presly", "Tinus Lorvalds", "Britney Smears"],
-        "locale" => "en"
+        stopwords: ["Bustin Jieber", "Pelvis Presly", "Tinus Lorvalds", "Britney Smears"],
+        locale: "en"
       }
 
     assert {:ok, %StopwordsSetSchema{id: ^set_id}} = Stopwords.upsert_stopwords_set(set_id, body)
 
-    assert {:ok, %StopwordsSetRetrieveSchema{stopwords: %{id: ^set_id}}} =
+    assert {:ok, %StopwordsSetRetrieveSchema{stopwords: %StopwordsSetSchema{id: ^set_id}}} =
              Stopwords.retrieve_stopwords_set(set_id)
 
     assert {:ok, _} = Stopwords.retrieve_stopwords_set(set_id, [])
@@ -76,8 +76,8 @@ defmodule StopwordsTest do
 
     body =
       %{
-        "stopwords" => ["Loca Cola", "Burgler King", "Buttweiser", "Lowcoste"],
-        "locale" => "en"
+        stopwords: ["Loca Cola", "Burgler King", "Buttweiser", "Lowcoste"],
+        locale: "en"
       }
 
     assert {:ok, %StopwordsSetSchema{id: ^set_id}} = Stopwords.upsert_stopwords_set(set_id, body)
@@ -89,6 +89,6 @@ defmodule StopwordsTest do
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "field" do
-    assert [id: {:string, :generic}] = Stopwords.__fields__(:delete_stopwords_set_200_json_resp)
+    assert [id: :string] = Stopwords.__fields__(:delete_stopwords_set_200_json_resp)
   end
 end

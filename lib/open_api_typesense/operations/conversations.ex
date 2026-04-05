@@ -1,6 +1,4 @@
 defmodule OpenApiTypesense.Conversations do
-  @moduledoc since: "0.4.0"
-
   @moduledoc """
   Provides API endpoints related to conversations
   """
@@ -8,9 +6,14 @@ defmodule OpenApiTypesense.Conversations do
   @default_client OpenApiTypesense.Client
 
   @doc """
+  Create a conversation model
+
   Create a Conversation Model
+
+  ## Request Body
+
+  **Content Types**: `application/json`
   """
-  @doc since: "0.4.0"
   @spec create_conversation_model(
           body :: OpenApiTypesense.ConversationModelCreateSchema.t(),
           opts :: keyword
@@ -28,7 +31,7 @@ defmodule OpenApiTypesense.Conversations do
       method: :post,
       request: [{"application/json", {OpenApiTypesense.ConversationModelCreateSchema, :t}}],
       response: [
-        {200, {OpenApiTypesense.ConversationModelSchema, :t}},
+        {201, {OpenApiTypesense.ConversationModelSchema, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
@@ -38,8 +41,9 @@ defmodule OpenApiTypesense.Conversations do
 
   @doc """
   Delete a conversation model
+
+  Delete a conversation model
   """
-  @doc since: "0.4.0"
   @spec delete_conversation_model(model_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -61,9 +65,10 @@ defmodule OpenApiTypesense.Conversations do
   end
 
   @doc """
+  List all conversation models
+
   Retrieve all conversation models
   """
-  @doc since: "0.4.0"
   @spec retrieve_all_conversation_models(opts :: keyword) ::
           {:ok, [OpenApiTypesense.ConversationModelSchema.t()]}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -85,8 +90,9 @@ defmodule OpenApiTypesense.Conversations do
 
   @doc """
   Retrieve a conversation model
+
+  Retrieve a conversation model
   """
-  @doc since: "0.4.0"
   @spec retrieve_conversation_model(model_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -109,8 +115,13 @@ defmodule OpenApiTypesense.Conversations do
 
   @doc """
   Update a conversation model
+
+  Update a conversation model
+
+  ## Request Body
+
+  **Content Types**: `application/json`
   """
-  @doc since: "0.4.0"
   @spec update_conversation_model(
           model_id :: String.t(),
           body :: OpenApiTypesense.ConversationModelUpdateSchema.t(),

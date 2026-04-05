@@ -31,11 +31,11 @@ defmodule OpenApiTypesense.AnalyticsRuleUpdateParams do
   def __fields__(:t) do
     [
       capture_search_requests: :boolean,
-      counter_field: {:string, :generic},
-      destination_collection: {:string, :generic},
+      counter_field: :string,
+      destination_collection: :string,
       expand_query: :boolean,
       limit: :integer,
-      meta_fields: [string: :generic],
+      meta_fields: [:string],
       weight: :integer
     ]
   end

@@ -55,7 +55,7 @@ defmodule OpenApiTypesense.FacetCounts do
   def __fields__(:t) do
     [
       counts: [{OpenApiTypesense.FacetCountsCounts, :t}],
-      field_name: {:string, :generic},
+      field_name: :string,
       stats: {OpenApiTypesense.FacetCountsStats, :t}
     ]
   end

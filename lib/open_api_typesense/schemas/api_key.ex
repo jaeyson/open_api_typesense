@@ -22,13 +22,13 @@ defmodule OpenApiTypesense.ApiKey do
 
   def __fields__(:t) do
     [
-      actions: [string: :generic],
-      collections: [string: :generic],
-      description: {:string, :generic},
-      expires_at: :integer,
-      id: :integer,
-      value: {:string, :generic},
-      value_prefix: {:string, :generic}
+      actions: [:string],
+      collections: [:string],
+      description: :string,
+      expires_at: {:integer, "int64"},
+      id: {:integer, "int64"},
+      value: :string,
+      value_prefix: :string
     ]
   end
 end

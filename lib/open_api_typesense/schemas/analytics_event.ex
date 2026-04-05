@@ -17,10 +17,6 @@ defmodule OpenApiTypesense.AnalyticsEvent do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [
-      data: {OpenApiTypesense.AnalyticsEventData, :t},
-      event_type: {:string, :generic},
-      name: {:string, :generic}
-    ]
+    [data: {OpenApiTypesense.AnalyticsEventData, :t}, event_type: :string, name: :string]
   end
 end

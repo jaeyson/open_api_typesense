@@ -13,6 +13,6 @@ defmodule OpenApiTypesense.ApiKeyDeleteResponse do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [id: :integer]
+    [id: {:integer, "int64"}]
   end
 end

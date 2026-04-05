@@ -18,11 +18,6 @@ defmodule OpenApiTypesense.SearchSynonymSchema do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [
-      locale: {:string, :generic},
-      root: {:string, :generic},
-      symbols_to_index: [string: :generic],
-      synonyms: [string: :generic]
-    ]
+    [locale: :string, root: :string, symbols_to_index: [:string], synonyms: [:string]]
   end
 end

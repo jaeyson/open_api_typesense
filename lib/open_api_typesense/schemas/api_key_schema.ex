@@ -20,11 +20,11 @@ defmodule OpenApiTypesense.ApiKeySchema do
 
   def __fields__(:t) do
     [
-      actions: [string: :generic],
-      collections: [string: :generic],
-      description: {:string, :generic},
-      expires_at: :integer,
-      value: {:string, :generic}
+      actions: [:string],
+      collections: [:string],
+      description: :string,
+      expires_at: {:integer, "int64"},
+      value: :string
     ]
   end
 end

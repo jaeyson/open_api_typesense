@@ -1,6 +1,4 @@
 defmodule OpenApiTypesense.Synonyms do
-  @moduledoc since: "0.4.0"
-
   @moduledoc """
   Provides API endpoints related to synonyms
   """
@@ -10,7 +8,6 @@ defmodule OpenApiTypesense.Synonyms do
   @doc """
   Delete a synonym associated with a collection
   """
-  @doc since: "0.4.0"
   @spec delete_search_synonym(
           collection_name :: String.t(),
           synonym_id :: String.t(),
@@ -40,7 +37,6 @@ defmodule OpenApiTypesense.Synonyms do
 
   Retrieve the details of a search synonym, given its id.
   """
-  @doc since: "0.4.0"
   @spec get_search_synonym(
           collection_name :: String.t(),
           synonym_id :: String.t(),
@@ -73,7 +69,6 @@ defmodule OpenApiTypesense.Synonyms do
     * `offset`: Skip a certain number of results and start after that.
 
   """
-  @doc since: "0.4.0"
   @spec get_search_synonyms(collection_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.SearchSynonymsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -100,8 +95,13 @@ defmodule OpenApiTypesense.Synonyms do
   Create or update a synonym
 
   Create or update a synonym  to define search terms that should be considered equivalent.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The search synonym object to be created/updated
   """
-  @doc since: "0.4.0"
   @spec upsert_search_synonym(
           collection_name :: String.t(),
           synonym_id :: String.t(),

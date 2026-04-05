@@ -21,11 +21,11 @@ defmodule OpenApiTypesense.AnalyticsRuleCreate do
 
   def __fields__(:t) do
     [
-      collection: {:string, :generic},
-      event_type: {:string, :generic},
-      name: {:string, :generic},
+      collection: :string,
+      event_type: :string,
+      name: :string,
       params: :map,
-      rule_tag: {:string, :generic},
+      rule_tag: :string,
       type: {:enum, ["popular_queries", "nohits_queries", "counter", "log"]}
     ]
   end

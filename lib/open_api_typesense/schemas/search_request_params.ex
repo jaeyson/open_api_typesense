@@ -19,9 +19,9 @@ defmodule OpenApiTypesense.SearchRequestParams do
 
   def __fields__(:t) do
     [
-      collection_name: {:string, :generic},
+      collection_name: :string,
       per_page: :integer,
-      q: {:string, :generic},
+      q: :string,
       voice_query: {OpenApiTypesense.SearchRequestParamsVoiceQuery, :t}
     ]
   end

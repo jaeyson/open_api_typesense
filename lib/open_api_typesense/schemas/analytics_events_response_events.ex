@@ -23,14 +23,14 @@ defmodule OpenApiTypesense.AnalyticsEventsResponseEvents do
 
   def __fields__(:t) do
     [
-      collection: {:string, :generic},
-      doc_id: {:string, :generic},
-      doc_ids: [string: :generic],
-      event_type: {:string, :generic},
-      name: {:string, :generic},
-      query: {:string, :generic},
-      timestamp: :integer,
-      user_id: {:string, :generic}
+      collection: :string,
+      doc_id: :string,
+      doc_ids: [:string],
+      event_type: :string,
+      name: :string,
+      query: :string,
+      timestamp: {:integer, "int64"},
+      user_id: :string
     ]
   end
 end

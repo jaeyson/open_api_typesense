@@ -1,11 +1,7 @@
 defmodule OpenApiTypesense.Stopwords do
-  @moduledoc since: "0.4.0"
-
   @moduledoc """
   Provides API endpoints related to stopwords
   """
-
-  defstruct [:id]
 
   @default_client OpenApiTypesense.Client
 
@@ -16,9 +12,9 @@ defmodule OpenApiTypesense.Stopwords do
 
   Permanently deletes a stopwords set, given it's name.
   """
-  @doc since: "0.4.0"
   @spec delete_stopwords_set(set_id :: String.t(), opts :: keyword) ::
-          {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.Stopwords.delete_stopwords_set_200_json_resp()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_stopwords_set(set_id, opts \\ []) do
     client = opts[:client] || @default_client
 
@@ -41,7 +37,6 @@ defmodule OpenApiTypesense.Stopwords do
 
   Retrieve the details of a stopwords set, given it's name.
   """
-  @doc since: "0.4.0"
   @spec retrieve_stopwords_set(set_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.StopwordsSetRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -67,7 +62,6 @@ defmodule OpenApiTypesense.Stopwords do
 
   Retrieve the details of all stopwords sets
   """
-  @doc since: "0.4.0"
   @spec retrieve_stopwords_sets(opts :: keyword) ::
           {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -91,8 +85,13 @@ defmodule OpenApiTypesense.Stopwords do
   Upserts a stopwords set.
 
   When an analytics rule is created, we give it a name and describe the type, the source collections and the destination collection.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The stopwords set to upsert.
   """
-  @doc since: "0.4.0"
   @spec upsert_stopwords_set(
           set_id :: String.t(),
           body :: OpenApiTypesense.StopwordsSetUpsertSchema.t(),
@@ -122,6 +121,6 @@ defmodule OpenApiTypesense.Stopwords do
   @doc false
   @spec __fields__(atom) :: keyword
   def __fields__(:delete_stopwords_set_200_json_resp) do
-    [id: {:string, :generic}]
+    [id: :string]
   end
 end

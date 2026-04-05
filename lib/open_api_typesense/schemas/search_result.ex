@@ -21,6 +21,7 @@ defmodule OpenApiTypesense.SearchResult do
         }
 
   defstruct [
+    :conversation,
     :facet_counts,
     :found,
     :found_docs,
@@ -29,11 +30,10 @@ defmodule OpenApiTypesense.SearchResult do
     :metadata,
     :out_of,
     :page,
+    :request_params,
     :search_cutoff,
     :search_time_ms,
-    :union_request_params,
-    conversation: %OpenApiTypesense.SearchResultConversation{},
-    request_params: %OpenApiTypesense.SearchRequestParams{}
+    :union_request_params
   ]
 
   defimpl(Poison.Decoder, for: OpenApiTypesense.SearchResult) do

@@ -13,6 +13,6 @@ defmodule OpenApiTypesense.SchemaChangeStatus do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [altered_docs: :integer, collection: {:string, :generic}, validated_docs: :integer]
+    [altered_docs: :integer, collection: :string, validated_docs: :integer]
   end
 end

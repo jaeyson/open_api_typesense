@@ -18,11 +18,6 @@ defmodule OpenApiTypesense.SearchResultConversation do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [
-      answer: {:string, :generic},
-      conversation_history: [:map],
-      conversation_id: {:string, :generic},
-      query: {:string, :generic}
-    ]
+    [answer: :string, conversation_history: [:map], conversation_id: :string, query: :string]
   end
 end

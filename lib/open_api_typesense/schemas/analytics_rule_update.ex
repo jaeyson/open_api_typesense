@@ -17,10 +17,6 @@ defmodule OpenApiTypesense.AnalyticsRuleUpdate do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [
-      name: {:string, :generic},
-      params: {OpenApiTypesense.AnalyticsRuleUpdateParams, :t},
-      rule_tag: {:string, :generic}
-    ]
+    [name: :string, params: {OpenApiTypesense.AnalyticsRuleUpdateParams, :t}, rule_tag: :string]
   end
 end

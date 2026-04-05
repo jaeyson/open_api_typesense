@@ -530,7 +530,6 @@ defmodule JoinTest do
 
     assert {:ok,
             %OpenApiTypesense.MultiSearchResult{
-              conversation: %SearchResultConversation{},
               results: [
                 %{
                   found: 6,

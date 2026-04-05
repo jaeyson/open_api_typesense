@@ -1,6 +1,4 @@
 defmodule OpenApiTypesense.Presets do
-  @moduledoc since: "0.4.0"
-
   @moduledoc """
   Provides API endpoints related to presets
   """
@@ -12,7 +10,6 @@ defmodule OpenApiTypesense.Presets do
 
   Permanently deletes a preset, given it's name.
   """
-  @doc since: "0.4.0"
   @spec delete_preset(preset_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.PresetDeleteSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -38,7 +35,6 @@ defmodule OpenApiTypesense.Presets do
 
   Retrieve the details of all presets
   """
-  @doc since: "0.4.0"
   @spec retrieve_all_presets(opts :: keyword) ::
           {:ok, OpenApiTypesense.PresetsRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -63,7 +59,6 @@ defmodule OpenApiTypesense.Presets do
 
   Retrieve the details of a preset, given it's name.
   """
-  @doc since: "0.4.0"
   @spec retrieve_preset(preset_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.PresetSchema.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_preset(preset_id, opts \\ []) do
@@ -87,8 +82,13 @@ defmodule OpenApiTypesense.Presets do
   Upserts a preset.
 
   Create or update an existing preset.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The stopwords set to upsert.
   """
-  @doc since: "0.4.0"
   @spec upsert_preset(
           preset_id :: String.t(),
           body :: OpenApiTypesense.PresetUpsertSchema.t(),

@@ -1,6 +1,4 @@
 defmodule OpenApiTypesense.Analytics do
-  @moduledoc since: "0.4.0"
-
   @moduledoc """
   Provides API endpoints related to analytics
   """
@@ -11,12 +9,14 @@ defmodule OpenApiTypesense.Analytics do
   Create an analytics event
 
   Submit a single analytics event. The event must correspond to an existing analytics rule by name.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The analytics event to be created
   """
-  @doc since: "0.4.0"
-  @spec create_analytics_event(
-          body :: OpenApiTypesense.AnalyticsEventCreateSchema.t(),
-          opts :: keyword
-        ) ::
+  @spec create_analytics_event(body :: OpenApiTypesense.AnalyticsEvent.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.AnalyticsEventCreateResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_analytics_event(body, opts \\ []) do
@@ -42,8 +42,13 @@ defmodule OpenApiTypesense.Analytics do
   Create analytics rule(s)
 
   Create one or more analytics rules. You can send a single rule object or an array of rule objects.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The analytics rule(s) to be created
   """
-  @doc since: "0.4.0"
   @spec create_analytics_rule(
           body ::
             OpenApiTypesense.AnalyticsRuleCreate.t() | [OpenApiTypesense.AnalyticsRuleCreate.t()],
@@ -88,7 +93,6 @@ defmodule OpenApiTypesense.Analytics do
 
   Permanently deletes an analytics rule, given it's name
   """
-  @doc since: "0.4.0"
   @spec delete_analytics_rule(rule_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.AnalyticsRule.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_analytics_rule(rule_name, opts \\ []) do
@@ -113,7 +117,6 @@ defmodule OpenApiTypesense.Analytics do
 
   Triggers a flush of analytics data to persistent storage.
   """
-  @doc since: "1.1.0"
   @spec flush_analytics(opts :: keyword) ::
           {:ok, OpenApiTypesense.AnalyticsEventCreateResponse.t()} | :error
   def flush_analytics(opts \\ []) do
@@ -141,7 +144,6 @@ defmodule OpenApiTypesense.Analytics do
     * `n`: Number of events to return (max 1000)
 
   """
-  @doc since: "1.1.0"
   @spec get_analytics_events(opts :: keyword) ::
           {:ok, OpenApiTypesense.AnalyticsEventsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -168,7 +170,6 @@ defmodule OpenApiTypesense.Analytics do
 
   Returns sizes of internal analytics buffers and queues.
   """
-  @doc since: "1.1.0"
   @spec get_analytics_status(opts :: keyword) ::
           {:ok, OpenApiTypesense.AnalyticsStatus.t()} | :error
   def get_analytics_status(opts \\ []) do
@@ -189,7 +190,6 @@ defmodule OpenApiTypesense.Analytics do
 
   Retrieve the details of an analytics rule, given it's name
   """
-  @doc since: "0.4.0"
   @spec retrieve_analytics_rule(rule_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.AnalyticsRule.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_analytics_rule(rule_name, opts \\ []) do
@@ -219,7 +219,6 @@ defmodule OpenApiTypesense.Analytics do
     * `rule_tag`: Filter rules by rule_tag
 
   """
-  @doc since: "0.4.0"
   @spec retrieve_analytics_rules(opts :: keyword) ::
           {:ok, [OpenApiTypesense.AnalyticsRule.t()]} | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_analytics_rules(opts \\ []) do
@@ -244,8 +243,13 @@ defmodule OpenApiTypesense.Analytics do
   Upserts an analytics rule
 
   Upserts an analytics rule with the given name.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The Analytics rule to be upserted
   """
-  @doc since: "0.4.0"
   @spec upsert_analytics_rule(
           rule_name :: String.t(),
           body :: OpenApiTypesense.AnalyticsRuleUpdate.t(),

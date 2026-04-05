@@ -36,16 +36,16 @@ defmodule OpenApiTypesense.FieldEmbedModelConfig do
 
   def __fields__(:t) do
     [
-      access_token: {:string, :generic},
-      api_key: {:string, :generic},
-      client_id: {:string, :generic},
-      client_secret: {:string, :generic},
-      indexing_prefix: {:string, :generic},
-      model_name: {:string, :generic},
-      project_id: {:string, :generic},
-      query_prefix: {:string, :generic},
-      refresh_token: {:string, :generic},
-      url: {:string, :generic}
+      access_token: :string,
+      api_key: :string,
+      client_id: :string,
+      client_secret: :string,
+      indexing_prefix: :string,
+      model_name: :string,
+      project_id: :string,
+      query_prefix: :string,
+      refresh_token: :string,
+      url: :string
     ]
   end
 end

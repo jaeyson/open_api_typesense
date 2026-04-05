@@ -1,6 +1,4 @@
 defmodule OpenApiTypesense.Keys do
-  @moduledoc since: "0.4.0"
-
   @moduledoc """
   Provides API endpoints related to keys
   """
@@ -11,8 +9,13 @@ defmodule OpenApiTypesense.Keys do
   Create an API Key
 
   Create an API Key with fine-grain access control. You can restrict access on both a per-collection and per-action level. The generated key is returned only during creation. You want to store this key carefully in a secure place.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The object that describes API key scope
   """
-  @doc since: "0.4.0"
   @spec create_key(body :: OpenApiTypesense.ApiKeySchema.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_key(body, opts \\ []) do
@@ -38,7 +41,6 @@ defmodule OpenApiTypesense.Keys do
   @doc """
   Delete an API key given its ID.
   """
-  @doc since: "0.4.0"
   @spec delete_key(key_id :: integer, opts :: keyword) ::
           {:ok, OpenApiTypesense.ApiKeyDeleteResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -65,7 +67,6 @@ defmodule OpenApiTypesense.Keys do
 
   Retrieve (metadata about) a key. Only the key prefix is returned when you retrieve a key. Due to security reasons, only the create endpoint returns the full API key.
   """
-  @doc since: "0.4.0"
   @spec get_key(key_id :: integer, opts :: keyword) ::
           {:ok, OpenApiTypesense.ApiKey.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_key(key_id, opts \\ []) do
@@ -88,7 +89,6 @@ defmodule OpenApiTypesense.Keys do
   @doc """
   Retrieve (metadata about) all keys.
   """
-  @doc since: "0.4.0"
   @spec get_keys(opts :: keyword) :: {:ok, OpenApiTypesense.ApiKeysResponse.t()} | :error
   def get_keys(opts \\ []) do
     client = opts[:client] || @default_client

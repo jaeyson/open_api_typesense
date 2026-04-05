@@ -1,6 +1,4 @@
 defmodule OpenApiTypesense.Override do
-  @moduledoc since: "0.4.0"
-
   @moduledoc """
   Provides API endpoint related to override
   """
@@ -12,7 +10,6 @@ defmodule OpenApiTypesense.Override do
 
   Retrieve the details of a search override, given its id.
   """
-  @doc since: "0.4.0"
   @spec get_search_override(
           collection_name :: String.t(),
           override_id :: String.t(),

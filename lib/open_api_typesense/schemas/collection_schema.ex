@@ -21,11 +21,11 @@ defmodule OpenApiTypesense.CollectionSchema do
     :metadata,
     :name,
     :synonym_sets,
+    :voice_query_model,
     default_sorting_field: "",
     enable_nested_fields: false,
     symbols_to_index: [],
-    token_separators: [],
-    voice_query_model: %OpenApiTypesense.VoiceQueryModelCollectionConfig{}
+    token_separators: []
   ]
 
   defimpl(Poison.Decoder, for: OpenApiTypesense.CollectionSchema) do
@@ -70,14 +70,14 @@ defmodule OpenApiTypesense.CollectionSchema do
 
   def __fields__(:t) do
     [
-      default_sorting_field: {:string, :generic},
+      default_sorting_field: :string,
       enable_nested_fields: :boolean,
       fields: [{OpenApiTypesense.Field, :t}],
       metadata: :map,
-      name: {:string, :generic},
-      symbols_to_index: [string: :generic],
-      synonym_sets: [string: :generic],
-      token_separators: [string: :generic],
+      name: :string,
+      symbols_to_index: [:string],
+      synonym_sets: [:string],
+      token_separators: [:string],
       voice_query_model: {OpenApiTypesense.VoiceQueryModelCollectionConfig, :t}
     ]
   end

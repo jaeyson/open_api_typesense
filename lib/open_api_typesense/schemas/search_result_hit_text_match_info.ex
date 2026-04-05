@@ -30,11 +30,11 @@ defmodule OpenApiTypesense.SearchResultHitTextMatchInfo do
 
   def __fields__(:t) do
     [
-      best_field_score: {:string, :generic},
+      best_field_score: :string,
       best_field_weight: :integer,
       fields_matched: :integer,
-      num_tokens_dropped: :integer,
-      score: {:string, :generic},
+      num_tokens_dropped: {:integer, "int64"},
+      score: :string,
       tokens_matched: :integer,
       typo_prefix_score: :integer
     ]

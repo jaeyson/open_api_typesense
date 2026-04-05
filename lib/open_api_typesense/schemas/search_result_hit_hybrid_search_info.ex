@@ -13,6 +13,6 @@ defmodule OpenApiTypesense.SearchResultHitHybridSearchInfo do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [rank_fusion_score: :number]
+    [rank_fusion_score: {:number, "float"}]
   end
 end

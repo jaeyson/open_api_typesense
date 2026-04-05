@@ -13,6 +13,6 @@ defmodule OpenApiTypesense.FacetCountsCounts do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [count: :integer, highlighted: {:string, :generic}, parent: :map, value: {:string, :generic}]
+    [count: :integer, highlighted: :string, parent: :map, value: :string]
   end
 end

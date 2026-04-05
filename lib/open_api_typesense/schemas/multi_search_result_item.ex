@@ -24,6 +24,7 @@ defmodule OpenApiTypesense.MultiSearchResultItem do
 
   defstruct [
     :code,
+    :conversation,
     :error,
     :facet_counts,
     :found,
@@ -33,11 +34,10 @@ defmodule OpenApiTypesense.MultiSearchResultItem do
     :metadata,
     :out_of,
     :page,
+    :request_params,
     :search_cutoff,
     :search_time_ms,
-    :union_request_params,
-    conversation: %OpenApiTypesense.SearchResultConversation{},
-    request_params: %OpenApiTypesense.SearchRequestParams{}
+    :union_request_params
   ]
 
   defimpl(Poison.Decoder, for: OpenApiTypesense.MultiSearchResultItem) do
@@ -82,9 +82,9 @@ defmodule OpenApiTypesense.MultiSearchResultItem do
 
   def __fields__(:t) do
     [
-      code: :integer,
+      code: {:integer, "int64"},
       conversation: {OpenApiTypesense.SearchResultConversation, :t},
-      error: {:string, :generic},
+      error: :string,
       facet_counts: [{OpenApiTypesense.FacetCounts, :t}],
       found: :integer,
       found_docs: :integer,

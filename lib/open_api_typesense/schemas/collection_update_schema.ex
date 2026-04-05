@@ -53,6 +53,6 @@ defmodule OpenApiTypesense.CollectionUpdateSchema do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [fields: [{OpenApiTypesense.Field, :t}], metadata: :map, synonym_sets: [string: :generic]]
+    [fields: [{OpenApiTypesense.Field, :t}], metadata: :map, synonym_sets: [:string]]
   end
 end

@@ -1,6 +1,4 @@
 defmodule OpenApiTypesense.NlSearchModels do
-  @moduledoc since: "1.1.0"
-
   @moduledoc """
   Provides API endpoints related to nl search models
   """
@@ -11,8 +9,13 @@ defmodule OpenApiTypesense.NlSearchModels do
   Create a NL search model
 
   Create a new NL search model.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The NL search model to be created
   """
-  @doc since: "1.1.0"
   @spec create_nl_search_model(
           body :: OpenApiTypesense.NLSearchModelCreateSchema.t(),
           opts :: keyword
@@ -44,7 +47,6 @@ defmodule OpenApiTypesense.NlSearchModels do
 
   Delete a specific NL search model by its ID.
   """
-  @doc since: "1.1.0"
   @spec delete_nl_search_model(model_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.NLSearchModelDeleteSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -70,7 +72,6 @@ defmodule OpenApiTypesense.NlSearchModels do
 
   Retrieve all NL search models.
   """
-  @doc since: "1.1.0"
   @spec retrieve_all_nl_search_models(opts :: keyword) ::
           {:ok, [OpenApiTypesense.NLSearchModelSchema.t()]}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -95,7 +96,6 @@ defmodule OpenApiTypesense.NlSearchModels do
 
   Retrieve a specific NL search model by its ID.
   """
-  @doc since: "1.1.0"
   @spec retrieve_nl_search_model(model_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.NLSearchModelSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -120,8 +120,13 @@ defmodule OpenApiTypesense.NlSearchModels do
   Update a NL search model
 
   Update an existing NL search model.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The NL search model fields to update
   """
-  @doc since: "1.1.0"
   @spec update_nl_search_model(
           model_id :: String.t(),
           body :: OpenApiTypesense.NLSearchModelCreateSchema.t(),

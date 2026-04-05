@@ -25,11 +25,11 @@ defmodule OpenApiTypesense.CollectionResponse do
     :name,
     :num_documents,
     :synonym_sets,
+    :voice_query_model,
     default_sorting_field: "",
     enable_nested_fields: false,
     symbols_to_index: [],
-    token_separators: [],
-    voice_query_model: %OpenApiTypesense.VoiceQueryModelCollectionConfig{}
+    token_separators: []
   ]
 
   defimpl(Poison.Decoder, for: OpenApiTypesense.CollectionResponse) do
@@ -74,16 +74,16 @@ defmodule OpenApiTypesense.CollectionResponse do
 
   def __fields__(:t) do
     [
-      created_at: :integer,
-      default_sorting_field: {:string, :generic},
+      created_at: {:integer, "int64"},
+      default_sorting_field: :string,
       enable_nested_fields: :boolean,
       fields: [{OpenApiTypesense.Field, :t}],
       metadata: :map,
-      name: {:string, :generic},
-      num_documents: :integer,
-      symbols_to_index: [string: :generic],
-      synonym_sets: [string: :generic],
-      token_separators: [string: :generic],
+      name: :string,
+      num_documents: {:integer, "int64"},
+      symbols_to_index: [:string],
+      synonym_sets: [:string],
+      token_separators: [:string],
       voice_query_model: {OpenApiTypesense.VoiceQueryModelCollectionConfig, :t}
     ]
   end

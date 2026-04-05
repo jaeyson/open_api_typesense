@@ -42,19 +42,19 @@ defmodule OpenApiTypesense.APIStatsResponse do
 
   def __fields__(:t) do
     [
-      delete_latency_ms: :number,
-      delete_requests_per_second: :number,
-      import_latency_ms: :number,
-      import_requests_per_second: :number,
+      delete_latency_ms: {:number, "double"},
+      delete_requests_per_second: {:number, "double"},
+      import_latency_ms: {:number, "double"},
+      import_requests_per_second: {:number, "double"},
       latency_ms: :map,
-      overloaded_requests_per_second: :number,
-      pending_write_batches: :number,
+      overloaded_requests_per_second: {:number, "double"},
+      pending_write_batches: {:number, "double"},
       requests_per_second: :map,
-      search_latency_ms: :number,
-      search_requests_per_second: :number,
-      total_requests_per_second: :number,
-      write_latency_ms: :number,
-      write_requests_per_second: :number
+      search_latency_ms: {:number, "double"},
+      search_requests_per_second: {:number, "double"},
+      total_requests_per_second: {:number, "double"},
+      write_latency_ms: {:number, "double"},
+      write_requests_per_second: {:number, "double"}
     ]
   end
 end

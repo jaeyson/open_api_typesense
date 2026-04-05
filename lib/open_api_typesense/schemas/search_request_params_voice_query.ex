@@ -13,6 +13,6 @@ defmodule OpenApiTypesense.SearchRequestParamsVoiceQuery do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [transcribed_query: {:string, :generic}]
+    [transcribed_query: :string]
   end
 end
