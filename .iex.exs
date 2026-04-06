@@ -3,13 +3,16 @@ alias OpenApiTypesense.Connection
 
 alias OpenApiTypesense.Analytics
 alias OpenApiTypesense.Collections
+alias OpenApiTypesense.Conversations
 alias OpenApiTypesense.Curation
 alias OpenApiTypesense.Debug
 alias OpenApiTypesense.Documents
 alias OpenApiTypesense.Health
 alias OpenApiTypesense.Keys
+alias OpenApiTypesense.NlSearchModels
 alias OpenApiTypesense.Operations
 alias OpenApiTypesense.Override
 alias OpenApiTypesense.Presets
+alias OpenApiTypesense.Stemming
 alias OpenApiTypesense.Stopwords
 alias OpenApiTypesense.Synonyms

@@ -13,6 +13,6 @@ defmodule OpenApiTypesense.StopwordsSetSchema do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [id: {:string, :generic}, locale: {:string, :generic}, stopwords: [string: :generic]]
+    [id: :string, locale: :string, stopwords: [:string]]
   end
 end

@@ -13,6 +13,6 @@ defmodule OpenApiTypesense.SearchOverrideInclude do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [id: {:string, :generic}, position: :integer]
+    [id: :string, position: :integer]
   end
 end

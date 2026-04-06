@@ -11,6 +11,12 @@ defmodule OpenApiTypesense.Keys do
   Create an API Key
 
   Create an API Key with fine-grain access control. You can restrict access on both a per-collection and per-action level. The generated key is returned only during creation. You want to store this key carefully in a secure place.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The object that describes API key scope
   """
   @doc since: "0.4.0"
   @spec create_key(body :: OpenApiTypesense.ApiKeySchema.t(), opts :: keyword) ::

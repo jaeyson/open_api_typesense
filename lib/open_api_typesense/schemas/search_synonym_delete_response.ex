@@ -13,6 +13,6 @@ defmodule OpenApiTypesense.SearchSynonymDeleteResponse do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [id: {:string, :generic}]
+    [id: :string]
   end
 end

@@ -126,6 +126,9 @@ defmodule OpenApiTypesense.Client do
       {[{"application/octet-stream", {:string, :generic}}], body} when not is_binary(body) ->
         Enum.map_join(body, "\n", &Jason.encode_to_iodata!/1)
 
+      {[{"application/octet-stream", :string}], body} when not is_binary(body) ->
+        Enum.map_join(body, "\n", &Jason.encode_to_iodata!/1)
+
       {[{"application/json", _}], body} when not is_binary(body) ->
         Jason.encode_to_iodata!(body)
 
@@ -135,6 +138,9 @@ defmodule OpenApiTypesense.Client do
   end
 
   defp parse_resp(%Req.Response{status: code, body: body}, %{response: resp}) do
+    # dbg(code)
+    # dbg(body)
+    # dbg(resp)
     {_status, mod} = Enum.find(resp, fn {status, _} -> status === code end)
     parse_body(code, mod, body)
   end
@@ -156,11 +162,23 @@ defmodule OpenApiTypesense.Client do
     {:ok, []}
   end
 
-  defp parse_body(_code, [{mod, _t}], body) when is_binary(body) do
-    {:ok, Poison.decode!(body, as: [mod.__struct__()])}
+  defp parse_body(_code, [{mod, _t}], body) do
+    regex = ~r/\"rules\":\s*(?<rules>\[.*\])/
+
+    case Regex.named_captures(regex, body) do
+      %{"rules" => rules_string} ->
+        {:ok, Poison.decode!(rules_string, as: [mod.__struct__()])}
+
+      nil ->
+        {:ok, Poison.decode!(body, as: [mod.__struct__()])}
+    end
   end
 
   defp parse_body(_code, {:string, :generic}, "") do
+    {:ok, ""}
+  end
+
+  defp parse_body(_code, :string, "") do
     {:ok, ""}
   end
 
@@ -168,11 +186,37 @@ defmodule OpenApiTypesense.Client do
     {:ok, String.split(body, "\n") |> Enum.map(&Jason.decode!/1)}
   end
 
+  defp parse_body(_code, :string, body) do
+    {:ok, String.split(body, "\n") |> Enum.map(&Jason.decode!/1)}
+  end
+
   defp parse_body(_code, :map, body) do
     {:ok, Jason.decode!(body, keys: :atoms)}
   end
 
-  defp parse_body(_code, {mod, _t}, body) do
+  defp parse_body(_code, {:union, [{mod, _t} | _rest]}, body) do
+    case Poison.decode!(body) do
+      list when is_list(list) ->
+        Enum.map(list, fn el ->
+          case Poison.decode(el, as: mod.__struct__()) do
+            {:ok, result} ->
+              {:ok, result}
+
+            _ ->
+              {:ok, el}
+          end
+        end)
+
+      map when is_map(map) ->
+        {:ok, Poison.decode!(body, as: mod.__struct__())}
+    end
+  end
+
+  defp parse_body(_code, {mod, :t}, body) do
     {:ok, Poison.decode!(body, as: mod.__struct__())}
+  end
+
+  defp parse_body(_code, _type, body) do
+    {:ok, Poison.decode!(body)}
   end
 end

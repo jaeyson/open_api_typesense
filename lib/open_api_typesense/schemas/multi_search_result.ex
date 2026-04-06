@@ -9,7 +9,7 @@ defmodule OpenApiTypesense.MultiSearchResult do
           results: [OpenApiTypesense.MultiSearchResultItem.t()]
         }
 
-  defstruct [:results, conversation: %OpenApiTypesense.SearchResultConversation{}]
+  defstruct [:conversation, :results]
 
   defimpl(Poison.Decoder, for: OpenApiTypesense.MultiSearchResult) do
     def decode(value, %{as: struct}) do

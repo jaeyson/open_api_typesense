@@ -20,11 +20,11 @@ defmodule OpenApiTypesense.SearchSynonym do
 
   def __fields__(:t) do
     [
-      id: {:string, :generic},
-      locale: {:string, :generic},
-      root: {:string, :generic},
-      symbols_to_index: [string: :generic],
-      synonyms: [string: :generic]
+      id: :string,
+      locale: :string,
+      root: :string,
+      symbols_to_index: [:string],
+      synonyms: [:string]
     ]
   end
 end

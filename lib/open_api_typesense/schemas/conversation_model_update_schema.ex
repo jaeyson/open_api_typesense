@@ -34,15 +34,15 @@ defmodule OpenApiTypesense.ConversationModelUpdateSchema do
 
   def __fields__(:t) do
     [
-      account_id: {:string, :generic},
-      api_key: {:string, :generic},
-      history_collection: {:string, :generic},
-      id: {:string, :generic},
+      account_id: :string,
+      api_key: :string,
+      history_collection: :string,
+      id: :string,
       max_bytes: :integer,
-      model_name: {:string, :generic},
-      system_prompt: {:string, :generic},
+      model_name: :string,
+      system_prompt: :string,
       ttl: :integer,
-      vllm_url: {:string, :generic}
+      vllm_url: :string
     ]
   end
 end

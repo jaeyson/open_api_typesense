@@ -13,6 +13,6 @@ defmodule OpenApiTypesense.PresetDeleteSchema do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [name: {:string, :generic}]
+    [name: :string]
   end
 end

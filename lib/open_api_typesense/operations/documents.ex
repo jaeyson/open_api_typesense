@@ -58,7 +58,8 @@ defmodule OpenApiTypesense.Documents do
   """
   @doc since: "0.4.0"
   @spec delete_documents(collection_name :: String.t(), opts :: keyword) ::
-          {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.Documents.delete_documents_200_json_resp()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_documents(collection_name, opts \\ []) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:batch_size, :filter_by, :ignore_not_found, :truncate])
@@ -133,7 +134,7 @@ defmodule OpenApiTypesense.Documents do
       method: :get,
       query: query,
       response: [
-        {200, {:string, :generic}},
+        {200, :string},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
@@ -251,6 +252,11 @@ defmodule OpenApiTypesense.Documents do
     * `action`: Additional action to perform
     * `dirty_values`: Dealing with Dirty Data
 
+  ## Request Body
+
+  **Content Types**: `application/octet-stream`
+
+  The json array of documents or the JSONL file to import
   """
   @doc since: "0.4.0"
   @spec import_documents(collection_name :: String.t(), body :: String.t(), opts :: keyword) ::
@@ -279,7 +285,7 @@ defmodule OpenApiTypesense.Documents do
       query: query,
       request: [{"application/octet-stream", {:string, :generic}}],
       response: [
-        {200, {:string, :generic}},
+        {200, :string},
         {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
@@ -298,6 +304,11 @@ defmodule OpenApiTypesense.Documents do
     * `action`: Additional action to perform
     * `dirty_values`: Dealing with Dirty Data
 
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The document object to be indexed
   """
   @doc since: "0.4.0"
   @spec index_document(collection_name :: String.t(), body :: map, opts :: keyword) ::
@@ -335,6 +346,9 @@ defmodule OpenApiTypesense.Documents do
     * `limit_multi_searches`: Max number of search requests that can be sent in a multi-search request. Default 50
     * `x-typesense-api-key`: You can embed a separate search API key for each search within a multi_search request. This is useful when you want to apply different embedded filters for each collection in individual scoped API keys.
 
+  ## Request Body
+
+  **Content Types**: `application/json`
   """
   @doc since: "0.4.0"
   @spec multi_search(body :: OpenApiTypesense.MultiSearchSearchesParameter.t(), opts :: keyword) ::
@@ -389,7 +403,6 @@ defmodule OpenApiTypesense.Documents do
       iex> OpenApiTypesense.Collections.create_collection(schema)
       iex> params = [q: "duplex", query_by: "house_type"]
       ...> OpenApiTypesense.Documents.search_collection("houses", params)
-
   """
   @doc since: "0.4.0"
   @spec search_collection(collection_name :: String.t(), opts :: keyword) ::
@@ -423,6 +436,11 @@ defmodule OpenApiTypesense.Documents do
 
     * `dirty_values`: Dealing with Dirty Data
 
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The document object with fields to be updated
   """
   @doc since: "0.4.0"
   @spec update_document(
@@ -465,10 +483,16 @@ defmodule OpenApiTypesense.Documents do
     * `filter_by`: Filter results by a particular value(s) or logical expressions. multiple conditions with &&.
     * `action`: Additional action to perform
 
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The document fields to be updated
   """
   @doc since: "0.4.0"
   @spec update_documents(collection_name :: String.t(), body :: map, opts :: keyword) ::
-          {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.Documents.update_documents_200_json_resp()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def update_documents(collection_name, body, opts \\ []) do
     client = opts[:client] || @default_client
     query = Keyword.take(opts, [:action, :filter_by])
@@ -495,6 +519,12 @@ defmodule OpenApiTypesense.Documents do
   Create or update an override to promote certain documents over others
 
   Create or update an override to promote certain documents over others. Using overrides, you can include or exclude specific documents for a given query.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The search override object to be created/updated
   """
   @doc since: "0.4.0"
   @spec upsert_search_override(

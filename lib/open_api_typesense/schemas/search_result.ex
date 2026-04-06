@@ -11,25 +11,29 @@ defmodule OpenApiTypesense.SearchResult do
           found_docs: integer,
           grouped_hits: [OpenApiTypesense.SearchGroupedHit.t()],
           hits: [OpenApiTypesense.SearchResultHit.t()],
+          metadata: map,
           out_of: integer,
           page: integer,
-          request_params: map,
+          request_params: OpenApiTypesense.SearchRequestParams.t(),
           search_cutoff: boolean,
-          search_time_ms: integer
+          search_time_ms: integer,
+          union_request_params: [OpenApiTypesense.SearchRequestParams.t()]
         }
 
   defstruct [
+    :conversation,
     :facet_counts,
     :found,
     :found_docs,
     :grouped_hits,
     :hits,
+    :metadata,
     :out_of,
     :page,
     :request_params,
     :search_cutoff,
     :search_time_ms,
-    conversation: %OpenApiTypesense.SearchResultConversation{}
+    :union_request_params
   ]
 
   defimpl(Poison.Decoder, for: OpenApiTypesense.SearchResult) do
@@ -80,11 +84,13 @@ defmodule OpenApiTypesense.SearchResult do
       found_docs: :integer,
       grouped_hits: [{OpenApiTypesense.SearchGroupedHit, :t}],
       hits: [{OpenApiTypesense.SearchResultHit, :t}],
+      metadata: :map,
       out_of: :integer,
       page: :integer,
-      request_params: :map,
+      request_params: {OpenApiTypesense.SearchRequestParams, :t},
       search_cutoff: :boolean,
-      search_time_ms: :integer
+      search_time_ms: :integer,
+      union_request_params: [{OpenApiTypesense.SearchRequestParams, :t}]
     ]
   end
 end

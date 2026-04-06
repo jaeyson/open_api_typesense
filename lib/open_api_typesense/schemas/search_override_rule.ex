@@ -18,11 +18,6 @@ defmodule OpenApiTypesense.SearchOverrideRule do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [
-      filter_by: {:string, :generic},
-      match: {:enum, ["exact", "contains"]},
-      query: {:string, :generic},
-      tags: [string: :generic]
-    ]
+    [filter_by: :string, match: {:enum, ["exact", "contains"]}, query: :string, tags: [:string]]
   end
 end

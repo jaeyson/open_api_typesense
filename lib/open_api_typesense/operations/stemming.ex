@@ -1,11 +1,11 @@
 defmodule OpenApiTypesense.Stemming do
   @moduledoc since: "0.7.0"
 
+  defstruct [:dictionaries]
+
   @moduledoc """
   Provides API endpoints related to stemming
   """
-
-  defstruct [:dictionaries]
 
   @default_client OpenApiTypesense.Client
 
@@ -51,7 +51,6 @@ defmodule OpenApiTypesense.Stemming do
       ...>   %{"word" => "geese", "root" => "goose"}
       ...> ]
       iex> OpenApiTypesense.Stemming.import_stemming_dictionary(body, id: "irregular-plurals")
-
   """
   @doc since: "0.7.0"
   @spec import_stemming_dictionary(body :: list(map), opts :: keyword) ::
@@ -68,9 +67,9 @@ defmodule OpenApiTypesense.Stemming do
       method: :post,
       query: query,
       # request: [{"application/json", {:string, :generic}}],
-      request: [{"application/octet-stream", {:string, :generic}}],
+      request: [{"application/octet-stream", :string}],
       response: [
-        {200, {:string, :generic}},
+        {200, :string},
         {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}}
       ],
@@ -87,7 +86,8 @@ defmodule OpenApiTypesense.Stemming do
   """
   @doc since: "0.7.0"
   @spec list_stemming_dictionaries(opts :: keyword) ::
-          {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.Stemming.list_stemming_dictionaries_200_json_resp()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def list_stemming_dictionaries(opts \\ []) do
     client = opts[:client] || @default_client
 
@@ -107,6 +107,6 @@ defmodule OpenApiTypesense.Stemming do
   @doc false
   @spec __fields__(atom) :: keyword
   def __fields__(:list_stemming_dictionaries_200_json_resp) do
-    [dictionaries: [string: :generic]]
+    [dictionaries: [:string]]
   end
 end

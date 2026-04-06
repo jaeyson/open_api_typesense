@@ -16,6 +16,6 @@ defmodule OpenApiTypesense.FieldEmbed do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [from: [string: :generic], model_config: {OpenApiTypesense.FieldEmbedModelConfig, :t}]
+    [from: [:string], model_config: {OpenApiTypesense.FieldEmbedModelConfig, :t}]
   end
 end

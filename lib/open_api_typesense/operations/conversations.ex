@@ -8,9 +8,13 @@ defmodule OpenApiTypesense.Conversations do
   @default_client OpenApiTypesense.Client
 
   @doc """
-  post `/conversations/models`
+  Create a conversation model
 
   Create a Conversation Model
+
+  ## Request Body
+
+  **Content Types**: `application/json`
   """
   @doc since: "0.4.0"
   @spec create_conversation_model(
@@ -30,9 +34,10 @@ defmodule OpenApiTypesense.Conversations do
       method: :post,
       request: [{"application/json", {OpenApiTypesense.ConversationModelCreateSchema, :t}}],
       response: [
-        {200, {OpenApiTypesense.ConversationModelSchema, :t}},
+        {201, {OpenApiTypesense.ConversationModelSchema, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
-        {401, {OpenApiTypesense.ApiResponse, :t}}
+        {401, {OpenApiTypesense.ApiResponse, :t}},
+        {408, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })
@@ -119,6 +124,10 @@ defmodule OpenApiTypesense.Conversations do
   Update a conversation model
 
   Update a conversation model
+
+  ## Request Body
+
+  **Content Types**: `application/json`
   """
   @doc since: "0.4.0"
   @spec update_conversation_model(

@@ -13,6 +13,6 @@ defmodule OpenApiTypesense.ApiResponse do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [message: {:string, :generic}]
+    [message: :string]
   end
 end

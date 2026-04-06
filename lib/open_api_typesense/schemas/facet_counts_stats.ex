@@ -19,6 +19,12 @@ defmodule OpenApiTypesense.FacetCountsStats do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [avg: :number, max: :number, min: :number, sum: :number, total_values: :integer]
+    [
+      avg: {:number, "double"},
+      max: {:number, "double"},
+      min: {:number, "double"},
+      sum: {:number, "double"},
+      total_values: :integer
+    ]
   end
 end

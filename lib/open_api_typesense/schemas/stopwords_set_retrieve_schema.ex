@@ -6,7 +6,7 @@ defmodule OpenApiTypesense.StopwordsSetRetrieveSchema do
 
   @type t :: %__MODULE__{stopwords: OpenApiTypesense.StopwordsSetSchema.t()}
 
-  defstruct stopwords: %OpenApiTypesense.StopwordsSetSchema{}
+  defstruct [:stopwords]
 
   @doc false
   @spec __fields__(atom) :: keyword

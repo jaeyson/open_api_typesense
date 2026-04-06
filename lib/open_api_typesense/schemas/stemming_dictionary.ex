@@ -49,6 +49,6 @@ defmodule OpenApiTypesense.StemmingDictionary do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [id: {:string, :generic}, words: [{OpenApiTypesense.StemmingDictionaryWords, :t}]]
+    [id: :string, words: [{OpenApiTypesense.StemmingDictionaryWords, :t}]]
   end
 end

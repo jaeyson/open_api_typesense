@@ -100,6 +100,12 @@ defmodule OpenApiTypesense.Synonyms do
   Create or update a synonym
 
   Create or update a synonym  to define search terms that should be considered equivalent.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The search synonym object to be created/updated
   """
   @doc since: "0.4.0"
   @spec upsert_search_synonym(

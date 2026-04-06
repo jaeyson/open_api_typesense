@@ -29,9 +29,9 @@ defmodule OpenApiTypesense.SearchOverrideSchema do
     :metadata,
     :remove_matched_tokens,
     :replace_query,
+    :rule,
     :sort_by,
-    :stop_processing,
-    rule: %OpenApiTypesense.SearchOverrideRule{}
+    :stop_processing
   ]
 
   defimpl(Poison.Decoder, for: OpenApiTypesense.SearchOverrideSchema) do
@@ -79,14 +79,14 @@ defmodule OpenApiTypesense.SearchOverrideSchema do
       effective_from_ts: :integer,
       effective_to_ts: :integer,
       excludes: [{OpenApiTypesense.SearchOverrideExclude, :t}],
-      filter_by: {:string, :generic},
+      filter_by: :string,
       filter_curated_hits: :boolean,
       includes: [{OpenApiTypesense.SearchOverrideInclude, :t}],
       metadata: :map,
       remove_matched_tokens: :boolean,
-      replace_query: {:string, :generic},
+      replace_query: :string,
       rule: {OpenApiTypesense.SearchOverrideRule, :t},
-      sort_by: {:string, :generic},
+      sort_by: :string,
       stop_processing: :boolean
     ]
   end

@@ -22,13 +22,13 @@ defmodule OpenApiTypesense.SearchHighlight do
 
   def __fields__(:t) do
     [
-      field: {:string, :generic},
+      field: :string,
       indices: [:integer],
       matched_tokens: [:map],
-      snippet: {:string, :generic},
-      snippets: [string: :generic],
-      value: {:string, :generic},
-      values: [string: :generic]
+      snippet: :string,
+      snippets: [:string],
+      value: :string,
+      values: [:string]
     ]
   end
 end

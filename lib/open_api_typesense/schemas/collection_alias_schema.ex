@@ -13,6 +13,6 @@ defmodule OpenApiTypesense.CollectionAliasSchema do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [collection_name: {:string, :generic}]
+    [collection_name: :string]
   end
 end

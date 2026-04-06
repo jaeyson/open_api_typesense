@@ -87,6 +87,12 @@ defmodule OpenApiTypesense.Presets do
   Upserts a preset.
 
   Create or update an existing preset.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The stopwords set to upsert.
   """
   @doc since: "0.4.0"
   @spec upsert_preset(

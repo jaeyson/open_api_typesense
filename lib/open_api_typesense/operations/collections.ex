@@ -27,7 +27,6 @@ defmodule OpenApiTypesense.Collections do
       ...>   "default_sorting_field" => "houses_id",
       ...> }
       iex> OpenApiTypesense.Collections.create_collection(schema)
-
   """
   @doc since: "0.4.0"
   @spec create_collection(body :: OpenApiTypesense.CollectionSchema.t(), opts :: keyword) ::
@@ -218,6 +217,12 @@ defmodule OpenApiTypesense.Collections do
   Update a collection
 
   Update a collection's schema to modify the fields and their types.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The document object with fields to be updated
   """
   @doc since: "0.4.0"
   @spec update_collection(
@@ -251,6 +256,12 @@ defmodule OpenApiTypesense.Collections do
   Create or update a collection alias
 
   Create or update a collection alias. An alias is a virtual collection name that points to a real collection. If you're familiar with symbolic links on Linux, it's very similar to that. Aliases are useful when you want to reindex your data in the background on a new collection and switch your application to it without any changes to your code.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  Collection alias to be created/updated
   """
   @doc since: "0.4.0"
   @spec upsert_alias(

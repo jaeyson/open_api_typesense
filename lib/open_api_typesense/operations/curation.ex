@@ -71,6 +71,12 @@ defmodule OpenApiTypesense.Curation do
   Create or update an override to promote certain documents over others
 
   Create or update an override to promote certain documents over others. Using overrides, you can include or exclude specific documents for a given query.
+
+  ## Request Body
+
+  **Content Types**: `application/json`
+
+  The search override object to be created/updated
   """
   @doc since: "0.4.0"
   @spec upsert_search_override(
@@ -92,6 +98,7 @@ defmodule OpenApiTypesense.Curation do
       request: [{"application/json", {OpenApiTypesense.SearchOverrideSchema, :t}}],
       response: [
         {200, {OpenApiTypesense.SearchOverride, :t}},
+        {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],

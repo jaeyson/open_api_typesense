@@ -59,20 +59,20 @@ defmodule OpenApiTypesense.Field do
       facet: :boolean,
       index: :boolean,
       infix: :boolean,
-      locale: {:string, :generic},
-      name: {:string, :generic},
+      locale: :string,
+      name: :string,
       num_dim: :integer,
       optional: :boolean,
       range_index: :boolean,
-      reference: {:string, :generic},
+      reference: :string,
       sort: :boolean,
       stem: :boolean,
-      stem_dictionary: {:string, :generic},
+      stem_dictionary: :string,
       store: :boolean,
-      symbols_to_index: [string: :generic],
-      token_separators: [string: :generic],
-      type: {:string, :generic},
-      vec_dist: {:string, :generic}
+      symbols_to_index: [:string],
+      token_separators: [:string],
+      type: :string,
+      vec_dist: :string
     ]
   end
 end

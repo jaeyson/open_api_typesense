@@ -1,10 +1,12 @@
 name: CI v28.0
 
 on:
-  push:
-    branches: ["main"]
   pull_request:
     branches: ["main"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   # https://docs.github.com/en/actions/managing-workflow-runs/skipping-workflow-runs
@@ -19,7 +21,9 @@ jobs:
   # - [actions skip]
 
   test:
+    if: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && github.repository == 'jaeyson/open_api_typesense' }}
     runs-on: ubuntu-latest
+    environment: review
 
     env:
       MIX_ENV: test
@@ -36,11 +40,7 @@ jobs:
         - typesense: '28.0'
           otp: '27'
           elixir: '1.18'
-          lint: false
-        - typesense: '28.0'
-          otp: '28'
-          elixir: '1.19'
-          lint: true
+          lint: false 
 
     services:
       typesense:

@@ -5,10 +5,12 @@ defmodule OpenApiTypesense.SearchResultHit do
   use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          document: OpenApiTypesense.SearchResultHitDocument.t(),
-          geo_distance_meters: OpenApiTypesense.SearchResultHitGeoDistanceMeters.t(),
+          document: map,
+          geo_distance_meters: map,
           highlight: map,
           highlights: [OpenApiTypesense.SearchHighlight.t()],
+          hybrid_search_info: OpenApiTypesense.SearchResultHitHybridSearchInfo.t(),
+          search_index: integer,
           text_match: integer,
           text_match_info: OpenApiTypesense.SearchResultHitTextMatchInfo.t(),
           vector_distance: number
@@ -19,6 +21,8 @@ defmodule OpenApiTypesense.SearchResultHit do
     :geo_distance_meters,
     :highlight,
     :highlights,
+    :hybrid_search_info,
+    :search_index,
     :text_match,
     :text_match_info,
     :vector_distance
@@ -66,13 +70,15 @@ defmodule OpenApiTypesense.SearchResultHit do
 
   def __fields__(:t) do
     [
-      document: {OpenApiTypesense.SearchResultHitDocument, :t},
-      geo_distance_meters: {OpenApiTypesense.SearchResultHitGeoDistanceMeters, :t},
+      document: :map,
+      geo_distance_meters: :map,
       highlight: :map,
       highlights: [{OpenApiTypesense.SearchHighlight, :t}],
-      text_match: :integer,
+      hybrid_search_info: {OpenApiTypesense.SearchResultHitHybridSearchInfo, :t},
+      search_index: :integer,
+      text_match: {:integer, "int64"},
       text_match_info: {OpenApiTypesense.SearchResultHitTextMatchInfo, :t},
-      vector_distance: :number
+      vector_distance: {:number, "float"}
     ]
   end
 end
