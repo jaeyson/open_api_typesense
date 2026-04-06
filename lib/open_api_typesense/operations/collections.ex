@@ -1,4 +1,6 @@
 defmodule OpenApiTypesense.Collections do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoints related to collections
   """
@@ -14,12 +16,19 @@ defmodule OpenApiTypesense.Collections do
 
     * `src_name`: Clone an existing collection's schema (documents are not copied), overrides and synonyms. The actual documents in the collection are not copied, so this is primarily useful for creating new collections from an existing reference template.
 
-  ## Request Body
-
-  **Content Types**: `application/json`
-
-  The collection object to be created
+  ## Example
+      iex> schema = %{
+      ...>   "name" => "houses",
+      ...>   "fields" => [
+      ...>     %{"name" => "house_type", "type" => "string"},
+      ...>     %{"name" => "houses_id", "type" => "int32"},
+      ...>     %{"name" => "description", "type" => "string"},
+      ...>   ],
+      ...>   "default_sorting_field" => "houses_id",
+      ...> }
+      iex> OpenApiTypesense.Collections.create_collection(schema)
   """
+  @doc since: "0.4.0"
   @spec create_collection(body :: OpenApiTypesense.CollectionSchema.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -48,6 +57,7 @@ defmodule OpenApiTypesense.Collections do
   @doc """
   Delete an alias
   """
+  @doc since: "0.4.0"
   @spec delete_alias(alias_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_alias(alias_name, opts \\ []) do
@@ -72,6 +82,7 @@ defmodule OpenApiTypesense.Collections do
 
   Permanently drops a collection. This action cannot be undone. For large collections, this might have an impact on read latencies.
   """
+  @doc since: "0.4.0"
   @spec delete_collection(collection_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -97,6 +108,7 @@ defmodule OpenApiTypesense.Collections do
 
   Find out which collection an alias points to by fetching it
   """
+  @doc since: "0.4.0"
   @spec get_alias(alias_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.CollectionAlias.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_alias(alias_name, opts \\ []) do
@@ -121,6 +133,7 @@ defmodule OpenApiTypesense.Collections do
 
   List all aliases and the corresponding collections that they map to.
   """
+  @doc since: "0.4.0"
   @spec get_aliases(opts :: keyword) ::
           {:ok, OpenApiTypesense.CollectionAliasesResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -145,6 +158,7 @@ defmodule OpenApiTypesense.Collections do
 
   Retrieve the details of a collection, given its name.
   """
+  @doc since: "0.4.0"
   @spec get_collection(collection_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.CollectionResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -177,6 +191,7 @@ defmodule OpenApiTypesense.Collections do
     * `exclude_fields`: Exclude the field definitions from being returned in the response.
 
   """
+  @doc since: "0.4.0"
   @spec get_collections(opts :: keyword) ::
           {:ok, [OpenApiTypesense.CollectionResponse.t()]}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -209,6 +224,7 @@ defmodule OpenApiTypesense.Collections do
 
   The document object with fields to be updated
   """
+  @doc since: "0.4.0"
   @spec update_collection(
           collection_name :: String.t(),
           body :: OpenApiTypesense.CollectionUpdateSchema.t(),
@@ -247,6 +263,7 @@ defmodule OpenApiTypesense.Collections do
 
   Collection alias to be created/updated
   """
+  @doc since: "0.4.0"
   @spec upsert_alias(
           alias_name :: String.t(),
           body :: OpenApiTypesense.CollectionAliasSchema.t(),

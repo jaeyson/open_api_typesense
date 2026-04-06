@@ -1,7 +1,11 @@
 defmodule OpenApiTypesense.Stopwords do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoints related to stopwords
   """
+
+  defstruct [:id]
 
   @default_client OpenApiTypesense.Client
 
@@ -12,6 +16,7 @@ defmodule OpenApiTypesense.Stopwords do
 
   Permanently deletes a stopwords set, given it's name.
   """
+  @doc since: "0.4.0"
   @spec delete_stopwords_set(set_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.Stopwords.delete_stopwords_set_200_json_resp()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -37,6 +42,7 @@ defmodule OpenApiTypesense.Stopwords do
 
   Retrieve the details of a stopwords set, given it's name.
   """
+  @doc since: "0.4.0"
   @spec retrieve_stopwords_set(set_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.StopwordsSetRetrieveSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -62,6 +68,7 @@ defmodule OpenApiTypesense.Stopwords do
 
   Retrieve the details of all stopwords sets
   """
+  @doc since: "0.4.0"
   @spec retrieve_stopwords_sets(opts :: keyword) ::
           {:ok, OpenApiTypesense.StopwordsSetsRetrieveAllSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -92,6 +99,7 @@ defmodule OpenApiTypesense.Stopwords do
 
   The stopwords set to upsert.
   """
+  @doc since: "0.4.0"
   @spec upsert_stopwords_set(
           set_id :: String.t(),
           body :: OpenApiTypesense.StopwordsSetUpsertSchema.t(),

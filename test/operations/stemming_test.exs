@@ -66,11 +66,11 @@ defmodule StemmingTest do
 
   @tag ["29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
   test "success: list stemming dictionaries", %{conn: conn, map_conn: map_conn} do
-    assert {:ok, 1} = Stemming.list_stemming_dictionaries()
-    # assert {:ok, %Stemming{dictionaries: []}} = Stemming.list_stemming_dictionaries()
-    # assert {:ok, %Stemming{}} = Stemming.list_stemming_dictionaries([])
-    # assert {:ok, %Stemming{}} = Stemming.list_stemming_dictionaries(conn: conn)
-    # assert {:ok, %Stemming{}} = Stemming.list_stemming_dictionaries(conn: map_conn)
+    dictionaries = %{"dictionaries" => ["irregular-plurals", "example-stemming"]}
+    assert {:ok, ^dictionaries} = Stemming.list_stemming_dictionaries()
+    assert {:ok, ^dictionaries} = Stemming.list_stemming_dictionaries([])
+    assert {:ok, ^dictionaries} = Stemming.list_stemming_dictionaries(conn: conn)
+    assert {:ok, ^dictionaries} = Stemming.list_stemming_dictionaries(conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": false, "27.1": false, "27.0": false, "26.0": false]
@@ -110,7 +110,7 @@ defmodule StemmingTest do
 
   @tag ["29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
   test "field" do
-    assert [dictionaries: [string: :generic]] =
+    assert [dictionaries: [:string]] =
              Stemming.__fields__(:list_stemming_dictionaries_200_json_resp)
   end
 end

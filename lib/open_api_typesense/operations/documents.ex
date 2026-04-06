@@ -1,7 +1,11 @@
 defmodule OpenApiTypesense.Documents do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoints related to documents
   """
+
+  defstruct [:num_deleted, :num_updated]
 
   @default_client OpenApiTypesense.Client
 
@@ -15,6 +19,7 @@ defmodule OpenApiTypesense.Documents do
     * `ignore_not_found`: Ignore the error and treat the deletion as success.
 
   """
+  @doc since: "0.4.0"
   @spec delete_document(collection_name :: String.t(), document_id :: String.t(), opts :: keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_document(collection_name, document_id, opts \\ []) do
@@ -51,6 +56,7 @@ defmodule OpenApiTypesense.Documents do
     * `truncate`: When true, removes all documents from the collection while preserving the collection and its schema.
 
   """
+  @doc since: "0.4.0"
   @spec delete_documents(collection_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.Documents.delete_documents_200_json_resp()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -77,6 +83,7 @@ defmodule OpenApiTypesense.Documents do
   @doc """
   Delete an override associated with a collection
   """
+  @doc since: "0.4.0"
   @spec delete_search_override(
           collection_name :: String.t(),
           override_id :: String.t(),
@@ -113,6 +120,7 @@ defmodule OpenApiTypesense.Documents do
     * `exclude_fields`: List of fields from the document to exclude in the search result
 
   """
+  @doc since: "0.4.0"
   @spec export_documents(collection_name :: String.t(), opts :: keyword) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def export_documents(collection_name, opts \\ []) do
@@ -145,6 +153,7 @@ defmodule OpenApiTypesense.Documents do
     * `exclude_fields`: List of fields that should not be present in the returned document.
 
   """
+  @doc since: "0.4.0"
   @spec get_document(collection_name :: String.t(), document_id :: String.t(), opts :: keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_document(collection_name, document_id, opts \\ []) do
@@ -171,6 +180,7 @@ defmodule OpenApiTypesense.Documents do
 
   Retrieve the details of a search override, given its id.
   """
+  @doc since: "0.4.0"
   @spec get_search_override(
           collection_name :: String.t(),
           override_id :: String.t(),
@@ -203,6 +213,7 @@ defmodule OpenApiTypesense.Documents do
     * `offset`: Skip a certain number of results and start after that.
 
   """
+  @doc since: "0.4.0"
   @spec get_search_overrides(collection_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.SearchOverridesResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -247,6 +258,7 @@ defmodule OpenApiTypesense.Documents do
 
   The json array of documents or the JSONL file to import
   """
+  @doc since: "0.4.0"
   @spec import_documents(collection_name :: String.t(), body :: String.t(), opts :: keyword) ::
           {:ok, String.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def import_documents(collection_name, body, opts \\ []) do
@@ -271,7 +283,7 @@ defmodule OpenApiTypesense.Documents do
       body: body,
       method: :post,
       query: query,
-      request: [{"application/octet-stream", :string}],
+      request: [{"application/octet-stream", {:string, :generic}}],
       response: [
         {200, :string},
         {400, {OpenApiTypesense.ApiResponse, :t}},
@@ -298,6 +310,7 @@ defmodule OpenApiTypesense.Documents do
 
   The document object to be indexed
   """
+  @doc since: "0.4.0"
   @spec index_document(collection_name :: String.t(), body :: map, opts :: keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def index_document(collection_name, body, opts \\ []) do
@@ -337,6 +350,7 @@ defmodule OpenApiTypesense.Documents do
 
   **Content Types**: `application/json`
   """
+  @doc since: "0.4.0"
   @spec multi_search(body :: OpenApiTypesense.MultiSearchSearchesParameter.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.MultiSearchResult.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -368,14 +382,34 @@ defmodule OpenApiTypesense.Documents do
 
   ## Options
 
-    * `searchParameters`
+    * `searchParameters` can be found here:
+    https://typesense.org/docs/latest/api/search.html#search-parameters
 
+  Either one of:
+  - `search_collection(collectionName, params)`
+  - `search_collection(%{api_key: xyz, host: ...}, collectionName, params)`
+  - `search_collection(Connection.new(), collectionName, params)`
+
+  ## Example
+      iex> schema = %{
+      ...>   "name" => "houses",
+      ...>   "fields" => [
+      ...>     %{"name" => "house_type", "type" => "string"},
+      ...>     %{"name" => "houses_id", "type" => "int32"},
+      ...>     %{"name" => "description", "type" => "string"},
+      ...>   ],
+      ...>   "default_sorting_field" => "houses_id",
+      ...> }
+      iex> OpenApiTypesense.Collections.create_collection(schema)
+      iex> params = [q: "duplex", query_by: "house_type"]
+      ...> OpenApiTypesense.Documents.search_collection("houses", params)
   """
+  @doc since: "0.4.0"
   @spec search_collection(collection_name :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.SearchResult.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def search_collection(collection_name, opts \\ []) do
     client = opts[:client] || @default_client
-    query = Keyword.take(opts, [:searchParameters])
+    query = Keyword.drop(opts, [:conn])
 
     client.request(%{
       args: [collection_name: collection_name],
@@ -408,6 +442,7 @@ defmodule OpenApiTypesense.Documents do
 
   The document object with fields to be updated
   """
+  @doc since: "0.4.0"
   @spec update_document(
           collection_name :: String.t(),
           document_id :: String.t(),
@@ -454,6 +489,7 @@ defmodule OpenApiTypesense.Documents do
 
   The document fields to be updated
   """
+  @doc since: "0.4.0"
   @spec update_documents(collection_name :: String.t(), body :: map, opts :: keyword) ::
           {:ok, OpenApiTypesense.Documents.update_documents_200_json_resp()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -490,6 +526,7 @@ defmodule OpenApiTypesense.Documents do
 
   The search override object to be created/updated
   """
+  @doc since: "0.4.0"
   @spec upsert_search_override(
           collection_name :: String.t(),
           override_id :: String.t(),

@@ -1,6 +1,7 @@
 defmodule StopwordsTest do
   use ExUnit.Case, async: true
 
+  alias OpenApiTypesense.ApiResponse
   alias OpenApiTypesense.Connection
   alias OpenApiTypesense.Stopwords
   alias OpenApiTypesense.StopwordsSetSchema
@@ -26,7 +27,7 @@ defmodule StopwordsTest do
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list stopwords sets", %{conn: conn, map_conn: map_conn} do
-    assert {:ok, %StopwordsSetsRetrieveAllSchema{stopwords: stopwords}} =
+    assert {:ok, %StopwordsSetsRetrieveAllSchema{stopwords: _stopwords}} =
              Stopwords.retrieve_stopwords_sets()
 
     assert {:ok, _} = Stopwords.retrieve_stopwords_sets([])
@@ -62,12 +63,17 @@ defmodule StopwordsTest do
 
     assert {:ok, %StopwordsSetSchema{id: ^set_id}} = Stopwords.upsert_stopwords_set(set_id, body)
 
-    assert {:ok, %StopwordsSetRetrieveSchema{stopwords: %StopwordsSetSchema{id: ^set_id}}} =
+    assert {:ok, %StopwordsSetRetrieveSchema{stopwords: %{"id" => ^set_id}}} =
              Stopwords.retrieve_stopwords_set(set_id)
 
-    assert {:ok, _} = Stopwords.retrieve_stopwords_set(set_id, [])
-    assert {:ok, _} = Stopwords.retrieve_stopwords_set(set_id, conn: conn)
-    assert {:ok, _} = Stopwords.retrieve_stopwords_set(set_id, conn: map_conn)
+    assert {:ok, %StopwordsSetRetrieveSchema{stopwords: %{"id" => ^set_id}}} =
+             Stopwords.retrieve_stopwords_set(set_id, [])
+
+    assert {:ok, %StopwordsSetRetrieveSchema{stopwords: %{"id" => ^set_id}}} =
+             Stopwords.retrieve_stopwords_set(set_id, conn: conn)
+
+    assert {:ok, %StopwordsSetRetrieveSchema{stopwords: %{"id" => ^set_id}}} =
+             Stopwords.retrieve_stopwords_set(set_id, conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -81,10 +87,12 @@ defmodule StopwordsTest do
       }
 
     assert {:ok, %StopwordsSetSchema{id: ^set_id}} = Stopwords.upsert_stopwords_set(set_id, body)
-    assert {:ok, %Stopwords{id: ^set_id}} = Stopwords.delete_stopwords_set(set_id)
-    assert {:error, _} = Stopwords.delete_stopwords_set(set_id, [])
-    assert {:error, _} = Stopwords.delete_stopwords_set(set_id, conn: conn)
-    assert {:error, _} = Stopwords.delete_stopwords_set(set_id, conn: map_conn)
+    assert {:ok, %{"id" => "stopword_set_companies"}} = Stopwords.delete_stopwords_set(set_id)
+
+    reason = %ApiResponse{message: "Stopword `stopword_set_companies` not found."}
+    assert {:error, ^reason} = Stopwords.delete_stopwords_set(set_id, [])
+    assert {:error, ^reason} = Stopwords.delete_stopwords_set(set_id, conn: conn)
+    assert {:error, ^reason} = Stopwords.delete_stopwords_set(set_id, conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]

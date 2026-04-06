@@ -1,4 +1,6 @@
 defmodule OpenApiTypesense.Conversations do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoints related to conversations
   """
@@ -14,6 +16,7 @@ defmodule OpenApiTypesense.Conversations do
 
   **Content Types**: `application/json`
   """
+  @doc since: "0.4.0"
   @spec create_conversation_model(
           body :: OpenApiTypesense.ConversationModelCreateSchema.t(),
           opts :: keyword
@@ -44,6 +47,7 @@ defmodule OpenApiTypesense.Conversations do
 
   Delete a conversation model
   """
+  @doc since: "0.4.0"
   @spec delete_conversation_model(model_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -69,6 +73,7 @@ defmodule OpenApiTypesense.Conversations do
 
   Retrieve all conversation models
   """
+  @doc since: "0.4.0"
   @spec retrieve_all_conversation_models(opts :: keyword) ::
           {:ok, [OpenApiTypesense.ConversationModelSchema.t()]}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -93,6 +98,7 @@ defmodule OpenApiTypesense.Conversations do
 
   Retrieve a conversation model
   """
+  @doc since: "0.4.0"
   @spec retrieve_conversation_model(model_id :: String.t(), opts :: keyword) ::
           {:ok, OpenApiTypesense.ConversationModelSchema.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -122,6 +128,7 @@ defmodule OpenApiTypesense.Conversations do
 
   **Content Types**: `application/json`
   """
+  @doc since: "0.4.0"
   @spec update_conversation_model(
           model_id :: String.t(),
           body :: OpenApiTypesense.ConversationModelUpdateSchema.t(),

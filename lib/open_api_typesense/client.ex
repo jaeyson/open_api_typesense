@@ -209,14 +209,11 @@ defmodule OpenApiTypesense.Client do
     end
   end
 
-  defp parse_body(code, {mod, :t}, body) do
+  defp parse_body(_code, {mod, :t}, body) do
     {:ok, Poison.decode!(body, as: mod.__struct__())}
   end
 
-  defp parse_body(code, {mod, t} = type, body) do
-    dbg(code)
-    dbg(type)
-    dbg(body)
+  defp parse_body(_code, _type, body) do
     {:ok, Poison.decode!(body)}
   end
 end

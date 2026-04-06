@@ -1,4 +1,6 @@
 defmodule OpenApiTypesense.Health do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoint related to health
   """
@@ -10,6 +12,7 @@ defmodule OpenApiTypesense.Health do
 
   Checks if Typesense server is ready to accept requests.
   """
+  @doc since: "0.4.0"
   @spec health(opts :: keyword) :: {:ok, OpenApiTypesense.HealthStatus.t()} | :error
   def health(opts \\ []) do
     client = opts[:client] || @default_client

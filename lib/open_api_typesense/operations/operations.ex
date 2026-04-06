@@ -1,4 +1,6 @@
 defmodule OpenApiTypesense.Operations do
+  @moduledoc since: "0.4.0"
+
   @moduledoc """
   Provides API endpoints related to operations
   """
@@ -10,6 +12,7 @@ defmodule OpenApiTypesense.Operations do
 
   Clear the cached responses of search requests that are sent with `use_cache` parameter in the LRU cache.
   """
+  @doc since: "0.4.2"
   @spec clear_cache(opts :: keyword) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def clear_cache(opts \\ []) do
@@ -33,6 +36,7 @@ defmodule OpenApiTypesense.Operations do
 
   Typesense uses RocksDB to store your documents on the disk. If you do frequent writes or updates, you could benefit from running a compaction of the underlying RocksDB database. This could reduce the size of the database and decrease read latency. While the database will not block during this operation, we recommend running it during off-peak hours.
   """
+  @doc since: "0.4.2"
   @spec compact_db(opts :: keyword) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def compact_db(opts \\ []) do
@@ -56,6 +60,7 @@ defmodule OpenApiTypesense.Operations do
 
   Returns the status of any ongoing schema change operations. If no schema changes are in progress, returns an empty response.
   """
+  @doc since: "0.7.0"
   @spec get_schema_changes(opts :: keyword) ::
           {:ok, [OpenApiTypesense.SchemaChangeStatus.t()]}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -81,6 +86,7 @@ defmodule OpenApiTypesense.Operations do
 
   Retrieve the stats about API endpoints.
   """
+  @doc since: "0.4.0"
   @spec retrieve_api_stats(opts :: keyword) ::
           {:ok, OpenApiTypesense.APIStatsResponse.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
@@ -105,6 +111,7 @@ defmodule OpenApiTypesense.Operations do
 
   Retrieve the metrics.
   """
+  @doc since: "0.4.0"
   @spec retrieve_metrics(opts :: keyword) ::
           {:ok, map} | {:error, OpenApiTypesense.ApiResponse.t()}
   def retrieve_metrics(opts \\ []) do
@@ -130,6 +137,7 @@ defmodule OpenApiTypesense.Operations do
     * `snapshot_path`: The directory on the server where the snapshot should be saved.
 
   """
+  @doc since: "0.4.0"
   @spec take_snapshot(opts :: keyword) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def take_snapshot(opts \\ []) do
@@ -157,10 +165,16 @@ defmodule OpenApiTypesense.Operations do
 
   Enable logging of requests that take over a defined threshold of time. Default is `-1` which disables slow request logging. Slow requests are logged to the primary log file, with the prefix SLOW REQUEST.
 
-  ## Request Body
+  ## Required body
 
-  **Content Types**: `application/json`
+    * `log-slow-requests-time-ms`: Defaults to `-1`
+
+                
+  ## Example
+      iex> body = %{"log-slow-requests-time-ms" => 2_000}
+      iex> OpenApiTypesense.Operations.toggle_slow_request_log(body)`
   """
+  @doc since: "1.1.0"
   @spec toggle_slow_request_log(body :: map, opts :: keyword) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def toggle_slow_request_log(body, opts \\ []) do
@@ -187,6 +201,7 @@ defmodule OpenApiTypesense.Operations do
 
   Triggers a follower node to initiate the raft voting process, which triggers leader re-election. The follower node that you run this operation against will become the new leader, once this command succeeds.
   """
+  @doc since: "0.4.0"
   @spec vote(opts :: keyword) ::
           {:ok, OpenApiTypesense.SuccessStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def vote(opts \\ []) do

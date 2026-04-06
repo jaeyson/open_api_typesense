@@ -8,6 +8,7 @@ defmodule AnalyticsTest do
   alias OpenApiTypesense.CollectionResponse
   alias OpenApiTypesense.Connection
   alias OpenApiTypesense.AnalyticsEventCreateResponse
+  alias OpenApiTypesense.AnalyticsEventsResponse
 
   setup_all do
     conn = Connection.new()
@@ -172,6 +173,36 @@ defmodule AnalyticsTest do
     assert {:ok, _} = Analytics.retrieve_analytics_rules(conn: conn)
 
     assert {:ok, _} = Analytics.retrieve_analytics_rules(conn: map_conn)
+  end
+
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": false]
+  test "error: flush analytics", %{conn: conn, map_conn: map_conn} do
+    reason = %ApiResponse{message: "Not Found"}
+
+    assert {:error, ^reason} = Analytics.flush_analytics()
+    assert {:error, ^reason} = Analytics.flush_analytics([])
+    assert {:error, ^reason} = Analytics.flush_analytics(conn: conn)
+    assert {:error, ^reason} = Analytics.flush_analytics(map_conn: map_conn)
+  end
+
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": false]
+  test "success: get analytics events", %{conn: conn, map_conn: map_conn} do
+    events_response = %AnalyticsEventsResponse{events: []}
+
+    assert {:ok, events_response} = Analytics.get_analytics_events()
+    assert {:ok, events_response} = Analytics.get_analytics_events([])
+    assert {:ok, events_response} = Analytics.get_analytics_events(conn: conn)
+    assert {:ok, events_response} = Analytics.get_analytics_events(map_conn: map_conn)
+  end
+
+  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": false]
+  test "error: get analytics status", %{conn: conn, map_conn: map_conn} do
+    reason = %ApiResponse{message: "Not Found"}
+
+    assert {:error, ^reason} = Analytics.get_analytics_status()
+    assert {:error, ^reason} = Analytics.get_analytics_status([])
+    assert {:error, ^reason} = Analytics.get_analytics_status(conn: conn)
+    assert {:error, ^reason} = Analytics.get_analytics_status(map_conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": false]

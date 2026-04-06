@@ -213,15 +213,16 @@ defmodule DocumentsTest do
         "price" => "5.25"
       }
 
-    assert {:ok, %Documents{num_deleted: nil, num_updated: num_updated}} =
+    # assert {:ok, %Documents{num_deleted: nil, num_updated: num_updated}} =
+    assert {:ok, %{"num_updated" => num_updated}} =
              Documents.update_documents(coll_name, update, filter_by: "shoes_id:>=0")
 
     assert num_updated > 0
 
-    assert {:ok, _} =
+    assert {:ok, %{"num_updated" => ^num_updated}} =
              Documents.update_documents(coll_name, update, conn: conn, filter_by: "shoes_id:>=0")
 
-    assert {:ok, _} =
+    assert {:ok, %{"num_updated" => ^num_updated}} =
              Documents.update_documents(coll_name, update,
                conn: map_conn,
                filter_by: "shoes_id:>=0"
@@ -449,12 +450,17 @@ defmodule DocumentsTest do
 
     opts = [filter_by: "shoes_id:>=0", batch_size: 100]
 
-    assert {:ok, %Documents{num_deleted: _, num_updated: nil}} =
-             Documents.delete_documents(coll_name, opts)
+    assert {:ok, %{"num_deleted" => num_deleted}} = Documents.delete_documents(coll_name, opts)
 
-    assert {:ok, _} = Documents.delete_documents(coll_name, opts)
-    assert {:ok, _} = Documents.delete_documents(coll_name, List.flatten([conn: conn], opts))
-    assert {:ok, _} = Documents.delete_documents(coll_name, List.flatten([conn: map_conn], opts))
+    assert num_deleted > 0
+
+    assert {:ok, %{"num_deleted" => 0}} = Documents.delete_documents(coll_name, opts)
+
+    assert {:ok, %{"num_deleted" => 0}} =
+             Documents.delete_documents(coll_name, List.flatten([conn: conn], opts))
+
+    assert {:ok, %{"num_deleted" => 0}} =
+             Documents.delete_documents(coll_name, List.flatten([conn: map_conn], opts))
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]

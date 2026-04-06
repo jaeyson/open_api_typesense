@@ -14,14 +14,14 @@ defmodule DebugTest do
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list stopwords sets", %{conn: conn, map_conn: map_conn} do
-    assert {:ok, %Debug{version: _}} = Debug.debug()
-    assert {:ok, _} = Debug.debug([])
-    assert {:ok, _} = Debug.debug(conn: conn)
-    assert {:ok, _} = Debug.debug(conn: map_conn)
+    assert {:ok, %{"state" => 1, "version" => _}} = Debug.debug()
+    assert {:ok, %{"state" => 1, "version" => _}} = Debug.debug([])
+    assert {:ok, %{"state" => 1, "version" => _}} = Debug.debug(conn: conn)
+    assert {:ok, %{"state" => 1, "version" => _}} = Debug.debug(conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "field" do
-    assert [version: {:string, :generic}] = Debug.__fields__(:debug_200_json_resp)
+    assert [version: :string] = Debug.__fields__(:debug_200_json_resp)
   end
 end
