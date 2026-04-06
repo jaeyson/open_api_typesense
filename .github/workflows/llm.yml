@@ -69,7 +69,7 @@ jobs:
           echo "Typesense healthcheck elapsed: ${elapsed}s"
 
       - name: Checkout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup Elixir/OTP
         uses: erlef/setup-beam@v1
