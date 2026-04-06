@@ -41,9 +41,14 @@ defmodule SynonymsTest do
     assert {:ok, %SearchSynonymsResponse{synonyms: synonyms}} =
              Synonyms.get_search_synonyms(coll_name)
 
-    assert {:ok, _} = Synonyms.get_search_synonyms(coll_name, [])
-    assert {:ok, _} = Synonyms.get_search_synonyms(coll_name, conn: conn)
-    assert {:ok, _} = Synonyms.get_search_synonyms(coll_name, conn: map_conn)
+    assert {:ok, %SearchSynonymsResponse{synonyms: ^synonyms}} =
+             Synonyms.get_search_synonyms(coll_name, [])
+
+    assert {:ok, %SearchSynonymsResponse{synonyms: ^synonyms}} =
+             Synonyms.get_search_synonyms(coll_name, conn: conn)
+
+    assert {:ok, %SearchSynonymsResponse{synonyms: ^synonyms}} =
+             Synonyms.get_search_synonyms(coll_name, conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]

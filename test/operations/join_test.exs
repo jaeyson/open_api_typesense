@@ -5,7 +5,6 @@ defmodule JoinTest do
   alias OpenApiTypesense.Documents
   alias OpenApiTypesense.MultiSearchResult
   alias OpenApiTypesense.SearchResult
-  alias OpenApiTypesense.SearchResultConversation
 
   setup_all do
     author_schema = %{

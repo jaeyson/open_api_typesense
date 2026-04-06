@@ -36,7 +36,8 @@ defmodule OpenApiTypesense.Conversations do
       response: [
         {201, {OpenApiTypesense.ConversationModelSchema, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
-        {401, {OpenApiTypesense.ApiResponse, :t}}
+        {401, {OpenApiTypesense.ApiResponse, :t}},
+        {408, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })

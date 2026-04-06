@@ -99,9 +99,9 @@ defmodule OperationsTest do
   test "success: (v28.0) get schema changes", %{conn: conn, map_conn: map_conn} do
     assert {:ok, schemas} = Operations.get_schema_changes()
 
-    assert {:ok, _} = Operations.get_schema_changes([])
-    assert {:ok, _} = Operations.get_schema_changes(conn: conn)
-    assert {:ok, _} = Operations.get_schema_changes(conn: map_conn)
+    assert {:ok, ^schemas} = Operations.get_schema_changes([])
+    assert {:ok, ^schemas} = Operations.get_schema_changes(conn: conn)
+    assert {:ok, ^schemas} = Operations.get_schema_changes(conn: map_conn)
   end
 
   @tag ["29.0": false, "28.0": false, "27.1": true, "27.0": true, "26.0": true]

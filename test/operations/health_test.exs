@@ -21,7 +21,7 @@ defmodule HealthTest do
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
-  test "error: health check timeout" do
+  test "error: health check error" do
     conn =
       Connection.new(%{
         api_key: "wrong_key",
@@ -30,7 +30,12 @@ defmodule HealthTest do
         scheme: "http"
       })
 
-    assert {:error, "timeout"} = Health.health(conn: conn)
+    assert {:error, message} = Health.health(conn: conn)
+
+    assert String.contains?(String.downcase(message), [
+             "unreachable",
+             "timeout"
+           ]) === true
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]

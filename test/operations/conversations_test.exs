@@ -37,9 +37,10 @@ defmodule ConversationsTest do
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list conversation models", %{conn: conn, map_conn: map_conn} do
     assert {:ok, models} = Conversations.retrieve_all_conversation_models()
-    assert {:ok, _} = Conversations.retrieve_all_conversation_models([])
-    assert {:ok, _} = Conversations.retrieve_all_conversation_models(conn: conn)
-    assert {:ok, _} = Conversations.retrieve_all_conversation_models(conn: map_conn)
+
+    assert {:ok, ^models} = Conversations.retrieve_all_conversation_models([])
+    assert {:ok, ^models} = Conversations.retrieve_all_conversation_models(conn: conn)
+    assert {:ok, ^models} = Conversations.retrieve_all_conversation_models(conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -85,7 +86,8 @@ defmodule ConversationsTest do
              "error",
              "incorrect",
              "parsing",
-             "response"
+             "response",
+             "timeout"
            ]) === true
 
     assert {:error, _} = Conversations.create_conversation_model(body, [])

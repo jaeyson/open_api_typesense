@@ -1279,6 +1279,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+        '408':
+          description: Request timeout
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
       tags:
         - conversations
   /conversations/models/{modelId}:
@@ -1987,6 +1993,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: "Missing API key"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '404':
+          description: Analytics event not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /analytics/flush:
     post:
       tags:

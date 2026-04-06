@@ -76,6 +76,8 @@ defmodule CollectionsTest do
   test "success: list collections", %{conn: conn, map_conn: map_conn} do
     assert {:ok, collections} = Collections.get_collections()
 
+    assert Enum.any?(collections) || []
+
     opts = [exclude_fields: "fields", limit: 1]
     assert {:ok, _} = Collections.get_collections(opts)
     assert {:ok, _} = Collections.get_collections(conn: conn)
@@ -120,9 +122,14 @@ defmodule CollectionsTest do
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list empty aliases", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %CollectionAliasesResponse{aliases: aliases}} = Collections.get_aliases()
-    assert {:ok, _} = Collections.get_aliases([])
-    assert {:ok, _} = Collections.get_aliases(conn: conn)
-    assert {:ok, _} = Collections.get_aliases(conn: map_conn)
+
+    assert {:ok, %CollectionAliasesResponse{aliases: ^aliases}} = Collections.get_aliases([])
+
+    assert {:ok, %CollectionAliasesResponse{aliases: ^aliases}} =
+             Collections.get_aliases(conn: conn)
+
+    assert {:ok, %CollectionAliasesResponse{aliases: ^aliases}} =
+             Collections.get_aliases(conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]

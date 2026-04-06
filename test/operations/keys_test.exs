@@ -49,9 +49,9 @@ defmodule KeysTest do
   test "success: list API keys", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %ApiKeysResponse{keys: keys}} = Keys.get_keys()
 
-    assert {:ok, %ApiKeysResponse{}} = Keys.get_keys([])
-    assert {:ok, %ApiKeysResponse{}} = Keys.get_keys(conn: conn)
-    assert {:ok, %ApiKeysResponse{}} = Keys.get_keys(conn: map_conn)
+    assert {:ok, %ApiKeysResponse{keys: ^keys}} = Keys.get_keys([])
+    assert {:ok, %ApiKeysResponse{keys: ^keys}} = Keys.get_keys(conn: conn)
+    assert {:ok, %ApiKeysResponse{keys: ^keys}} = Keys.get_keys(conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]

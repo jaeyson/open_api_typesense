@@ -168,11 +168,9 @@ defmodule AnalyticsTest do
   test "success: list analytics rules", %{conn: conn, map_conn: map_conn} do
     assert {:ok, rules} = Analytics.retrieve_analytics_rules()
 
-    assert {:ok, _} = Analytics.retrieve_analytics_rules([])
-
-    assert {:ok, _} = Analytics.retrieve_analytics_rules(conn: conn)
-
-    assert {:ok, _} = Analytics.retrieve_analytics_rules(conn: map_conn)
+    assert {:ok, ^rules} = Analytics.retrieve_analytics_rules([])
+    assert {:ok, ^rules} = Analytics.retrieve_analytics_rules(conn: conn)
+    assert {:ok, ^rules} = Analytics.retrieve_analytics_rules(conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": false]
@@ -185,14 +183,24 @@ defmodule AnalyticsTest do
     assert {:error, ^reason} = Analytics.flush_analytics(map_conn: map_conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": false]
-  test "success: get analytics events", %{conn: conn, map_conn: map_conn} do
+  @tag ["29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
+  test "success: (v28.0+) get analytics events", %{conn: conn, map_conn: map_conn} do
     events_response = %AnalyticsEventsResponse{events: []}
 
-    assert {:ok, events_response} = Analytics.get_analytics_events()
-    assert {:ok, events_response} = Analytics.get_analytics_events([])
-    assert {:ok, events_response} = Analytics.get_analytics_events(conn: conn)
-    assert {:ok, events_response} = Analytics.get_analytics_events(map_conn: map_conn)
+    assert {:ok, ^events_response} = Analytics.get_analytics_events()
+    assert {:ok, ^events_response} = Analytics.get_analytics_events([])
+    assert {:ok, ^events_response} = Analytics.get_analytics_events(conn: conn)
+    assert {:ok, ^events_response} = Analytics.get_analytics_events(map_conn: map_conn)
+  end
+
+  @tag ["29.0": false, "28.0": false, "27.1": true, "27.0": true, "26.0": false]
+  test "success: get analytics events", %{conn: conn, map_conn: map_conn} do
+    reason = %ApiResponse{message: "Not Found"}
+
+    assert {:error, ^reason} = Analytics.get_analytics_events()
+    assert {:error, ^reason} = Analytics.get_analytics_events([])
+    assert {:error, ^reason} = Analytics.get_analytics_events(conn: conn)
+    assert {:error, ^reason} = Analytics.get_analytics_events(map_conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": false]

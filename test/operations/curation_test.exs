@@ -89,7 +89,7 @@ defmodule CurationTest do
     conn: conn,
     map_conn: map_conn
   } do
-    assert {:ok, %SearchOverridesResponse{overrides: overrides}} =
+    assert {:ok, %SearchOverridesResponse{overrides: _overrides}} =
              Curation.get_search_overrides(schema_name)
 
     assert {:ok, _} = Curation.get_search_overrides(schema_name, [])
