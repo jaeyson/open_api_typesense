@@ -13,7 +13,7 @@ defmodule NlSearchModelsTest do
       "id" => "gemini-model",
       "model_name" => "google/gemini-2.5-flash",
       "api_key" => "YOUR_GOOGLE_AI_STUDIO_API_KEY",
-      "max_bytes" => 16000,
+      "max_bytes" => 16_000,
       "temperature" => 0.0
     }
 
