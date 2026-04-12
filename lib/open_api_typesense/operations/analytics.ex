@@ -33,6 +33,7 @@ defmodule OpenApiTypesense.Analytics do
       method: :post,
       request: [{"application/json", {OpenApiTypesense.AnalyticsEvent, :t}}],
       response: [
+        {200, {OpenApiTypesense.AnalyticsEventCreateResponse, :t}},
         {201, {OpenApiTypesense.AnalyticsEventCreateResponse, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}}
@@ -58,7 +59,10 @@ defmodule OpenApiTypesense.Analytics do
             OpenApiTypesense.AnalyticsRuleCreate.t() | [OpenApiTypesense.AnalyticsRuleCreate.t()],
           opts :: keyword
         ) ::
-          {:ok, OpenApiTypesense.AnalyticsRule.t() | [map | OpenApiTypesense.AnalyticsRule.t()]}
+          {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
+          | {:ok,
+             OpenApiTypesense.AnalyticsRule.t()
+             | [map | OpenApiTypesense.AnalyticsRule.t()]}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_analytics_rule(body, opts \\ []) do
     client = opts[:client] || @default_client
@@ -78,6 +82,12 @@ defmodule OpenApiTypesense.Analytics do
           ]}}
       ],
       response: [
+        {200,
+         {:union,
+          [
+            {OpenApiTypesense.AnalyticsRule, :t},
+            [union: [:map, {OpenApiTypesense.AnalyticsRule, :t}]]
+          ]}},
         {201,
          {:union,
           [
@@ -99,7 +109,9 @@ defmodule OpenApiTypesense.Analytics do
   """
   @doc since: "0.4.0"
   @spec delete_analytics_rule(rule_name :: String.t(), opts :: keyword) ::
-          {:ok, OpenApiTypesense.AnalyticsRule.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.AnalyticsRuleDeleteResponse.t()}
+          | {:ok, OpenApiTypesense.AnalyticsRule.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_analytics_rule(rule_name, opts \\ []) do
     client = opts[:client] || @default_client
 
@@ -110,6 +122,7 @@ defmodule OpenApiTypesense.Analytics do
       method: :delete,
       response: [
         {200, {OpenApiTypesense.AnalyticsRule, :t}},
+        {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},
         {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
@@ -124,7 +137,8 @@ defmodule OpenApiTypesense.Analytics do
   """
   @doc since: "1.1.0"
   @spec flush_analytics(opts :: keyword) ::
-          {:ok, OpenApiTypesense.AnalyticsEventCreateResponse.t()} | :error
+          {:ok, OpenApiTypesense.AnalyticsEventCreateResponse.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def flush_analytics(opts \\ []) do
     client = opts[:client] || @default_client
 
@@ -185,7 +199,7 @@ defmodule OpenApiTypesense.Analytics do
   """
   @doc since: "1.1.0"
   @spec get_analytics_status(opts :: keyword) ::
-          {:ok, OpenApiTypesense.AnalyticsStatus.t()} | :error
+          {:ok, OpenApiTypesense.AnalyticsStatus.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
   def get_analytics_status(opts \\ []) do
     client = opts[:client] || @default_client
 

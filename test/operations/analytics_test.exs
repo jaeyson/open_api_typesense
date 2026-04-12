@@ -9,6 +9,8 @@ defmodule AnalyticsTest do
   alias OpenApiTypesense.Connection
   alias OpenApiTypesense.AnalyticsEventCreateResponse
   alias OpenApiTypesense.AnalyticsEventsResponse
+  alias OpenApiTypesense.AnalyticsEventCreateResponse
+  alias OpenApiTypesense.AnalyticsStatus
 
   setup_all do
     conn = Connection.new()
@@ -77,6 +79,35 @@ defmodule AnalyticsTest do
     %{conn: conn, map_conn: map_conn}
   end
 
+  @tag ["30.0": true]
+  test "error (v30.0): create analytics rule with non-existent collection", %{
+    conn: conn,
+    map_conn: map_conn
+  } do
+    name = "products_missing_query"
+    collection_name = "non_existent_collection"
+
+    body =
+      %{
+        "name" => name,
+        "collection" => "products",
+        "type" => "popular_queries",
+        "event_type" => "search",
+        "params" => %{
+          "destination_collection" => collection_name,
+          "expand_query" => false,
+          "limit" => 1_000,
+          "capture_search_requests" => true
+        }
+      }
+
+    error = {:error, %ApiResponse{message: "Destination collection does not exist"}}
+    assert ^error = Analytics.create_analytics_rule(body)
+    assert ^error = Analytics.create_analytics_rule(body, [])
+    assert ^error = Analytics.create_analytics_rule(body, conn: conn)
+    assert ^error = Analytics.create_analytics_rule(body, conn: map_conn)
+  end
+
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: create analytics rule with non-existent collection", %{
     conn: conn,
@@ -99,12 +130,39 @@ defmodule AnalyticsTest do
         }
       }
 
-    assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body)
-    assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body, [])
-    assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body, conn: conn)
+    error = {:error, %OpenApiTypesense.ApiResponse{message: "Bad or missing events."}}
+    assert ^error = Analytics.create_analytics_rule(body)
+    assert ^error = Analytics.create_analytics_rule(body, [])
+    assert ^error = Analytics.create_analytics_rule(body, conn: conn)
+    assert ^error = Analytics.create_analytics_rule(body, conn: map_conn)
+  end
 
-    assert {:error, %ApiResponse{message: _}} =
-             Analytics.create_analytics_rule(body, conn: map_conn)
+  @tag ["30.0": true]
+  test "success (v30.0): upsert analytics rule", %{conn: conn, map_conn: map_conn} do
+    name = "product_no_hits"
+
+    body =
+      %{
+        "name" => name,
+        "type" => "nohits_queries",
+        "collection" => "products",
+        "event_type" => "search",
+        "params" => %{
+          "destination_collection" => "product_queries",
+          "expand_query" => false,
+          "limit" => 1_000,
+          "capture_search_requests" => true
+        }
+      }
+
+    assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.upsert_analytics_rule(name, body)
+    assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.upsert_analytics_rule(name, body, [])
+
+    assert {:ok, %AnalyticsRule{name: ^name}} =
+             Analytics.upsert_analytics_rule(name, body, conn: conn)
+
+    assert {:ok, %AnalyticsRule{name: ^name}} =
+             Analytics.upsert_analytics_rule(name, body, conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
@@ -125,11 +183,8 @@ defmodule AnalyticsTest do
         }
       }
 
-    assert {:ok, %AnalyticsRule{name: ^name}} =
-             Analytics.upsert_analytics_rule(name, body)
-
-    assert {:ok, %AnalyticsRule{name: ^name}} =
-             Analytics.upsert_analytics_rule(name, body, [])
+    assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.upsert_analytics_rule(name, body)
+    assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.upsert_analytics_rule(name, body, [])
 
     assert {:ok, %AnalyticsRule{name: ^name}} =
              Analytics.upsert_analytics_rule(name, body, conn: conn)
@@ -164,7 +219,7 @@ defmodule AnalyticsTest do
     assert {:error, %ApiResponse{message: _}} = Analytics.create_analytics_rule(body)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list analytics rules", %{conn: conn, map_conn: map_conn} do
     assert {:ok, rules} = Analytics.retrieve_analytics_rules()
 
@@ -173,44 +228,140 @@ defmodule AnalyticsTest do
     assert {:ok, ^rules} = Analytics.retrieve_analytics_rules(conn: map_conn)
   end
 
+  @tag ["30.0": true]
+  test "success (v30.0): flush analytics", %{conn: conn, map_conn: map_conn} do
+    response = {:ok, %AnalyticsEventCreateResponse{ok: true}}
+
+    assert ^response = Analytics.flush_analytics()
+    assert ^response = Analytics.flush_analytics([])
+    assert ^response = Analytics.flush_analytics(conn: conn)
+    assert ^response = Analytics.flush_analytics(map_conn: map_conn)
+  end
+
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": false]
   test "error: flush analytics", %{conn: conn, map_conn: map_conn} do
-    reason = %ApiResponse{message: "Not Found"}
+    reason = {:error, %ApiResponse{message: "Not Found"}}
 
-    assert {:error, ^reason} = Analytics.flush_analytics()
-    assert {:error, ^reason} = Analytics.flush_analytics([])
-    assert {:error, ^reason} = Analytics.flush_analytics(conn: conn)
-    assert {:error, ^reason} = Analytics.flush_analytics(map_conn: map_conn)
+    assert ^reason = Analytics.flush_analytics()
+    assert ^reason = Analytics.flush_analytics([])
+    assert ^reason = Analytics.flush_analytics(conn: conn)
+    assert ^reason = Analytics.flush_analytics(map_conn: map_conn)
+  end
+
+  @tag ["30.0": true]
+  test "error (v30.0): get analytics events", %{conn: conn, map_conn: map_conn} do
+    reason = {:error, %ApiResponse{message: "Rule not found"}}
+
+    opts = [user_id: "9903", name: "product_popularity", n: 1]
+    assert ^reason = Analytics.get_analytics_events(opts)
+    assert ^reason = Analytics.get_analytics_events(opts ++ [conn: conn])
+    assert ^reason = Analytics.get_analytics_events(opts ++ [map_conn: map_conn])
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
-  test "success: (v28.0+) get analytics events", %{conn: conn, map_conn: map_conn} do
-    events_response = %AnalyticsEventsResponse{events: []}
+  test "success (v28.0) : get analytics events", %{conn: conn, map_conn: map_conn} do
+    events_response = {:ok, %AnalyticsEventsResponse{events: []}}
 
-    assert {:ok, ^events_response} = Analytics.get_analytics_events()
-    assert {:ok, ^events_response} = Analytics.get_analytics_events([])
-    assert {:ok, ^events_response} = Analytics.get_analytics_events(conn: conn)
-    assert {:ok, ^events_response} = Analytics.get_analytics_events(map_conn: map_conn)
+    assert ^events_response = Analytics.get_analytics_events()
+    assert ^events_response = Analytics.get_analytics_events([])
+    assert ^events_response = Analytics.get_analytics_events(conn: conn)
+    assert ^events_response = Analytics.get_analytics_events(map_conn: map_conn)
   end
 
   @tag ["29.0": false, "28.0": false, "27.1": true, "27.0": true, "26.0": false]
-  test "success: get analytics events", %{conn: conn, map_conn: map_conn} do
-    reason = %ApiResponse{message: "Not Found"}
+  test "error: get analytics events", %{conn: conn, map_conn: map_conn} do
+    reason = {:error, %ApiResponse{message: "Not Found"}}
 
-    assert {:error, ^reason} = Analytics.get_analytics_events()
-    assert {:error, ^reason} = Analytics.get_analytics_events([])
-    assert {:error, ^reason} = Analytics.get_analytics_events(conn: conn)
-    assert {:error, ^reason} = Analytics.get_analytics_events(map_conn: map_conn)
+    assert ^reason = Analytics.get_analytics_events()
+    assert ^reason = Analytics.get_analytics_events([])
+    assert ^reason = Analytics.get_analytics_events(conn: conn)
+    assert ^reason = Analytics.get_analytics_events(map_conn: map_conn)
+  end
+
+  @tag ["30.0": true]
+  test "success (v30.0): get analytics status", %{conn: conn, map_conn: map_conn} do
+    status = %AnalyticsStatus{
+      doc_counter_events: 0,
+      doc_log_events: 0,
+      log_prefix_queries: 0,
+      nohits_prefix_queries: 0,
+      popular_prefix_queries: 0,
+      query_counter_events: 0,
+      query_log_events: 0
+    }
+
+    assert {:ok, ^status} = Analytics.get_analytics_status()
+    assert {:ok, ^status} = Analytics.get_analytics_status([])
+    assert {:ok, ^status} = Analytics.get_analytics_status(conn: conn)
+    assert {:ok, ^status} = Analytics.get_analytics_status(map_conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": false]
   test "error: get analytics status", %{conn: conn, map_conn: map_conn} do
-    reason = %ApiResponse{message: "Not Found"}
+    reason = {:error, %ApiResponse{message: "Not Found"}}
 
-    assert {:error, ^reason} = Analytics.get_analytics_status()
-    assert {:error, ^reason} = Analytics.get_analytics_status([])
-    assert {:error, ^reason} = Analytics.get_analytics_status(conn: conn)
-    assert {:error, ^reason} = Analytics.get_analytics_status(map_conn: map_conn)
+    assert ^reason = Analytics.get_analytics_status()
+    assert ^reason = Analytics.get_analytics_status([])
+    assert ^reason = Analytics.get_analytics_status(conn: conn)
+    assert ^reason = Analytics.get_analytics_status(map_conn: map_conn)
+  end
+
+  @tag ["30.0": true]
+  test "success (v30.0): send click events", %{conn: conn, map_conn: map_conn} do
+    name = "products_clicks"
+
+    body =
+      %{
+        "name" => name,
+        "type" => "counter",
+        "collection" => "products",
+        "event_type" => "click",
+        "params" => %{
+          "destination_collection" => "products",
+          "counter_field" => "popularity",
+          "weight" => 1
+        }
+      }
+
+    assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.create_analytics_rule(body)
+    assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.retrieve_analytics_rule(name)
+    assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.retrieve_analytics_rule(name, [])
+
+    assert {:ok, %AnalyticsRule{name: ^name}} =
+             Analytics.retrieve_analytics_rule(name, conn: conn)
+
+    assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.retrieve_analytics_rule(name, [])
+
+    assert {:ok, %AnalyticsRule{name: ^name}} =
+             Analytics.retrieve_analytics_rule(name, conn: map_conn)
+
+    body =
+      %{
+        "name" => name,
+        "event_type" => "click",
+        "data" => %{
+          "doc_id" => "1024",
+          "user_id" => "111112"
+        }
+      }
+
+    # Here's the reason why v26.0 is not tested
+    # Docs v26.0: https://typesense.org/docs/26.0/api/analytics-query-suggestions.html#sending-click-events
+    # Problem: the response JSON body is actually {"ok": true
+    # where it is missing a closing curly bracket "}"
+    response = {:ok, %AnalyticsEventCreateResponse{ok: true}}
+    assert ^response = Analytics.create_analytics_event(body)
+    assert ^response = Analytics.create_analytics_event(body, [])
+    assert ^response = Analytics.create_analytics_event(body, conn: conn)
+    assert ^response = Analytics.create_analytics_event(body, conn: map_conn)
+
+    assert {:ok, %AnalyticsRule{name: ^name}} =
+             Analytics.delete_analytics_rule(name)
+
+    error = {:error, %ApiResponse{message: "Rule not found"}}
+    assert ^error = Analytics.delete_analytics_rule(name, [])
+    assert ^error = Analytics.delete_analytics_rule(name, conn: conn)
+    assert ^error = Analytics.delete_analytics_rule(name, conn: map_conn)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": false]
@@ -244,8 +395,7 @@ defmodule AnalyticsTest do
     assert {:ok, %AnalyticsRule{name: ^name}} =
              Analytics.retrieve_analytics_rule(name, conn: conn)
 
-    assert {:ok, %AnalyticsRule{name: ^name}} =
-             Analytics.retrieve_analytics_rule(name, [])
+    assert {:ok, %AnalyticsRule{name: ^name}} = Analytics.retrieve_analytics_rule(name, [])
 
     assert {:ok, %AnalyticsRule{name: ^name}} =
              Analytics.retrieve_analytics_rule(name, conn: map_conn)
@@ -265,29 +415,18 @@ defmodule AnalyticsTest do
     # Docs v26.0: https://typesense.org/docs/26.0/api/analytics-query-suggestions.html#sending-click-events
     # Problem: the response JSON body is actually {"ok": true
     # where it is missing a closing curly bracket "}"
-    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
-             Analytics.create_analytics_event(body)
-
-    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
-             Analytics.create_analytics_event(body, [])
-
-    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
-             Analytics.create_analytics_event(body, conn: conn)
-
-    assert {:ok, %AnalyticsEventCreateResponse{ok: true}} =
-             Analytics.create_analytics_event(body, conn: map_conn)
+    response = {:ok, %AnalyticsEventCreateResponse{ok: true}}
+    assert ^response = Analytics.create_analytics_event(body)
+    assert ^response = Analytics.create_analytics_event(body, [])
+    assert ^response = Analytics.create_analytics_event(body, conn: conn)
+    assert ^response = Analytics.create_analytics_event(body, conn: map_conn)
 
     assert {:ok, %AnalyticsRule{name: ^name}} =
              Analytics.delete_analytics_rule(name)
 
-    reason = "Rule not found."
-
-    assert {:error, %ApiResponse{message: ^reason}} = Analytics.delete_analytics_rule(name, [])
-
-    assert {:error, %ApiResponse{message: ^reason}} =
-             Analytics.delete_analytics_rule(name, conn: conn)
-
-    assert {:error, %ApiResponse{message: ^reason}} =
-             Analytics.delete_analytics_rule(name, conn: map_conn)
+    error = {:error, %ApiResponse{message: "Rule not found."}}
+    assert ^error = Analytics.delete_analytics_rule(name, [])
+    assert ^error = Analytics.delete_analytics_rule(name, conn: conn)
+    assert ^error = Analytics.delete_analytics_rule(name, conn: map_conn)
   end
 end

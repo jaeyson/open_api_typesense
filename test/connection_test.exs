@@ -11,7 +11,7 @@ defmodule ConnectionTest do
     message: "Forbidden - a valid `x-typesense-api-key` header must be sent."
   }
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "new/0 using the default config to creates a connection struct" do
     assert Connection.new() === %Connection{
              api_key: "xyz",
@@ -25,7 +25,7 @@ defmodule ConnectionTest do
            }
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "new/1 with custom fields creates a connection struct" do
     conn =
       Connection.new(%{
@@ -47,7 +47,7 @@ defmodule ConnectionTest do
            }
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: wrong api key was configured" do
     conn = %{
       host: "localhost",
@@ -59,7 +59,7 @@ defmodule ConnectionTest do
     assert {:error, @forbidden} == Collections.get_collections(conn: conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: overriding config with a wrong API key" do
     conn = %{
       host: "localhost",
@@ -71,34 +71,34 @@ defmodule ConnectionTest do
     assert {:error, @forbidden} = Collections.get_collections(conn: conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: health check, with incorrect port number" do
     conn = %{api_key: "xyz", host: "localhost", port: 8100, scheme: "http"}
 
     assert {:error, "connection refused"} = Health.health(conn: conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: health check, with incorrect host" do
     conn = %{api_key: "xyz", host: "my_test_host", port: 8108, scheme: "http"}
 
     assert {:error, "non-existing domain"} = Health.health(conn: conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "new/1 with Connection struct" do
     conn = Connection.new()
     assert %Connection{} = Connection.new(conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "new/1 with empty map raises ArgumentError" do
     error = assert_raise ArgumentError, fn -> Connection.new(%{}) end
 
     assert error.message === "Missing required fields: [:api_key, :host, :port, :scheme]"
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "new/1 with invalid data type raises ArgumentError" do
     invalid_inputs = [
       nil,
