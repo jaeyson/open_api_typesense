@@ -200,6 +200,19 @@ defmodule SynonymsTest do
 
   @tag ["30.0": true]
   test "success: list all synonym sets", %{conn: conn, map_conn: map_conn} do
+    name = "sample"
+
+    body = %{
+      "items" => [
+        %{
+          "id" => "coat-synonyms",
+          "synonyms" => ["blazer", "coat", "jacket"]
+        }
+      ]
+    }
+
+    assert {:ok, %SynonymSetSchema{name: ^name}} = Synonyms.upsert_synonym_set(name, body)
+
     assert {:ok, synonym_sets} = Synonyms.retrieve_synonym_sets()
     assert Enum.any?(synonym_sets)
     assert {:ok, _} = Synonyms.retrieve_synonym_sets([])
