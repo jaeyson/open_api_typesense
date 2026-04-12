@@ -32,7 +32,7 @@ defmodule StemmingTest do
     %{id: id, conn: conn, map_conn: map_conn}
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
   test "success: create stemming dictionaries", %{conn: conn, map_conn: map_conn} do
     id = "example-stemming"
 
@@ -64,7 +64,7 @@ defmodule StemmingTest do
             ]} = Stemming.import_stemming_dictionary(body, id: id, conn: map_conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
   test "success: list stemming dictionaries", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %{"dictionaries" => _}} = Stemming.list_stemming_dictionaries()
     assert {:ok, %{"dictionaries" => _}} = Stemming.list_stemming_dictionaries([])
@@ -72,8 +72,14 @@ defmodule StemmingTest do
     assert {:ok, %{"dictionaries" => _}} = Stemming.list_stemming_dictionaries(conn: map_conn)
   end
 
-  @tag ["29.0": true, "28.0": false, "27.1": false, "27.0": false, "26.0": false]
+  @tag ["30.0": true, "29.0": true, "28.0": false, "27.1": false, "27.0": false, "26.0": false]
   test "error: (v29.0) non-existent stemming dictionary" do
+    assert {:error, %ApiResponse{message: "Collection not found"}} =
+             Stemming.get_stemming_dictionary("non-existent")
+  end
+
+  @tag ["30.0": true]
+  test "error: (v30.0) non-existent stemming dictionary" do
     assert {:error, %ApiResponse{message: "Collection not found"}} =
              Stemming.get_stemming_dictionary("non-existent")
   end
@@ -84,7 +90,7 @@ defmodule StemmingTest do
              Stemming.get_stemming_dictionary("non-existent")
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
   test "success: get specific stemming dictionary", %{id: id, conn: conn, map_conn: map_conn} do
     body = [
       %{"word" => "mice", "root" => "mouse"},
@@ -107,7 +113,7 @@ defmodule StemmingTest do
              Stemming.get_stemming_dictionary(id, conn: map_conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": false, "27.0": false, "26.0": false]
   test "field" do
     assert [dictionaries: [:string]] =
              Stemming.__fields__(:list_stemming_dictionaries_200_json_resp)

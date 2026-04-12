@@ -34,6 +34,31 @@ defmodule CurationTest do
     %{schema_name: name, conn: conn, map_conn: map_conn}
   end
 
+  @tag ["30.0": true]
+  test "error (v30.0): deprecated function for upsert search override", %{
+    schema_name: schema_name
+  } do
+    override_id = "customize-loca-cola"
+
+    body =
+      %{
+        "rule" => %{
+          "query" => "Loca Cola",
+          "match" => "exact"
+        },
+        "includes" => [
+          %{"id" => "422", "position" => 1},
+          %{"id" => "54", "position" => 2}
+        ],
+        "excludes" => [
+          %{"id" => "287"}
+        ]
+      }
+
+    error = {:error, %ApiResponse{message: "Not Found"}}
+    assert ^error = Curation.upsert_search_override(schema_name, override_id, body)
+  end
+
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: upsert search override", %{
     schema_name: schema_name,
@@ -67,6 +92,16 @@ defmodule CurationTest do
              Curation.upsert_search_override(schema_name, override_id, body, conn: map_conn)
   end
 
+  @tag ["30.0": true]
+  test "error (v30.0): deprecated function for delete search override", %{
+    schema_name: schema_name
+  } do
+    message = "Not Found"
+
+    assert {:error, %ApiResponse{message: ^message}} =
+             Curation.delete_search_override(schema_name, "test")
+  end
+
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: delete search override", %{
     schema_name: schema_name,
@@ -81,6 +116,14 @@ defmodule CurationTest do
     assert {:error, _} = Curation.delete_search_override(schema_name, "test", [])
     assert {:error, _} = Curation.delete_search_override(schema_name, "test", conn: conn)
     assert {:error, _} = Curation.delete_search_override(schema_name, "test", conn: map_conn)
+  end
+
+  @tag ["30.0": true]
+  test "error (v30.0): deprecated function for list collection overrides", %{
+    schema_name: schema_name
+  } do
+    error = {:error, %ApiResponse{message: "Not Found"}}
+    assert ^error = Curation.get_search_overrides(schema_name)
   end
 
   @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]

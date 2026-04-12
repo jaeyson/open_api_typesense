@@ -5,6 +5,7 @@ defmodule OpenApiTypesense.Field do
   use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
+          async_reference: boolean,
           drop: boolean,
           embed: OpenApiTypesense.FieldEmbed.t(),
           facet: boolean,
@@ -27,6 +28,7 @@ defmodule OpenApiTypesense.Field do
         }
 
   defstruct [
+    :async_reference,
     :drop,
     :embed,
     :facet,
@@ -54,6 +56,7 @@ defmodule OpenApiTypesense.Field do
 
   def __fields__(:t) do
     [
+      async_reference: :boolean,
       drop: :boolean,
       embed: {OpenApiTypesense.FieldEmbed, :t},
       facet: :boolean,

@@ -32,7 +32,7 @@ defmodule CollectionsTest do
     %{schema: schema, alias_name: "foo_bar", conn: conn, map_conn: map_conn}
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: clone a collection schema" do
     schema = %{
       "name" => "vehicles",
@@ -56,7 +56,7 @@ defmodule CollectionsTest do
     assert {:ok, _} = Collections.delete_collection(payload["name"])
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: create a collection", %{schema: schema, conn: conn, map_conn: map_conn} do
     name = schema["name"]
 
@@ -72,7 +72,7 @@ defmodule CollectionsTest do
              Collections.get_collections()
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list collections", %{conn: conn, map_conn: map_conn} do
     assert {:ok, collections} = Collections.get_collections()
 
@@ -86,7 +86,7 @@ defmodule CollectionsTest do
     assert {:ok, _} = Collections.get_collections(conn: map_conn, limit: 1)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: update an existing collection", %{conn: conn, map_conn: map_conn} do
     name = "burgers"
 
@@ -119,7 +119,7 @@ defmodule CollectionsTest do
     Collections.delete_collection(name)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: list empty aliases", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %CollectionAliasesResponse{aliases: aliases}} = Collections.get_aliases()
 
@@ -132,22 +132,17 @@ defmodule CollectionsTest do
              Collections.get_aliases(conn: map_conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: delete a missing collection", %{conn: conn, map_conn: map_conn} do
-    assert Collections.delete_collection("non-existing-collection") ==
-             {:error,
-              %ApiResponse{
-                message: "No collection with name `non-existing-collection` found."
-              }}
+    error = {:error, %ApiResponse{message: "No collection with name `xyz` found."}}
 
-    assert {:error, %ApiResponse{message: _}} = Collections.delete_collection("xyz", [])
-    assert {:error, %ApiResponse{message: _}} = Collections.delete_collection("xyz", conn: conn)
-
-    assert {:error, %ApiResponse{message: _}} =
-             Collections.delete_collection("xyz", conn: map_conn)
+    assert ^error = Collections.delete_collection("xyz")
+    assert ^error = Collections.delete_collection("xyz", [])
+    assert ^error = Collections.delete_collection("xyz", conn: conn)
+    assert ^error = Collections.delete_collection("xyz", conn: map_conn)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "success: upsert an alias", %{
     schema: schema,
     alias_name: alias_name,
@@ -183,8 +178,8 @@ defmodule CollectionsTest do
     assert {:error, %ApiResponse{message: _}} = Collections.get_alias("xyz", conn: map_conn)
   end
 
-  @tag ["29.0": true]
-  test "error: get a non-existing alias (> v28.0)", %{conn: conn, map_conn: map_conn} do
+  @tag ["30.0": true, "29.0": true]
+  test "error (v28.0): get a non-existing alias", %{conn: conn, map_conn: map_conn} do
     assert Collections.get_alias("non-existing-alias") ==
              {:error, %ApiResponse{message: "Collection not found"}}
 
@@ -204,8 +199,8 @@ defmodule CollectionsTest do
     assert {:error, %ApiResponse{message: _}} = Collections.get_collection("xyz", conn: map_conn)
   end
 
-  @tag ["29.0": true]
-  test "error: get a non-existing collection (> v28.0)", %{conn: conn, map_conn: map_conn} do
+  @tag ["30.0": true, "29.0": true]
+  test "error (v28.0): get a non-existing collection", %{conn: conn, map_conn: map_conn} do
     assert Collections.get_collection("non-existing-collection") ==
              {:error, %ApiResponse{message: "Collection not found"}}
 

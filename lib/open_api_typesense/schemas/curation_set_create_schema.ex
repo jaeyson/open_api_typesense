@@ -1,19 +1,17 @@
-defmodule OpenApiTypesense.FacetCounts do
+defmodule OpenApiTypesense.CurationSetCreateSchema do
   @moduledoc """
-  Provides struct and type for a FacetCounts
+  Provides struct and type for a CurationSetCreateSchema
   """
   use OpenApiTypesense.Encoder
 
   @type t :: %__MODULE__{
-          counts: [OpenApiTypesense.FacetCountsCounts.t()],
-          field_name: String.t(),
-          sampled: boolean,
-          stats: OpenApiTypesense.FacetCountsStats.t()
+          description: String.t(),
+          items: [OpenApiTypesense.CurationItemCreateSchema.t()]
         }
 
-  defstruct [:counts, :field_name, :sampled, :stats]
+  defstruct [:description, :items]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.FacetCounts) do
+  defimpl(Poison.Decoder, for: OpenApiTypesense.CurationSetCreateSchema) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do
@@ -54,11 +52,6 @@ defmodule OpenApiTypesense.FacetCounts do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [
-      counts: [{OpenApiTypesense.FacetCountsCounts, :t}],
-      field_name: :string,
-      sampled: :boolean,
-      stats: {OpenApiTypesense.FacetCountsStats, :t}
-    ]
+    [description: :string, items: [{OpenApiTypesense.CurationItemCreateSchema, :t}]]
   end
 end

@@ -81,6 +81,10 @@ defmodule OpenApiTypesense.Documents do
   end
 
   @doc """
+  > #### Warning on using Typesense v30.0 and above {: .warning}
+  >
+  > v30.0 and above doesn't use this function `delete_search_override/3`. Try [CurationSets](`OpenApiTypesense.CurationSets`) module. See https://typesense.org/docs/30.0/api/#deprecations-behavior-changes
+
   Delete an override associated with a collection
   """
   @doc since: "0.4.0"
@@ -205,6 +209,10 @@ defmodule OpenApiTypesense.Documents do
   end
 
   @doc """
+  > #### Warning on using Typesense v30.0 and above {: .warning}
+  >
+  > v30.0 and above doesn't use this function `get_search_overrides/2`. Try [CurationSets](`OpenApiTypesense.CurationSets`) module. See https://typesense.org/docs/30.0/api/#deprecations-behavior-changes
+
   List all collection overrides
 
   ## Options
@@ -283,7 +291,7 @@ defmodule OpenApiTypesense.Documents do
       body: body,
       method: :post,
       query: query,
-      request: [{"application/octet-stream", {:string, :generic}}],
+      request: [{"application/octet-stream", :string}],
       response: [
         {200, :string},
         {400, {OpenApiTypesense.ApiResponse, :t}},
@@ -516,6 +524,10 @@ defmodule OpenApiTypesense.Documents do
   end
 
   @doc """
+  > #### Warning on using Typesense v30.0 and above {: .warning}
+  >
+  > v30.0 and above doesn't use this function `upsert_search_override/4`. Try [CurationSets](`OpenApiTypesense.CurationSets`) module. See https://typesense.org/docs/30.0/api/#deprecations-behavior-changes
+
   Create or update an override to promote certain documents over others
 
   Create or update an override to promote certain documents over others. Using overrides, you can include or exclude specific documents for a given query.

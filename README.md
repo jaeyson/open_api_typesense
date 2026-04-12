@@ -8,6 +8,7 @@ Restful client for Typesense with adherence to Open API spec 3 (formerly Swagger
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/965dd3f8866d49c3b3e82edd0f6270cb)](https://app.codacy.com/gh/jaeyson/open_api_typesense/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![codescenene Average Code Health](https://codescene.io/projects/63240/status-badges/average-code-health)](https://codescene.io/projects/63240)
 
+[![CI v30.0](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v30.0.yml/badge.svg)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v30.0.yml)
 [![CI v29.0](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v29.0.yml/badge.svg)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v29.0.yml)
 [![CI v28.0](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v28.0.yml/badge.svg)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v28.0.yml)
 [![CI v27.1](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v27.1.yml/badge.svg)](https://github.com/jaeyson/open_api_typesense/actions/workflows/ci_v27.1.yml)
@@ -16,9 +17,9 @@ Restful client for Typesense with adherence to Open API spec 3 (formerly Swagger
 
 [![Dependabot](https://img.shields.io/badge/Dependabot-enabled-green)](https://github.com/jaeyson/open_api_typesense/pulls/app%2Fdependabot)
 [![Hex.pm](https://img.shields.io/hexpm/l/open_api_typesense)](https://hexdocs.pm/open_api_typesense/license.html)
-[![Latest Typesense compatible](https://img.shields.io/badge/Latest%20Typesense%20compatible-v28.0-%230F35BC)](https://typesense.org/docs/28.0/api)
+[![Latest Typesense compatible](https://img.shields.io/badge/Latest%20Typesense%20compatible-v30.0-%230F35BC)](https://typesense.org/docs/30.0/api)
 
-**Note**: the only place where ai is used/integrated is in PR reviews. I am NOT interested in adding/integrating ai generated code in my codebase, as this little library can be fit in my mental model. ai has it’s own great use case, it’s just that I wanted to be hands-on with these projects.
+**Note**: the only place where ai is used/integrated is in PR reviews. I am NOT interested in adding/integrating ai generated code in this codebase, as this little library can be fit in my mental model. ai has it’s own great use case, it’s just that I wanted to be hands-on with these projects.
 
 > #### Upgrading to v1 {: .warning}
 >
@@ -47,7 +48,7 @@ by adding `open_api_typesense` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:open_api_typesense, "~> 1.1"}
+    {:open_api_typesense, "~> 1.2"}
 
     # Or from GitHub repository, if you want the latest greatest from main branch
     {:open_api_typesense, git: "https://github.com/jaeyson/open_api_typesense.git"}

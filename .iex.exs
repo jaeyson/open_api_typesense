@@ -5,6 +5,7 @@ alias OpenApiTypesense.Analytics
 alias OpenApiTypesense.Collections
 alias OpenApiTypesense.Conversations
 alias OpenApiTypesense.Curation
+alias OpenApiTypesense.CurationSets
 alias OpenApiTypesense.Debug
 alias OpenApiTypesense.Documents
 alias OpenApiTypesense.Health
