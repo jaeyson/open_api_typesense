@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Chore
 
-* Updated `priv/open_api.yml` for structure changes (v30.0). See https://typesense.org/docs/30.0/api/#deprecations-behavior-changes
+* Updated `priv/open_api.yml` for structure changes (v30.0). See <https://typesense.org/docs/30.0/api/#deprecations-behavior-changes>
 
 ## 1.1.0 (2026.04.06)
 
