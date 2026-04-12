@@ -138,7 +138,7 @@ jobs:
         if: ${{ matrix.lint }}
 
       - name: Create PLTs
-        if: ${{ steps.plt_cache.outputs.cache-hit != 'true' && matrix.lint }}
+        if: ${{ steps.cache_restore.outputs.cache-hit != 'true' && matrix.lint }}
         run: mix dialyzer --plt
 
       - name: Dialyzer
@@ -155,11 +155,11 @@ jobs:
       - name: Save cache
         id: cache_save
         uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
-        if: ${{ steps.plt_cache.outputs.cache-hit != 'true' && matrix.lint }}
+        if: ${{ matrix.lint }}
         with:
           path: |
             deps
             _build
             priv/plts
           key: |
-            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-${{ hashFiles('**/mix.lock') }}
+            ${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-${{ hashFiles('**/mix.lock') }}
