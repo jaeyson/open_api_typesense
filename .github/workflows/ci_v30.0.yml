@@ -95,12 +95,15 @@ jobs:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
 
-      - name: Cache dependencies/builds
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7
+      - name: Restore cache
+        id: cache_restore
+        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
+        if: ${{ matrix.lint }}
         with:
           path: |
             deps
             _build
+            priv/plts
           key: ${{ runner.os }}-typesense-${{ matrix.typesense}}-${{ matrix.otp}}-${{ matrix.elixir}}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-typesense-${{ matrix.typesense}}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-
@@ -134,31 +137,9 @@ jobs:
         run: mix format --check-formatted
         if: ${{ matrix.lint }}
 
-      - name: Restore PLT cache
-        id: plt_cache
-        uses: actions/cache/restore@v4
-        with:
-          key: |
-            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-
-          path: |
-            priv/plts
-        if: ${{ matrix.lint }}
-
       - name: Create PLTs
         if: ${{ steps.plt_cache.outputs.cache-hit != 'true' && matrix.lint }}
         run: mix dialyzer --plt
-
-      - name: Save PLT cache
-        id: plt_cache_save
-        uses: actions/cache/save@v4
-        if: ${{ steps.plt_cache.outputs.cache-hit != 'true' && matrix.lint }}
-        with:
-          key: |
-            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-${{ hashFiles('**/mix.lock') }}
-          path: |
-            priv/plts
 
       - name: Dialyzer
         run: mix dialyzer --format github --format dialyxir
@@ -170,3 +151,15 @@ jobs:
       - name: Post test coverage to Coveralls
         run: mix coveralls.github
         if: ${{ matrix.lint && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
+      - name: Save cache
+        id: cache_save
+        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
+        if: ${{ steps.plt_cache.outputs.cache-hit != 'true' && matrix.lint }}
+        with:
+          path: |
+            deps
+            _build
+            priv/plts
+          key: |
+            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-${{ hashFiles('**/mix.lock') }}
