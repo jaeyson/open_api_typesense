@@ -279,7 +279,7 @@ defmodule AnalyticsTest do
   end
 
   @tag ["30.0": true]
-  test "error (v30.0): get analytics status", %{conn: conn, map_conn: map_conn} do
+  test "success (v30.0): get analytics status", %{conn: conn, map_conn: map_conn} do
     status = %AnalyticsStatus{
       doc_counter_events: 0,
       doc_log_events: 0,

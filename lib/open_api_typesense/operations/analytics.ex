@@ -59,7 +59,10 @@ defmodule OpenApiTypesense.Analytics do
             OpenApiTypesense.AnalyticsRuleCreate.t() | [OpenApiTypesense.AnalyticsRuleCreate.t()],
           opts :: keyword
         ) ::
-          {:ok, OpenApiTypesense.AnalyticsRule.t() | [map | OpenApiTypesense.AnalyticsRule.t()]}
+          {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
+          | {:ok,
+             OpenApiTypesense.AnalyticsRule.t()
+             | [map | OpenApiTypesense.AnalyticsRule.t()]}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def create_analytics_rule(body, opts \\ []) do
     client = opts[:client] || @default_client
@@ -106,7 +109,9 @@ defmodule OpenApiTypesense.Analytics do
   """
   @doc since: "0.4.0"
   @spec delete_analytics_rule(rule_name :: String.t(), opts :: keyword) ::
-          {:ok, OpenApiTypesense.AnalyticsRule.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.AnalyticsRuleDeleteResponse.t()}
+          | {:ok, OpenApiTypesense.AnalyticsRule.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def delete_analytics_rule(rule_name, opts \\ []) do
     client = opts[:client] || @default_client
 
