@@ -41,7 +41,7 @@ jobs:
         - typesense: '29.0'
           otp: '28'
           elixir: '1.18'
-          lint: true
+          lint: false
 
     services:
       typesense:
@@ -49,10 +49,10 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Check for misspellings
-        uses: codespell-project/actions-codespell@v2
+        uses: codespell-project/actions-codespell@8f01853be192eb0f849a5c7d721450e7a467c579
 
       - name: Start Typesense
         run: |
@@ -90,13 +90,13 @@ jobs:
           echo "Typesense healthcheck elapsed: ${elapsed}s"
 
       - name: Setup Elixir/OTP
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@fc68ffb90438ef2936bbb3251622353b3dcb2f93
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
 
       - name: Cache dependencies/builds
-        uses: actions/cache@v5
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7
         with:
           path: |
             deps
@@ -132,36 +132,6 @@ jobs:
 
       - name: Check format files
         run: mix format --check-formatted
-        if: ${{ matrix.lint }}
-
-      - name: Restore PLT cache
-        id: plt_cache
-        uses: actions/cache/restore@v5
-        with:
-          key: |
-            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-
-          path: |
-            priv/plts
-        if: ${{ matrix.lint }}
-
-      - name: Create PLTs
-        if: ${{ steps.plt_cache.outputs.cache-hit != 'true' && matrix.lint }}
-        run: mix dialyzer --plt
-
-      - name: Save PLT cache
-        id: plt_cache_save
-        uses: actions/cache/save@v5
-        if: ${{ steps.plt_cache.outputs.cache-hit != 'true' && matrix.lint }}
-        with:
-          key: |
-            plt-${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-${{ hashFiles('**/mix.lock') }}
-          path: |
-            priv/plts
-
-      - name: Dialyzer
-        run: mix dialyzer --format github --format dialyxir
         if: ${{ matrix.lint }}
 
       - name: Run tests

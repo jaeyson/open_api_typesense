@@ -6,12 +6,13 @@ defmodule OpenApiTypesense.SearchRequestParams do
 
   @type t :: %__MODULE__{
           collection_name: String.t(),
+          first_q: String.t(),
           per_page: integer,
           q: String.t(),
           voice_query: OpenApiTypesense.SearchRequestParamsVoiceQuery.t()
         }
 
-  defstruct [:collection_name, :per_page, :q, :voice_query]
+  defstruct [:collection_name, :first_q, :per_page, :q, :voice_query]
 
   @doc false
   @spec __fields__(atom) :: keyword
@@ -20,6 +21,7 @@ defmodule OpenApiTypesense.SearchRequestParams do
   def __fields__(:t) do
     [
       collection_name: :string,
+      first_q: :string,
       per_page: :integer,
       q: :string,
       voice_query: {OpenApiTypesense.SearchRequestParamsVoiceQuery, :t}

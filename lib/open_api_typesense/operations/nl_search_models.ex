@@ -36,6 +36,7 @@ defmodule OpenApiTypesense.NlSearchModels do
       method: :post,
       request: [{"application/json", {OpenApiTypesense.NLSearchModelCreateSchema, :t}}],
       response: [
+        {200, {OpenApiTypesense.NLSearchModelSchema, :t}},
         {201, {OpenApiTypesense.NLSearchModelSchema, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
         {401, {OpenApiTypesense.ApiResponse, :t}},

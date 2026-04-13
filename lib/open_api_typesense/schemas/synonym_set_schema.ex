@@ -1,19 +1,14 @@
-defmodule OpenApiTypesense.FacetCounts do
+defmodule OpenApiTypesense.SynonymSetSchema do
   @moduledoc """
-  Provides struct and type for a FacetCounts
+  Provides struct and type for a SynonymSetSchema
   """
   use OpenApiTypesense.Encoder
 
-  @type t :: %__MODULE__{
-          counts: [OpenApiTypesense.FacetCountsCounts.t()],
-          field_name: String.t(),
-          sampled: boolean,
-          stats: OpenApiTypesense.FacetCountsStats.t()
-        }
+  @type t :: %__MODULE__{items: [OpenApiTypesense.SynonymItemSchema.t()], name: String.t()}
 
-  defstruct [:counts, :field_name, :sampled, :stats]
+  defstruct [:items, :name]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.FacetCounts) do
+  defimpl(Poison.Decoder, for: OpenApiTypesense.SynonymSetSchema) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do
@@ -54,11 +49,6 @@ defmodule OpenApiTypesense.FacetCounts do
   def __fields__(type \\ :t)
 
   def __fields__(:t) do
-    [
-      counts: [{OpenApiTypesense.FacetCountsCounts, :t}],
-      field_name: :string,
-      sampled: :boolean,
-      stats: {OpenApiTypesense.FacetCountsStats, :t}
-    ]
+    [items: [{OpenApiTypesense.SynonymItemSchema, :t}], name: :string]
   end
 end

@@ -35,11 +35,6 @@ tags:
     externalDocs:
       description: Find out more
       url: https://typesense.org/api/#index-document
-  - name: curation
-    description: Hand-curate search results based on conditional business rules
-    externalDocs:
-      description: Find out more
-      url: https://typesense.org/docs/0.23.0/api/#curation
   - name: analytics
     description: Typesense can aggregate search queries for both analytics purposes and for query suggestions.
     externalDocs:
@@ -77,6 +72,8 @@ tags:
     externalDocs:
       description: Find out more
       url: https://typesense.org/docs/28.0/api/synonyms.html
+  - name: curation_sets
+    description: Manage curation sets
   - name: stemming
     description: Manage stemming dictionaries
     externalDocs:
@@ -557,126 +554,556 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
-  /collections/{collectionName}/overrides:
+
+  /synonym_sets:
     get:
       tags:
-        - documents
-        - curation
-      summary: List all collection overrides
-      operationId: getSearchOverrides
-      parameters:
-        - name: collectionName
-          in: path
-          description: The name of the collection
-          required: true
-          schema:
-            type: string
-        - name: limit
-          in: query
-          description: Limit results in paginating on collection listing.
-          schema:
-            type: string
-        - name: offset
-          in: query
-          description: Skip a certain number of results and start after that.
-          schema:
-            type: string
+        - synonyms
+      summary: List all synonym sets
+      description: Retrieve all synonym sets
+      operationId: retrieveSynonymSets
       responses:
-        '200':
-          description: List of all search overrides
+        "200":
+          description: List of all synonym sets
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SearchOverridesResponse"
-        '401':
+                type: array
+                items:
+                  $ref: "#/components/schemas/SynonymSetSchema"
+        "401":
           description: Missing API key
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
-        '404':
-          description: List of search overrides not found
+        "404":
+          description: Method not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
-  /collections/{collectionName}/overrides/{overrideId}:
+
+  /synonym_sets/{synonymSetName}:
     get:
       tags:
-        - documents
-        - override
-      summary: Retrieve a single search override
-      description: Retrieve the details of a search override, given its id.
-      operationId: getSearchOverride
+        - synonyms
+      summary: Retrieve a synonym set
+      description: Retrieve a specific synonym set by its name
+      operationId: retrieveSynonymSet
       parameters:
-        - name: collectionName
+        - name: synonymSetName
           in: path
-          description: The name of the collection
-          required: true
-          schema:
-            type: string
-        - name: overrideId
-          in: path
-          description: The id of the search override
+          description: The name of the synonym set to retrieve
           required: true
           schema:
             type: string
       responses:
-        '200':
-          description: Search override fetched
+        "200":
+          description: Synonym set fetched
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SearchOverride"
-        '401':
+                $ref: "#/components/schemas/SynonymSetSchema"
+        "401":
           description: Missing API key
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
-        '404':
-          description: Search override not found
+        "404":
+          description: Method not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+    put:
+      tags:
+        - synonyms
+      summary: Create or update a synonym set
+      description: Create or update a synonym set with the given name
+      operationId: upsertSynonymSet
+      parameters:
+        - name: synonymSetName
+          in: path
+          description: The name of the synonym set to create/update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The synonym set to be created/updated
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SynonymSetCreateSchema"
+        required: true
+      responses:
+        "200":
+          description: Synonym set successfully created/updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SynonymSetSchema"
+        "400":
+          description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "401":
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "404":
+          description: Method not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    delete:
+      tags:
+        - synonyms
+      summary: Delete a synonym set
+      description: Delete a specific synonym set by its name
+      operationId: deleteSynonymSet
+      parameters:
+        - name: synonymSetName
+          in: path
+          description: The name of the synonym set to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Synonym set successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SynonymSetDeleteSchema"
+        "401":
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "404":
+          description: Method not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+  /synonym_sets/{synonymSetName}/items:
+    get:
+      tags:
+        - synonyms
+      summary: List items in a synonym set
+      description: Retrieve all synonym items in a set
+      operationId: retrieveSynonymSetItems
+      parameters:
+        - name: synonymSetName
+          in: path
+          description: The name of the synonym set to retrieve items for
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of synonym items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SynonymItemSchema"
+        "401":
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "404":
+          description: Synonym set not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+  /synonym_sets/{synonymSetName}/items/{itemId}:
+    get:
+      tags:
+        - synonyms
+      summary: Retrieve a synonym set item
+      description: Retrieve a specific synonym item by its id
+      operationId: retrieveSynonymSetItem
+      parameters:
+        - name: synonymSetName
+          in: path
+          description: The name of the synonym set
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          in: path
+          description: The id of the synonym item to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Synonym item fetched
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SynonymItemSchema"
+        "401":
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "404":
+          description: Synonym set item not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
     put:
       tags:
-        - documents
-        - curation
-      summary: Create or update an override to promote certain documents over others
-      description:
-        Create or update an override to promote certain documents over others.
-        Using overrides, you can include or exclude specific documents for a given query.
-      operationId: upsertSearchOverride
+        - synonyms
+      summary: Create or update a synonym set item
+      description: Create or update a synonym set item with the given id
+      operationId: upsertSynonymSetItem
       parameters:
-        - name: collectionName
+        - name: synonymSetName
           in: path
-          description: The name of the collection
+          description: The name of the synonym set
           required: true
           schema:
             type: string
-        - name: overrideId
+        - name: itemId
           in: path
-          description: The ID of the search override to create/update
+          description: The id of the synonym item to upsert
           required: true
           schema:
             type: string
       requestBody:
-        description: The search override object to be created/updated
+        description: The synonym item to be created/updated
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SearchOverrideSchema"
+              $ref: "#/components/schemas/SynonymItemUpsertSchema"
         required: true
       responses:
-        '200':
-          description: Created/updated search override
+        "200":
+          description: Synonym item successfully created/updated
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SearchOverride"
-        '400':
+                $ref: "#/components/schemas/SynonymItemSchema"
+        "400":
+          description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "401":
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "404":
+          description: Method not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    delete:
+      tags:
+        - synonyms
+      summary: Delete a synonym set item
+      description: Delete a specific synonym item by its id
+      operationId: deleteSynonymSetItem
+      parameters:
+        - name: synonymSetName
+          in: path
+          description: The name of the synonym set
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          in: path
+          description: The id of the synonym item to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Synonym item successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SynonymItemDeleteSchema"
+        "401":
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "404":
+          description: Synonym item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+  /curation_sets:
+    get:
+      tags:
+        - curation_sets
+      summary: List all curation sets
+      description: Retrieve all curation sets
+      operationId: retrieveCurationSets
+      responses:
+        "200":
+          description: List of all curation sets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CurationSetSchema"
+        "401":
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "404":
+          description: Curation sets not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+  /curation_sets/{curationSetName}:
+    get:
+      tags:
+        - curation_sets
+      summary: Retrieve a curation set
+      description: Retrieve a specific curation set by its name
+      operationId: retrieveCurationSet
+      parameters:
+        - name: curationSetName
+          in: path
+          description: The name of the curation set to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Curation set fetched
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurationSetSchema"
+        "401":
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "404":
+          description: Curation set item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    put:
+      tags:
+        - curation_sets
+      summary: Create or update a curation set
+      description: Create or update a curation set with the given name
+      operationId: upsertCurationSet
+      parameters:
+        - name: curationSetName
+          in: path
+          description: The name of the curation set to create/update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The curation set to be created/updated
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CurationSetCreateSchema"
+        required: true
+      responses:
+        "200":
+          description: Curation set successfully created/updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurationSetSchema"
+        "400":
+          description: Bad request, see error message for details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "401":
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "404":
+          description: Curation set not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    delete:
+      tags:
+        - curation_sets
+      summary: Delete a curation set
+      description: Delete a specific curation set by its name
+      operationId: deleteCurationSet
+      parameters:
+        - name: curationSetName
+          in: path
+          description: The name of the curation set to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Curation set successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurationSetDeleteSchema"
+        "401":
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "404":
+          description: Curation set not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+  /curation_sets/{curationSetName}/items:
+    get:
+      tags:
+        - curation_sets
+      summary: List items in a curation set
+      description: Retrieve all curation items in a set
+      operationId: retrieveCurationSetItems
+      parameters:
+        - name: curationSetName
+          in: path
+          description: The name of the curation set to retrieve items for
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of curation items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CurationItemSchema"
+        "404":
+          description: Curation set not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+  /curation_sets/{curationSetName}/items/{itemId}:
+    get:
+      tags:
+        - curation_sets
+      summary: Retrieve a curation set item
+      description: Retrieve a specific curation item by its id
+      operationId: retrieveCurationSetItem
+      parameters:
+        - name: curationSetName
+          in: path
+          description: The name of the curation set
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          in: path
+          description: The id of the curation item to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Curation item fetched
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurationItemSchema"
+        "401":
+          description: Missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "404":
+          description: Curation item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    put:
+      tags:
+        - curation_sets
+      summary: Create or update a curation set item
+      description: Create or update a curation set item with the given id
+      operationId: upsertCurationSetItem
+      parameters:
+        - name: curationSetName
+          in: path
+          description: The name of the curation set
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          in: path
+          description: The id of the curation item to upsert
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The curation item to be created/updated
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CurationItemCreateSchema"
+        required: true
+      responses:
+        "200":
+          description: Curation item successfully created/updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurationItemSchema"
+        "400":
           description: Bad request, see error message for details
           content:
             application/json:
@@ -689,176 +1116,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
         '404':
-          description: Search override not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-    delete:
-      tags:
-        - documents
-        - curation
-      summary: Delete an override associated with a collection
-      operationId: deleteSearchOverride
-      parameters:
-        - name: collectionName
-          in: path
-          description: The name of the collection
-          required: true
-          schema:
-            type: string
-        - name: overrideId
-          in: path
-          description: The ID of the search override to delete
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The ID of the deleted search override
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SearchOverrideDeleteResponse"
-        '401':
-          description: Missing API key
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-        '404':
-          description: Search override not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-  /collections/{collectionName}/synonyms:
-    get:
-      tags:
-        - synonyms
-      summary: List all collection synonyms
-      operationId: getSearchSynonyms
-      parameters:
-        - name: collectionName
-          in: path
-          description: The name of the collection
-          required: true
-          schema:
-            type: string
-        - name: limit
-          in: query
-          description: Limit results in paginating on collection listing.
-          schema:
-            type: string
-        - name: offset
-          in: query
-          description: Skip a certain number of results and start after that.
-          schema:
-            type: string
-      responses:
-        '200':
-          description: List of all search synonyms
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SearchSynonymsResponse"
-        '401':
-          description: Missing API key
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-        '404':
-          description: Search synonyms was not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-  /collections/{collectionName}/synonyms/{synonymId}:
-    get:
-      tags:
-        - synonyms
-      summary: Retrieve a single search synonym
-      description: Retrieve the details of a search synonym, given its id.
-      operationId: getSearchSynonym
-      parameters:
-        - name: collectionName
-          in: path
-          description: The name of the collection
-          required: true
-          schema:
-            type: string
-        - name: synonymId
-          in: path
-          description: The id of the search synonym
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Search synonym fetched
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SearchSynonym"
-        '401':
-          description: Missing API key
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-        '404':
-          description: Search synonym was not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-    put:
-      tags:
-        - synonyms
-      summary: Create or update a synonym
-      description: Create or update a synonym  to define search terms that should be considered equivalent.
-      operationId: upsertSearchSynonym
-      parameters:
-        - name: collectionName
-          in: path
-          description: The name of the collection
-          required: true
-          schema:
-            type: string
-        - name: synonymId
-          in: path
-          description: The ID of the search synonym to create/update
-          required: true
-          schema:
-            type: string
-      requestBody:
-        description: The search synonym object to be created/updated
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SearchSynonymSchema"
-        required: true
-      responses:
-        '200':
-          description: Created/updated search synonym
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SearchSynonym"
-        '400':
-          description: Bad request, see error message for details
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-        '401':
-          description: Missing API key
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-        '404':
           description: Search synonym was not found
           content:
             application/json:
@@ -866,37 +1123,38 @@ paths:
                 $ref: "#/components/schemas/ApiResponse"
     delete:
       tags:
-        - synonyms
-      summary: Delete a synonym associated with a collection
-      operationId: deleteSearchSynonym
+        - curation_sets
+      summary: Delete a curation set item
+      description: Delete a specific curation item by its id
+      operationId: deleteCurationSetItem
       parameters:
-        - name: collectionName
+        - name: curationSetName
           in: path
-          description: The name of the collection
+          description: The name of the curation set
           required: true
           schema:
             type: string
-        - name: synonymId
+        - name: itemId
           in: path
-          description: The ID of the search synonym to delete
+          description: The id of the curation item to delete
           required: true
           schema:
             type: string
       responses:
-        '200':
-          description: The ID of the deleted search synonym
+        "200":
+          description: Curation item successfully deleted
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SearchSynonymDeleteResponse"
-        '401':
+                $ref: "#/components/schemas/CurationItemDeleteSchema"
+        "401":
           description: Missing API key
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
-        '404':
-          description: Search synonym not found
+        "404":
+          description: Curation item not found
           content:
             application/json:
               schema:
@@ -1854,8 +2112,8 @@ paths:
               example: |
                 {"log-slow-requests-time-ms": 2000}
       responses:
-        '201':
-          description: Updated slow request log
+        '200':
+          description: Toggle Slow Request Log database succeeded.
           content:
             application/json:
               schema:
@@ -1938,6 +2196,12 @@ paths:
               $ref: '#/components/schemas/AnalyticsEvent'
         required: true
       responses:
+        '200':
+          description: Analytics event successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsEventCreateResponse'
         '201':
           description: Analytics event successfully created
           content:
@@ -2076,6 +2340,21 @@ paths:
                     $ref: "#/components/schemas/AnalyticsRuleCreate"
         required: true
       responses:
+        '200':
+          description: Analytics rule(s) successfully created
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/AnalyticsRule"
+                  - type: array
+                    items:
+                      oneOf:
+                        - $ref: "#/components/schemas/AnalyticsRule"
+                        - type: object
+                          properties:
+                            error:
+                              type: string
         '201':
           description: Analytics rule(s) successfully created
           content:
@@ -2085,7 +2364,7 @@ paths:
                   - $ref: "#/components/schemas/AnalyticsRule"
                   - type: array
                     items:
-                      anyOf:
+                      oneOf:
                         - $ref: "#/components/schemas/AnalyticsRule"
                         - type: object
                           properties:
@@ -2232,6 +2511,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AnalyticsRule"
+        '400':
+          description: Bad request, see error message for details.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: "Missing API key"
           content:
@@ -2696,6 +2981,12 @@ paths:
               $ref: '#/components/schemas/NLSearchModelCreateSchema'
         required: true
       responses:
+        '200':
+          description: NL search model successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NLSearchModelSchema'
         '201':
           description: NL search model successfully created
           content:
@@ -2992,6 +3283,10 @@ components:
           type: string
           description: >
             Name of a field in another collection that should be linked to this collection so that it can be joined during query.
+        async_reference:
+          type: boolean
+          description: >
+            Allow documents to be indexed successfully even when the referenced document doesn't exist yet.
         num_dim:
           type: integer
           example: 256
@@ -3150,7 +3445,7 @@ components:
           items:
             $ref: "#/components/schemas/SearchResultHit"
         request_params:
-            $ref: "#/components/schemas/SearchRequestParams"
+          $ref: "#/components/schemas/SearchRequestParams"
         conversation:
           $ref: "#/components/schemas/SearchResultConversation"
         union_request_params:
@@ -3170,6 +3465,8 @@ components:
         - per_page
       properties:
         collection_name:
+          type: string
+        first_q:
           type: string
         q:
           type: string
@@ -3327,136 +3624,6 @@ components:
           items:
             type: object
             x-go-type: "interface{}"
-    SearchOverrideSchema:
-      type: object
-      required:
-        - rule
-      properties:
-        rule:
-          $ref: "#/components/schemas/SearchOverrideRule"
-        includes:
-          type: array
-          description:
-            List of document `id`s that should be included in the search results with their
-            corresponding `position`s.
-          items:
-            $ref: "#/components/schemas/SearchOverrideInclude"
-        excludes:
-          type: array
-          description: List of document `id`s that should be excluded from the search results.
-          items:
-            $ref: "#/components/schemas/SearchOverrideExclude"
-        filter_by:
-          type: string
-          description: >
-            A filter by clause that is applied to any search query that matches the override rule.
-        remove_matched_tokens:
-          type: boolean
-          description: >
-            Indicates whether search query tokens that exist in the override's rule should be removed from the search query.
-        metadata:
-          type: object
-          description: >
-            Return a custom JSON object in the Search API response, when this rule is triggered. This can can be used to display a pre-defined message (eg: a promotion banner) on the front-end when a particular rule is triggered.
-        sort_by:
-          type: string
-          description: >
-            A sort by clause that is applied to any search query that matches the override rule.
-        replace_query:
-          type: string
-          description: >
-            Replaces the current search query with this value, when the search query matches the override rule.
-        filter_curated_hits:
-          type: boolean
-          description: >
-            When set to true, the filter conditions of the query is applied to the curated records as well.
-            Default: false.
-        effective_from_ts:
-          type: integer
-          description: >
-            A Unix timestamp that indicates the date/time from which the override will be active. You can use this to create override rules that start applying from a future point in time.
-        effective_to_ts:
-          type: integer
-          description: >
-            A Unix timestamp that indicates the date/time until which the override will be active. You can use this to create override rules that stop applying after a period of time.
-        stop_processing:
-          type: boolean
-          description: >
-            When set to true, override processing will stop at the first matching rule. When set to false override processing will continue and multiple override actions will be triggered in sequence.
-            Overrides are processed in the lexical sort order of their id field.
-            Default: true.
-    SearchOverride:
-      allOf:
-        - $ref: "#/components/schemas/SearchOverrideSchema"
-        - type: object
-          required:
-            - id
-          properties:
-            id:
-              type: string
-              readOnly: true
-    SearchOverrideDeleteResponse:
-      type: object
-      required:
-        - id
-      properties:
-        id:
-          type: string
-          description: The id of the override that was deleted
-    SearchOverrideRule:
-      type: object
-      properties:
-        tags:
-          type: array
-          description: List of tag values to associate with this override rule.
-          items:
-            type: string
-        query:
-          type: string
-          description: Indicates what search queries should be overridden
-        match:
-          type: string
-          description: >
-            Indicates whether the match on the query term should be `exact` or `contains`.
-            If we want to match all queries that contained
-            the word `apple`, we will use the `contains` match instead.
-          enum:
-            - exact
-            - contains
-        filter_by:
-          type: string
-          description: >
-            Indicates that the override should apply when the filter_by parameter in a search query exactly matches the string specified here (including backticks, spaces, brackets, etc).
-    SearchOverrideInclude:
-      type: object
-      required:
-        - id
-        - position
-      properties:
-        id:
-          type: string
-          description: document id that should be included
-        position:
-          type: integer
-          description: position number where document should be included in the search results
-    SearchOverrideExclude:
-      type: object
-      required:
-        - id
-      properties:
-        id:
-          type: string
-          description: document id that should be excluded from the search results.
-    SearchOverridesResponse:
-      type: object
-      required:
-        - overrides
-      properties:
-        overrides:
-          type: array
-          x-go-type: "[]*SearchOverride"
-          items:
-            $ref: "#/components/schemas/SearchOverride"
     SearchSynonymSchema:
       type: object
       required:
@@ -3628,6 +3795,13 @@ components:
           description: A list of `string` fields that should be queried
             against. Multiple fields are separated with a comma.
           type: string
+
+        validate_field_names:
+          description: >
+            Controls whether Typesense should validate if the fields exist in the schema.
+            When set to false, Typesense will not throw an error if a field is missing.
+            This is useful for programmatic grouping where not all fields may exist.
+          type: boolean
 
         nl_query:
           description: Whether to use natural language processing to parse the query.
@@ -3847,7 +4021,7 @@ components:
         filter_curated_hits:
           type: boolean
           description: >
-            Whether the filter_by condition of the search query should be applicable to curated results (override definitions, pinned hits, hidden hits, etc.). Default: false
+            Whether the filter_by condition of the search query should be applicable to curated results (curation definitions, pinned hits, hidden hits, etc.). Default: false
         enable_synonyms:
           type: boolean
           description: >
@@ -3870,8 +4044,8 @@ components:
             at Position 1 and another record with ID 456 at Position 5,
             you'd specify `123:1,456:5`.
 
-            You could also use the Overrides feature to override search results based
-            on rules. Overrides are applied first, followed by `pinned_hits` and
+            You could also use the Curation feature to override search results based
+            on rules. Curations are applied first, followed by `pinned_hits` and
             finally `hidden_hits`.
           type: string
 
@@ -3881,12 +4055,12 @@ components:
             A list of `record_id`s to hide. Eg: to hide records with IDs 123 and 456,
             you'd specify `123,456`.
 
-            You could also use the Overrides feature to override search results based
-            on rules. Overrides are applied first, followed by `pinned_hits` and
+            You could also use the Curation feature to override search results based
+            on rules. Curations are applied first, followed by `pinned_hits` and
             finally `hidden_hits`.
           type: string
 
-        override_tags:
+        curation_tags:
           description: Comma separated list of tags to trigger the curations rules that match the tags.
           type: string
 
@@ -3919,9 +4093,9 @@ components:
             the name of the existing Preset.
           type: string
 
-        enable_overrides:
+        enable_curations:
           description: >
-            If you have some overrides defined but want to disable all of them during
+            If you have some curation sets defined but want to disable all of them during
             query time, you can do that by setting this parameter to false
           type: boolean
           default: false
@@ -4224,7 +4398,7 @@ components:
         filter_curated_hits:
           type: boolean
           description: >
-            Whether the filter_by condition of the search query should be applicable to curated results (override definitions, pinned hits, hidden hits, etc.). Default: false
+            Whether the filter_by condition of the search query should be applicable to curated results (curation definitions, pinned hits, hidden hits, etc.). Default: false
         enable_synonyms:
           type: boolean
           description: >
@@ -4255,8 +4429,8 @@ components:
             at Position 1 and another record with ID 456 at Position 5,
             you'd specify `123:1,456:5`.
 
-            You could also use the Overrides feature to override search results based
-            on rules. Overrides are applied first, followed by `pinned_hits` and
+            You could also use the Curation feature to override search results based
+            on rules. Curations are applied first, followed by `pinned_hits` and
             finally `hidden_hits`.
           type: string
 
@@ -4266,12 +4440,12 @@ components:
             A list of `record_id`s to hide. Eg: to hide records with IDs 123 and 456,
             you'd specify `123,456`.
 
-            You could also use the Overrides feature to override search results based
-            on rules. Overrides are applied first, followed by `pinned_hits` and
+            You could also use the Curation feature to override search results based
+            on rules. Curations are applied first, followed by `pinned_hits` and
             finally `hidden_hits`.
           type: string
 
-        override_tags:
+        curation_tags:
           description: Comma separated list of tags to trigger the curations rules that match the tags.
           type: string
 
@@ -4297,9 +4471,9 @@ components:
             the name of the existing Preset.
           type: string
 
-        enable_overrides:
+        enable_curations:
           description: >
-            If you have some overrides defined but want to disable all of them during
+            If you have some curation sets defined but want to disable all of them during
             query time, you can do that by setting this parameter to false
           type: boolean
           default: false
@@ -4401,6 +4575,13 @@ components:
           description: >
             The Id of a previous conversation to continue, this tells Typesense to include prior context when communicating with the LLM.
           type: string
+        validate_field_names:
+          description: >
+            Controls whether Typesense should validate if the fields exist in the schema.
+            When set to false, Typesense will not throw an error if a field is missing.
+            This is useful for programmatic grouping where not all fields may exist.
+          type: boolean
+
     MultiSearchSearchesParameter:
       type: object
       required:
@@ -4451,6 +4632,8 @@ components:
                 type: object
         field_name:
           type: string
+        sampled:
+          type: boolean
         stats:
           type: object
           properties:
@@ -4535,8 +4718,7 @@ components:
         name:
           type: string
         type:
-          type: string
-          enum: [popular_queries, nohits_queries, counter, log]
+          $ref: "#/components/schemas/AnalyticsRuleType"
         collection:
           type: string
         event_type:
@@ -4561,6 +4743,9 @@ components:
               type: string
             weight:
               type: integer
+    AnalyticsRuleType:
+      type: string
+      enum: [popular_queries, nohits_queries, counter, log]
     AnalyticsRuleUpdate:
       type: object
       description: Fields allowed to update on an analytics rule
@@ -4601,7 +4786,7 @@ components:
         query_counter_events: { type: integer }
         doc_log_events: { type: integer }
         doc_counter_events: { type: integer }
-    
+
     APIStatsResponse:
       type: object
       properties:
@@ -4734,19 +4919,13 @@ components:
       type: string
       enum: [create, update, upsert, emplace]
     DropTokensMode:
-      type: object 
-      properties:
-        match:
-          type: string
-          description: >
-            Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document.
-            Values: right_to_left (default), left_to_right, both_sides:3
-            A note on both_sides:3 - for queries up to 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results.
-            If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
-          enum:
-            - right_to_left
-            - left_to_right
-            - both_sides:3
+      type: string
+      enum: [right_to_left, left_to_right, both_sides:3]
+      description: >
+        Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document.
+        Values: right_to_left (default), left_to_right, both_sides:3
+        A note on both_sides:3 - for queries up to 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results.
+        If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
     ConversationModelCreateSchema:
       required:
         - model_name
@@ -4930,15 +5109,11 @@ components:
           type: string
           description: ID of the deleted NL search model
 
-    SynonymItemSchema:
+    SynonymItemUpsertSchema:
       type: object
       required:
-        - id
         - synonyms
       properties:
-        id:
-          type: string
-          description: Unique identifier for the synonym item
         synonyms:
           type: array
           description: Array of words that should be considered as synonyms
@@ -4955,6 +5130,17 @@ components:
           description: By default, special characters are dropped from synonyms. Use this attribute to specify which special characters should be indexed as is
           items:
             type: string
+
+    SynonymItemSchema:
+      allOf:
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              description: Unique identifier for the synonym item
+        - $ref: "#/components/schemas/SynonymItemUpsertSchema"
 
     SynonymSetCreateSchema:
       type: object
@@ -4989,9 +5175,6 @@ components:
           items:
             $ref: "#/components/schemas/SynonymSetSchema"
 
-    SynonymSetRetrieveSchema:
-      $ref: "#/components/schemas/SynonymSetCreateSchema"
-
     SynonymSetDeleteSchema:
       type: object
       required:
@@ -5000,6 +5183,174 @@ components:
         name:
           type: string
           description: Name of the deleted synonym set
+
+    SynonymItemDeleteSchema:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: ID of the deleted synonym item
+
+    CurationItemCreateSchema:
+      type: object
+      required:
+        - rule
+      properties:
+        rule:
+          $ref: '#/components/schemas/CurationRule'
+        includes:
+          type: array
+          description:
+            List of document `id`s that should be included in the search results with their
+            corresponding `position`s.
+          items:
+            $ref: '#/components/schemas/CurationInclude'
+        excludes:
+          type: array
+          description: List of document `id`s that should be excluded from the search results.
+          items:
+            $ref: '#/components/schemas/CurationExclude'
+        filter_by:
+          type: string
+          description: >
+            A filter by clause that is applied to any search query that matches the curation rule.
+        remove_matched_tokens:
+          type: boolean
+          description: >
+            Indicates whether search query tokens that exist in the curation's rule should be removed from the search query.
+        metadata:
+          type: object
+          description: >
+            Return a custom JSON object in the Search API response, when this rule is triggered. This can can be used to display a pre-defined message (eg: a promotion banner) on the front-end when a particular rule is triggered.
+        sort_by:
+          type: string
+          description: >
+            A sort by clause that is applied to any search query that matches the curation rule.
+        replace_query:
+          type: string
+          description: >
+            Replaces the current search query with this value, when the search query matches the curation rule.
+        filter_curated_hits:
+          type: boolean
+          description: >
+            When set to true, the filter conditions of the query is applied to the curated records as well.
+            Default: false.
+        effective_from_ts:
+          type: integer
+          description: >
+            A Unix timestamp that indicates the date/time from which the curation will be active. You can use this to create rules that start applying from a future point in time.
+        effective_to_ts:
+          type: integer
+          description: >
+            A Unix timestamp that indicates the date/time until which the curation will be active. You can use this to create rules that stop applying after a period of time.
+        stop_processing:
+          type: boolean
+          description: >
+            When set to true, curation processing will stop at the first matching rule. When set to false curation processing will continue and multiple curation actions will be triggered in sequence.
+            Curations are processed in the lexical sort order of their id field.
+        id:
+          type: string
+          description: ID of the curation item
+
+
+    CurationItemSchema:
+      allOf:
+        - $ref: '#/components/schemas/CurationItemCreateSchema'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+
+    CurationSetCreateSchema:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          description: Array of curation items
+          items:
+            $ref: '#/components/schemas/CurationItemCreateSchema'
+        description:
+          type: string
+          description: Optional description for the curation set
+
+    CurationSetSchema:
+      allOf:
+        - $ref: '#/components/schemas/CurationSetCreateSchema'
+        - type: object
+          required:
+            - name
+          properties:
+            name:
+              type: string
+
+    CurationRule:
+      type: object
+      properties:
+        tags:
+          type: array
+          description: List of tag values to associate with this curation rule.
+          items:
+            type: string
+        query:
+          type: string
+          description: Indicates what search queries should be curated
+        match:
+          type: string
+          description: >
+            Indicates whether the match on the query term should be `exact` or `contains`.
+            If we want to match all queries that contained the word `apple`, we will use the `contains` match instead.
+          enum:
+            - exact
+            - contains
+        filter_by:
+          type: string
+          description: >
+            Indicates that the curation should apply when the filter_by parameter in a search query exactly matches the string specified here (including backticks, spaces, brackets, etc).
+
+    CurationInclude:
+      type: object
+      required:
+        - id
+        - position
+      properties:
+        id:
+          type: string
+          description: document id that should be included
+        position:
+          type: integer
+          description: position number where document should be included in the search results
+
+    CurationExclude:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: document id that should be excluded from the search results.
+
+    CurationSetDeleteSchema:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Name of the deleted curation set
+    CurationItemDeleteSchema:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: ID of the deleted curation item
 
   securitySchemes:
     api_key_header:
