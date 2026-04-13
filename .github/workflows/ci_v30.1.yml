@@ -2,8 +2,6 @@ name: CI v30.1
 
 on:
   workflow_call:
-  pull_request:
-    branches: ["main"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -22,7 +20,6 @@ jobs:
   # - [actions skip]
 
   test:
-    if: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && github.repository == 'jaeyson/open_api_typesense' }}
     runs-on: ubuntu-latest
     environment: review
 
@@ -104,7 +101,7 @@ jobs:
             deps
             _build
             priv/plts
-          key: ${{ runner.os }}-typesense-${{ matrix.typesense}}-${{ matrix.otp}}-${{ matrix.elixir}}-mix-${{ hashFiles('**/mix.lock') }}
+          key: ${{ runner.os }}-typesense-${{ matrix.typesense }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-typesense-${{ matrix.typesense}}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-
 
@@ -161,5 +158,5 @@ jobs:
             deps
             _build
             priv/plts
-          key: |
-            ${{ runner.os }}-${{ steps.beam.outputs.otp-version }}-${{ steps.beam.outputs.elixir-version }}-${{ hashFiles('**/mix.lock') }}
+          key: ${{ runner.os }}-typesense-${{ matrix.typesense }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles('**/mix.lock') }}
+
