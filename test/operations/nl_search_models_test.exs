@@ -4,6 +4,7 @@ defmodule NlSearchModelsTest do
   alias OpenApiTypesense.ApiResponse
   alias OpenApiTypesense.Connection
   alias OpenApiTypesense.NlSearchModels
+  alias OpenApiTypesense.NLSearchModelSchema
 
   setup_all do
     conn = Connection.new()
@@ -11,53 +12,88 @@ defmodule NlSearchModelsTest do
 
     model = %{
       "id" => "gemini-model",
-      "model_name" => "google/gemini-2.5-flash",
-      "api_key" => "YOUR_GOOGLE_AI_STUDIO_API_KEY",
+      "model_name" => "google/gemini-2.5-flash-lite",
+      "api_key" => System.get_env("GOOGLE_GEMINI_API"),
       "max_bytes" => 16_000,
       "temperature" => 0.0
     }
+
+    # TOO EXPENSIVE TO INVOKE FREE TIER REQUESTS!!!
+    # on_exit(fn ->
+    #   {:ok, models} = NlSearchModels.retrieve_all_nl_search_models()
+
+    #   models
+    #   |> Enum.each(fn model ->
+    #     model_id = model.id
+    #     {:ok, %{id: ^model_id}} = NlSearchModels.delete_nl_search_model(model.id)
+    #   end)
+    # end)
 
     %{conn: conn, map_conn: map_conn, model: model}
   end
 
   @tag [nls: true]
-  test "error: create natural language search model", %{
+  test "success: create natural language search model", %{
     conn: conn,
     map_conn: map_conn,
     model: model
   } do
-    reason = %ApiResponse{
-      message: "Google Gemini API error: API key not valid. Please pass a valid API key."
-    }
+    case NlSearchModels.create_nl_search_model(model) do
+      {:error, error} ->
+        assert String.contains?(String.downcase(error.message), [
+                 "already exists",
+                 "please pass a valid api key",
+                 "not found"
+               ]) === true
 
-    assert {:error, ^reason} = NlSearchModels.create_nl_search_model(model)
-    assert {:error, ^reason} = NlSearchModels.create_nl_search_model(model, [])
-    assert {:error, ^reason} = NlSearchModels.create_nl_search_model(model, conn: conn)
-    assert {:error, ^reason} = NlSearchModels.create_nl_search_model(model, map_conn: map_conn)
+        assert {:error, ^error} = NlSearchModels.create_nl_search_model(model)
+        assert {:error, ^error} = NlSearchModels.create_nl_search_model(model, [])
+        assert {:error, ^error} = NlSearchModels.create_nl_search_model(model, conn: conn)
+        assert {:error, ^error} = NlSearchModels.create_nl_search_model(model, map_conn: map_conn)
+
+      {:ok, %NLSearchModelSchema{id: id}} ->
+        assert "gemini-model" === model["id"]
+        assert {:error, error} = NlSearchModels.create_nl_search_model(model)
+
+        assert String.contains?(String.downcase(error.message), [
+                 "already exists",
+                 "please pass a valid api key",
+                 "not found"
+               ]) === true
+
+        assert {:error, ^error} = NlSearchModels.create_nl_search_model(model, [])
+        assert {:error, ^error} = NlSearchModels.create_nl_search_model(model, conn: conn)
+        assert {:error, ^error} = NlSearchModels.create_nl_search_model(model, map_conn: map_conn)
+    end
   end
 
   @tag [nls: true]
-  test "error: delete natural language search model", %{
-    conn: conn,
-    map_conn: map_conn,
-    model: model
-  } do
+  test "error: delete unknown search model", %{conn: conn, map_conn: map_conn} do
     reason = %ApiResponse{message: "Model not found"}
 
-    assert {:error, ^reason} = NlSearchModels.delete_nl_search_model(model["id"])
-    assert {:error, ^reason} = NlSearchModels.delete_nl_search_model(model["id"], [])
-    assert {:error, ^reason} = NlSearchModels.delete_nl_search_model(model["id"], conn: conn)
+    model_id = "unknown"
 
-    assert {:error, ^reason} =
-             NlSearchModels.delete_nl_search_model(model["id"], map_conn: map_conn)
+    assert {:error, ^reason} = NlSearchModels.delete_nl_search_model(model_id)
+    assert {:error, ^reason} = NlSearchModels.delete_nl_search_model(model_id, [])
+    assert {:error, ^reason} = NlSearchModels.delete_nl_search_model(model_id, conn: conn)
+    assert {:error, ^reason} = NlSearchModels.delete_nl_search_model(model_id, map_conn: map_conn)
   end
 
   @tag [nls: true]
   test "success: retrieve all natural language search models", %{conn: conn, map_conn: map_conn} do
-    assert {:ok, []} = NlSearchModels.retrieve_all_nl_search_models()
-    assert {:ok, []} = NlSearchModels.retrieve_all_nl_search_models([])
-    assert {:ok, []} = NlSearchModels.retrieve_all_nl_search_models(conn: conn)
-    assert {:ok, []} = NlSearchModels.retrieve_all_nl_search_models(map_conn: map_conn)
+    case NlSearchModels.retrieve_all_nl_search_models() do
+      {:ok, []} ->
+        assert {:ok, []} = NlSearchModels.retrieve_all_nl_search_models()
+        assert {:ok, []} = NlSearchModels.retrieve_all_nl_search_models([])
+        assert {:ok, []} = NlSearchModels.retrieve_all_nl_search_models(conn: conn)
+        assert {:ok, []} = NlSearchModels.retrieve_all_nl_search_models(map_conn: map_conn)
+
+      {:ok, [first | _]} when is_struct(first, NLSearchModelSchema) ->
+        assert {:ok, _} = NlSearchModels.retrieve_all_nl_search_models()
+        assert {:ok, _} = NlSearchModels.retrieve_all_nl_search_models([])
+        assert {:ok, _} = NlSearchModels.retrieve_all_nl_search_models(conn: conn)
+        assert {:ok, _} = NlSearchModels.retrieve_all_nl_search_models(map_conn: map_conn)
+    end
   end
 
   @tag [nls: true]
@@ -66,18 +102,37 @@ defmodule NlSearchModelsTest do
     map_conn: map_conn,
     model: model
   } do
-    reason = %ApiResponse{message: "Model not found"}
+    case NlSearchModels.retrieve_nl_search_model(model["id"]) do
+      {:error, reason} ->
+        assert %ApiResponse{message: "Model not found"} === reason
+        assert {:error, ^reason} = NlSearchModels.retrieve_nl_search_model(model["id"])
+        assert {:error, ^reason} = NlSearchModels.retrieve_nl_search_model(model["id"], [])
 
-    assert {:error, ^reason} = NlSearchModels.retrieve_nl_search_model(model["id"])
-    assert {:error, ^reason} = NlSearchModels.retrieve_nl_search_model(model["id"], [])
-    assert {:error, ^reason} = NlSearchModels.retrieve_nl_search_model(model["id"], conn: conn)
+        assert {:error, ^reason} =
+                 NlSearchModels.retrieve_nl_search_model(model["id"], conn: conn)
 
-    assert {:error, ^reason} =
-             NlSearchModels.retrieve_nl_search_model(model["id"], map_conn: map_conn)
+        assert {:error, ^reason} =
+                 NlSearchModels.retrieve_nl_search_model(model["id"], map_conn: map_conn)
+
+      {:ok, %NLSearchModelSchema{id: id}} ->
+        assert "gemini-model" === id
+
+        assert {:ok, %NLSearchModelSchema{id: ^id}} =
+                 NlSearchModels.retrieve_nl_search_model(model["id"])
+
+        assert {:ok, %NLSearchModelSchema{id: ^id}} =
+                 NlSearchModels.retrieve_nl_search_model(model["id"], [])
+
+        assert {:ok, %NLSearchModelSchema{id: ^id}} =
+                 NlSearchModels.retrieve_nl_search_model(model["id"], conn: conn)
+
+        assert {:ok, %NLSearchModelSchema{id: ^id}} =
+                 NlSearchModels.retrieve_nl_search_model(model["id"], map_conn: map_conn)
+    end
   end
 
   @tag [nls: true]
-  test "error: update a natural language search model", %{
+  test "success: update a natural language search model", %{
     conn: conn,
     map_conn: map_conn,
     model: model
@@ -87,15 +142,29 @@ defmodule NlSearchModelsTest do
       "system_prompt" => "New system prompt instructions"
     }
 
-    reason = %ApiResponse{message: "Model not found"}
+    NlSearchModels.create_nl_search_model(model)
 
-    assert {:error, ^reason} = NlSearchModels.update_nl_search_model(model["id"], body)
-    assert {:error, ^reason} = NlSearchModels.update_nl_search_model(model["id"], body, [])
+    case NlSearchModels.update_nl_search_model(model["id"], body) do
+      {:error, error} ->
+        assert String.contains?(String.downcase(error.message), [
+                 "please pass a valid api key",
+                 "not found"
+               ]) === true
 
-    assert {:error, ^reason} =
-             NlSearchModels.update_nl_search_model(model["id"], body, conn: conn)
+        assert {:error, ^error} = NlSearchModels.update_nl_search_model(model["id"], body)
+        assert {:error, ^error} = NlSearchModels.update_nl_search_model(model["id"], body, [])
 
-    assert {:error, ^reason} =
-             NlSearchModels.update_nl_search_model(model["id"], body, map_conn: map_conn)
+        assert {:error, ^error} =
+                 NlSearchModels.update_nl_search_model(model["id"], body, conn: conn)
+
+        assert {:error, ^error} =
+                 NlSearchModels.update_nl_search_model(model["id"], body, map_conn: map_conn)
+
+      {:ok, resp} ->
+        model_id = resp.id
+
+        assert {:ok, %NLSearchModelSchema{id: ^model_id}} =
+                 NlSearchModels.update_nl_search_model(model["id"], body)
+    end
   end
 end

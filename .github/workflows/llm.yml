@@ -3,9 +3,9 @@ on:
   pull_request:
     branches: ["main"]
 
-# concurrency:
-#   group: ${{ github.workflow }}-${{ github.ref }}
-#   cancel-in-progress: true
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ci_workflow:
@@ -20,6 +20,7 @@ jobs:
 
     env:
       MIX_ENV: test
+      GOOGLE_GEMINI_API: ${{ secrets.GOOGLE_GEMINI_API }}
 
     strategy:
       matrix:

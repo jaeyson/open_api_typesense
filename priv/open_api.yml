@@ -2981,6 +2981,12 @@ paths:
               $ref: '#/components/schemas/NLSearchModelCreateSchema'
         required: true
       responses:
+        '200':
+          description: NL search model successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NLSearchModelSchema'
         '201':
           description: NL search model successfully created
           content:
