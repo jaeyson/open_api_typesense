@@ -43,10 +43,6 @@ jobs:
           otp: '28'
           elixir: '1.18'
 
-    services:
-      typesense:
-        image: typesense/typesense:${{ matrix.typesense }}
-
     steps:
       - name: Start Typesense
         run: |
