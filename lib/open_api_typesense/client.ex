@@ -138,9 +138,6 @@ defmodule OpenApiTypesense.Client do
   end
 
   defp parse_resp(%Req.Response{status: code, body: body}, %{response: resp}) do
-    dbg(code)
-    dbg(body)
-    dbg(resp)
     {_status, mod} = Enum.find(resp, fn {status, _} -> status === code end)
     parse_body(code, mod, body)
   end
@@ -152,6 +149,7 @@ defmodule OpenApiTypesense.Client do
   defp parse_body(code, {mod, :t}, body) when code in 400..499 do
     payload =
       body
+      |> String.replace("\n", "\\n")
       |> Jason.decode!()
       |> OpenApiTypesense.Converter.to_atom_keys()
 

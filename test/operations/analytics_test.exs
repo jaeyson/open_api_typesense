@@ -15,7 +15,7 @@ defmodule AnalyticsTest do
   setup_all do
     conn = Connection.new()
     map_conn = %{api_key: "xyz", host: "localhost", port: 8108, scheme: "http"}
-    product_name = "products"
+    product_name = "analytics_products"
 
     product_schema =
       %{
@@ -90,7 +90,7 @@ defmodule AnalyticsTest do
     body =
       %{
         "name" => name,
-        "collection" => "products",
+        "collection" => "analytics_products",
         "type" => "popular_queries",
         "event_type" => "search",
         "params" => %{
@@ -122,7 +122,7 @@ defmodule AnalyticsTest do
         "type" => "counter",
         "params" => %{
           "source" => %{
-            "collections" => ["products"]
+            "collections" => ["analytics_products"]
           },
           "destination" => %{
             "collection" => collection_name
@@ -145,7 +145,7 @@ defmodule AnalyticsTest do
       %{
         "name" => name,
         "type" => "nohits_queries",
-        "collection" => "products",
+        "collection" => "analytics_products",
         "event_type" => "search",
         "params" => %{
           "destination_collection" => "product_queries",
@@ -174,7 +174,7 @@ defmodule AnalyticsTest do
         "type" => "nohits_queries",
         "params" => %{
           "source" => %{
-            "collections" => ["products"]
+            "collections" => ["analytics_products"]
           },
           "destination" => %{
             "collection" => "no_hits_queries"
@@ -204,7 +204,7 @@ defmodule AnalyticsTest do
         "type" => "counter",
         "params" => %{
           "source" => %{
-            "collections" => ["products"],
+            "collections" => ["analytics_products"],
             "events" => [
               %{"type" => "click", "weight" => 1, "name" => "products_downloads_event"}
             ]
@@ -314,10 +314,10 @@ defmodule AnalyticsTest do
       %{
         "name" => name,
         "type" => "counter",
-        "collection" => "products",
+        "collection" => "analytics_products",
         "event_type" => "click",
         "params" => %{
-          "destination_collection" => "products",
+          "destination_collection" => "analytics_products",
           "counter_field" => "popularity",
           "weight" => 1
         }
@@ -376,13 +376,13 @@ defmodule AnalyticsTest do
         "type" => "counter",
         "params" => %{
           "source" => %{
-            "collections" => ["products"],
+            "collections" => ["analytics_products"],
             "events" => [
               %{"type" => "click", "weight" => 1, "name" => event_name}
             ]
           },
           "destination" => %{
-            "collection" => "products",
+            "collection" => "analytics_products",
             "counter_field" => "popularity"
           }
         }
