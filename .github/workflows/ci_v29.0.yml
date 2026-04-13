@@ -1,7 +1,6 @@
 name: CI v29.0
 
 on:
-  workflow_call:
   pull_request:
     branches: ["main"]
 
@@ -22,7 +21,6 @@ jobs:
   # - [actions skip]
 
   test:
-    if: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && github.repository == 'jaeyson/open_api_typesense' }}
     runs-on: ubuntu-latest
     environment: review
 
@@ -42,10 +40,6 @@ jobs:
           otp: '28'
           elixir: '1.18'
           lint: false
-
-    services:
-      typesense:
-        image: typesense/typesense:${{ matrix.typesense }}
 
     steps:
       - name: Checkout repo

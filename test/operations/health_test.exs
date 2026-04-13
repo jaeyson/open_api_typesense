@@ -12,7 +12,15 @@ defmodule HealthTest do
     %{conn: conn, map_conn: map_conn}
   end
 
-  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag [
+    "30.1": true,
+    "30.0": true,
+    "29.0": true,
+    "28.0": true,
+    "27.1": true,
+    "27.0": true,
+    "26.0": true
+  ]
   test "success: health check", %{conn: conn, map_conn: map_conn} do
     assert {:ok, %HealthStatus{ok: true}} = Health.health()
     assert {:ok, %HealthStatus{ok: true}} = Health.health([])
@@ -20,7 +28,15 @@ defmodule HealthTest do
     assert {:ok, %HealthStatus{ok: true}} = Health.health(conn: map_conn)
   end
 
-  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag [
+    "30.1": true,
+    "30.0": true,
+    "29.0": true,
+    "28.0": true,
+    "27.1": true,
+    "27.0": true,
+    "26.0": true
+  ]
   test "error: health check error" do
     conn =
       Connection.new(%{
@@ -38,7 +54,15 @@ defmodule HealthTest do
            ]) === true
   end
 
-  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag [
+    "30.1": true,
+    "30.0": true,
+    "29.0": true,
+    "28.0": true,
+    "27.1": true,
+    "27.0": true,
+    "26.0": true
+  ]
   test "error: health check connection refused" do
     conn =
       Connection.new(%{
@@ -51,7 +75,15 @@ defmodule HealthTest do
     assert {:error, "connection refused"} = Health.health(conn: conn)
   end
 
-  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag [
+    "30.1": true,
+    "30.0": true,
+    "29.0": true,
+    "28.0": true,
+    "27.1": true,
+    "27.0": true,
+    "26.0": true
+  ]
   test "error: health check non-existing domain" do
     conn = %{
       api_key: "wrong_key",

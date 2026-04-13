@@ -21,7 +21,6 @@ jobs:
   # - [actions skip]
 
   test:
-    if: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && github.repository == 'jaeyson/open_api_typesense' }}
     runs-on: ubuntu-latest
     environment: review
 
@@ -41,10 +40,6 @@ jobs:
           otp: '27'
           elixir: '1.18'
           lint: false 
-
-    services:
-      typesense:
-        image: typesense/typesense:${{ matrix.typesense }}
 
     steps:
       - name: Checkout repo

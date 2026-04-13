@@ -12,7 +12,7 @@ defmodule OverrideTest do
     %{conn: conn, map_conn: map_conn}
   end
 
-  @tag ["30.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag ["30.1": true, "30.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
   test "error: retrieve an override", %{conn: conn, map_conn: map_conn} do
     error = {:error, %ApiResponse{message: "Not Found"}}
 

@@ -52,7 +52,7 @@ defmodule SynonymsTest do
     %{coll_name: collection_name, conn: conn, map_conn: map_conn}
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "error (v30.0): deprecated function for list collection synonyms", %{coll_name: coll_name} do
     error = {:error, %ApiResponse{message: "Not Found"}}
     assert ^error = Synonyms.get_search_synonyms(coll_name)
@@ -77,7 +77,7 @@ defmodule SynonymsTest do
              Synonyms.get_search_synonyms(coll_name, conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "error (v30.0): deprecated function for upsert a collection synonym", %{
     coll_name: coll_name
   } do
@@ -115,7 +115,7 @@ defmodule SynonymsTest do
     assert {:ok, _} = Synonyms.upsert_search_synonym(coll_name, synonym_id, body, conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "error (v30.0): deprecated function for delete a collection synonym", %{
     coll_name: coll_name
   } do
@@ -154,7 +154,7 @@ defmodule SynonymsTest do
     assert {:error, _} = Synonyms.delete_search_synonym(coll_name, synonym_id, conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "success: delete a synonym set item", %{conn: conn, map_conn: map_conn} do
     name = "tech-synonyms"
 
@@ -189,7 +189,7 @@ defmodule SynonymsTest do
     assert ^error = Synonyms.delete_synonym_set_item(name, item_id, map_conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "error (v30.0): deprecate function delete a synonym associated with a collection", %{
     coll_name: coll_name
   } do
@@ -198,7 +198,7 @@ defmodule SynonymsTest do
     assert ^error = Synonyms.delete_search_synonym(coll_name, synonym_id)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "success: list all synonym sets", %{conn: conn, map_conn: map_conn} do
     name = "sample"
 
@@ -220,7 +220,7 @@ defmodule SynonymsTest do
     assert {:ok, _} = Synonyms.retrieve_synonym_sets(map_conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "success: retrieve a synonym set", %{conn: conn, map_conn: map_conn} do
     name = "sample"
 
@@ -242,7 +242,7 @@ defmodule SynonymsTest do
              Synonyms.retrieve_synonym_set(name, map_conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "success: retrieve a synonym set item", %{conn: conn, map_conn: map_conn} do
     name = "tech-synonyms"
 
@@ -281,7 +281,7 @@ defmodule SynonymsTest do
              Synonyms.retrieve_synonym_set_item(name, item_id, map_conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "success: retrieve a synonym set items", %{conn: conn, map_conn: map_conn} do
     name = "tech-synonyms"
 
@@ -314,7 +314,7 @@ defmodule SynonymsTest do
     assert {:ok, _} = Synonyms.retrieve_synonym_set_items(name, map_conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "error (v30.0): deprecated function for get a collection synonym", %{coll_name: coll_name} do
     synonym_id = "t-shirt-synonyms"
     error = {:error, %ApiResponse{message: "Not Found"}}
@@ -346,7 +346,7 @@ defmodule SynonymsTest do
     assert {:ok, _} = Synonyms.get_search_synonym(coll_name, synonym_id, conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "success: create or update a synonym set (multi-way synonym)", %{
     conn: conn,
     map_conn: map_conn
@@ -372,7 +372,7 @@ defmodule SynonymsTest do
              Synonyms.upsert_synonym_set(name, body, map_conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "success: create or update a synonym set (one-way synonym)", %{
     conn: conn,
     map_conn: map_conn
@@ -399,7 +399,7 @@ defmodule SynonymsTest do
              Synonyms.upsert_synonym_set(name, body, map_conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "success: upsert a synonym set item", %{conn: conn, map_conn: map_conn} do
     name = "tech-synonyms"
 
@@ -435,7 +435,7 @@ defmodule SynonymsTest do
              Synonyms.upsert_synonym_set_item(name, item_id, body, map_conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "success: delete a synonym set", %{conn: conn, map_conn: map_conn} do
     name = "tech-synonyms"
 

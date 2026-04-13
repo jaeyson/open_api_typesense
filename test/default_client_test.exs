@@ -7,7 +7,15 @@ defmodule DefaultClientTest do
   require Logger
 
   describe "request/2" do
-    @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+    @tag [
+      "30.1": true,
+      "30.0": true,
+      "29.0": true,
+      "28.0": true,
+      "27.1": true,
+      "27.0": true,
+      "26.0": true
+    ]
     test "default to req http client if no custom client set" do
       conn = Connection.new()
 
@@ -27,7 +35,15 @@ defmodule DefaultClientTest do
   end
 
   describe "build_req_client/2" do
-    @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+    @tag [
+      "30.1": true,
+      "30.0": true,
+      "29.0": true,
+      "28.0": true,
+      "27.1": true,
+      "27.0": true,
+      "26.0": true
+    ]
     test "override req options through req field" do
       req =
         Client.build_req_client(Connection.new(),
@@ -43,7 +59,15 @@ defmodule DefaultClientTest do
     end
   end
 
-  @tag ["30.0": true, "29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag [
+    "30.1": true,
+    "30.0": true,
+    "29.0": true,
+    "28.0": true,
+    "27.1": true,
+    "27.0": true,
+    "26.0": true
+  ]
   test "get api key" do
     assert "xyz" = Client.api_key()
   end
