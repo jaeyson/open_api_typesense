@@ -34,7 +34,7 @@ defmodule CurationTest do
     %{schema_name: name, conn: conn, map_conn: map_conn}
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "error (v30.0): deprecated function for upsert search override", %{
     schema_name: schema_name
   } do
@@ -92,7 +92,7 @@ defmodule CurationTest do
              Curation.upsert_search_override(schema_name, override_id, body, conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "error (v30.0): deprecated function for delete search override", %{
     schema_name: schema_name
   } do
@@ -118,7 +118,7 @@ defmodule CurationTest do
     assert {:error, _} = Curation.delete_search_override(schema_name, "test", conn: map_conn)
   end
 
-  @tag ["30.0": true]
+  @tag ["30.1": true, "30.0": true]
   test "error (v30.0): deprecated function for list collection overrides", %{
     schema_name: schema_name
   } do

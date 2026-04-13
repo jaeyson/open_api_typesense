@@ -345,7 +345,15 @@ defmodule JoinTest do
     :ok
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag [
+    "30.1": true,
+    "30.0": true,
+    "29.0": true,
+    "28.0": true,
+    "27.1": true,
+    "27.0": true,
+    "26.0": true
+  ]
   test "success: one-to-one relation" do
     searches = %{
       searches: [
@@ -378,7 +386,15 @@ defmodule JoinTest do
             }} = Documents.multi_search(searches)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag [
+    "30.1": true,
+    "30.0": true,
+    "29.0": true,
+    "28.0": true,
+    "27.1": true,
+    "27.0": true,
+    "26.0": true
+  ]
   test "success: one-to-many relation (simple)" do
     searches = %{
       searches: [
@@ -436,7 +452,15 @@ defmodule JoinTest do
             }} = Documents.multi_search(searches)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag [
+    "30.1": true,
+    "30.0": true,
+    "29.0": true,
+    "28.0": true,
+    "27.1": true,
+    "27.0": true,
+    "26.0": true
+  ]
   test "success: one-to-many relation (specialized)" do
     searches = %{
       searches: [
@@ -473,7 +497,15 @@ defmodule JoinTest do
             }} = Documents.multi_search(searches)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag [
+    "30.1": true,
+    "30.0": true,
+    "29.0": true,
+    "28.0": true,
+    "27.1": true,
+    "27.0": true,
+    "26.0": true
+  ]
   test "success: merging or nesting joined fields" do
     searches = %{
       searches: [
@@ -514,7 +546,15 @@ defmodule JoinTest do
             }} = Documents.multi_search(searches)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag [
+    "30.1": true,
+    "30.0": true,
+    "29.0": true,
+    "28.0": true,
+    "27.1": true,
+    "27.0": true,
+    "26.0": true
+  ]
   test "success: forcing nested array for joined fields" do
     searches = %{
       searches: [
@@ -551,7 +591,15 @@ defmodule JoinTest do
             }} = Documents.multi_search(searches)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag [
+    "30.1": true,
+    "30.0": true,
+    "29.0": true,
+    "28.0": true,
+    "27.1": true,
+    "27.0": true,
+    "26.0": true
+  ]
   test "success: left join" do
     opts = [
       collection: "authors",
@@ -576,7 +624,15 @@ defmodule JoinTest do
             }} = Documents.search_collection("authors", opts)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag [
+    "30.1": true,
+    "30.0": true,
+    "29.0": true,
+    "28.0": true,
+    "27.1": true,
+    "27.0": true,
+    "26.0": true
+  ]
   test "success: nested joins" do
     opts = [
       q: "shampoo",
@@ -633,7 +689,15 @@ defmodule JoinTest do
             }} = Documents.search_collection("join_products", opts)
   end
 
-  @tag ["29.0": true, "28.0": true, "27.1": true, "27.0": true, "26.0": true]
+  @tag [
+    "30.1": true,
+    "30.0": true,
+    "29.0": true,
+    "28.0": true,
+    "27.1": true,
+    "27.0": true,
+    "26.0": true
+  ]
   test "success: nested joins (geo radius)" do
     opts = [
       q: "shampoo",

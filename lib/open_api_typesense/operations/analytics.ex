@@ -290,7 +290,9 @@ defmodule OpenApiTypesense.Analytics do
           body :: OpenApiTypesense.AnalyticsRuleUpdate.t(),
           opts :: keyword
         ) ::
-          {:ok, OpenApiTypesense.AnalyticsRule.t()} | {:error, OpenApiTypesense.ApiResponse.t()}
+          {:ok, OpenApiTypesense.AnalyticsRule.t()}
+          | {:ok, OpenApiTypesense.AnalyticsRuleSchema.t()}
+          | {:error, OpenApiTypesense.ApiResponse.t()}
   def upsert_analytics_rule(rule_name, body, opts \\ []) do
     client = opts[:client] || @default_client
 
