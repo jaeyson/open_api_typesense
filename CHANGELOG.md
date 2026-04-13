@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 1.3.0 (2026.04.14)
+
+### Chore
+
+* Support for Typesense v30.1. See <https://typesense.org/docs/30.1/api>
+
 ## 1.2.0 (2026.04.13)
 
 ### Deprecated
