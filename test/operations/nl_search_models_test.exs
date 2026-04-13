@@ -41,6 +41,8 @@ defmodule NlSearchModelsTest do
     case NlSearchModels.create_nl_search_model(model) do
       {:error, error} ->
         assert String.contains?(String.downcase(error.message), [
+                 "You exceeded your current quota",
+                 "`api_key` is missing or is not a non-empty string.",
                  "already exists",
                  "please pass a valid api key",
                  "not found"
@@ -56,6 +58,8 @@ defmodule NlSearchModelsTest do
         assert {:error, error} = NlSearchModels.create_nl_search_model(model)
 
         assert String.contains?(String.downcase(error.message), [
+                 "You exceeded your current quota",
+                 "`api_key` is missing or is not a non-empty string.",
                  "already exists",
                  "please pass a valid api key",
                  "not found"
@@ -146,7 +150,11 @@ defmodule NlSearchModelsTest do
 
     case NlSearchModels.update_nl_search_model(model["id"], body) do
       {:error, error} ->
+        assert 1 = error
+
         assert String.contains?(String.downcase(error.message), [
+                 "You exceeded your current quota",
+                 "`api_key` is missing or is not a non-empty string.",
                  "please pass a valid api key",
                  "not found"
                ]) === true
