@@ -150,8 +150,6 @@ defmodule NlSearchModelsTest do
 
     case NlSearchModels.update_nl_search_model(model["id"], body) do
       {:error, error} ->
-        assert 1 = error
-
         assert String.contains?(String.downcase(error.message), [
                  "You exceeded your current quota",
                  "`api_key` is missing or is not a non-empty string.",
