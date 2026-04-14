@@ -306,7 +306,8 @@ defmodule OpenApiTypesense.Analytics do
       response: [
         {200, {OpenApiTypesense.AnalyticsRule, :t}},
         {400, {OpenApiTypesense.ApiResponse, :t}},
-        {401, {OpenApiTypesense.ApiResponse, :t}}
+        {401, {OpenApiTypesense.ApiResponse, :t}},
+        {404, {OpenApiTypesense.ApiResponse, :t}}
       ],
       opts: opts
     })

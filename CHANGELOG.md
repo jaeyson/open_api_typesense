@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 1.3.1 (2026.04.14)
+
+### Fixed
+
+* Add 404 on response for `Analytics.upsert_analytics_rule`.
+
 ## 1.3.0 (2026.04.14)
 
 ### Chore
