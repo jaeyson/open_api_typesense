@@ -117,7 +117,23 @@ defmodule OpenApiTypesense.Client do
   end
 
   defp encode_body(opts) do
-    body = opts[:args][:body]
+    body =
+      opts[:args][:body]
+      |> then(fn
+        nil ->
+          nil
+
+        binary when is_binary(binary) ->
+          binary
+
+        data when is_list(data) ->
+          Enum.map(data, &scrub_ash_not_loaded/1)
+
+        data ->
+          data
+          |> maybe_convert_struct()
+          |> Map.new(&scrub_ash_not_loaded/1)
+      end)
 
     case {opts[:request], body} do
       {nil, _} ->
@@ -136,6 +152,13 @@ defmodule OpenApiTypesense.Client do
         body
     end
   end
+
+  defp maybe_convert_struct(data) when is_struct(data), do: Map.from_struct(data)
+  defp maybe_convert_struct(data), do: data
+
+  defp scrub_ash_not_loaded({key, %{__struct__: Ash.NotLoaded}}), do: {key, nil}
+  defp scrub_ash_not_loaded({key, value}), do: {key, value}
+  defp scrub_ash_not_loaded(other), do: other
 
   defp parse_resp(%Req.Response{status: code, body: body}, %{response: resp}) do
     {_status, mod} = Enum.find(resp, fn {status, _} -> status === code end)

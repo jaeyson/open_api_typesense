@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 1.3.2 (2026.??.??)
+
+### Fixed
+
+* Ignore `Ash.NotLoaded` when encoding payload to send in Typesense server
+
+### Chore
+
+* Update typespecs to include map type as body/payload
+
 ## 1.3.1 (2026.04.14)
 
 ### Fixed
