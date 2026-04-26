@@ -88,6 +88,15 @@ jobs:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
 
+      - name: Cache typesense-data
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            typesense-data
+          key: ${{ runner.os }}-typesense-data
+          restore-keys: |
+            ${{ runner.os }}-typesense-data
+
       - name: Restore cache
         id: cache_restore
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
@@ -138,11 +147,8 @@ jobs:
         run: mix dialyzer --format github --format dialyxir
         if: ${{ matrix.lint }}
 
-      - name: Run tests
-        run: mix test --only ${{ matrix.typesense }}:true --only nls:true --trace
-
       - name: Post test coverage to Coveralls
-        run: mix coveralls.github
+        run: mix coveralls.github --only ${{ matrix.typesense }}:true --only nls:true --trace
         if: ${{ matrix.lint && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
       - name: Save cache
