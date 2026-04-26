@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-* Ignore `Ash.NotLoaded` when encoding payload to send in Typesense server
+* Ignore `Ash.NotLoaded` when encoding payload to send to the Typesense server
 
 ### Chore
 

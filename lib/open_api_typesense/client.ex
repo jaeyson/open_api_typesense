@@ -119,21 +119,8 @@ defmodule OpenApiTypesense.Client do
   defp encode_body(opts) do
     body =
       opts[:args][:body]
-      |> then(fn
-        nil ->
-          nil
-
-        binary when is_binary(binary) ->
-          binary
-
-        data when is_list(data) ->
-          Enum.map(data, &scrub_ash_not_loaded/1)
-
-        data ->
-          data
-          |> maybe_convert_struct()
-          |> Map.new(&scrub_ash_not_loaded/1)
-      end)
+      # Use a unified recursive scrubber
+      |> scrub_data()
 
     case {opts[:request], body} do
       {nil, _} ->
@@ -153,12 +140,24 @@ defmodule OpenApiTypesense.Client do
     end
   end
 
-  defp maybe_convert_struct(data) when is_struct(data), do: Map.from_struct(data)
-  defp maybe_convert_struct(data), do: data
+  # Recursive scrubber to handle nested maps, lists, and Ash.NotLoaded
+  defp scrub_data(%{__struct__: Ash.NotLoaded}), do: nil
 
-  defp scrub_ash_not_loaded({key, %{__struct__: Ash.NotLoaded}}), do: {key, nil}
-  defp scrub_ash_not_loaded({key, value}), do: {key, value}
-  defp scrub_ash_not_loaded(other), do: other
+  defp scrub_data(struct) when is_struct(struct) do
+    struct
+    |> Map.from_struct()
+    |> scrub_data()
+  end
+
+  defp scrub_data(map) when is_map(map) do
+    for {k, v} <- map, into: %{}, do: {k, scrub_data(v)}
+  end
+
+  defp scrub_data(list) when is_list(list) do
+    Enum.map(list, &scrub_data/1)
+  end
+
+  defp scrub_data(other), do: other
 
   defp parse_resp(%Req.Response{status: code, body: body}, %{response: resp}) do
     {_status, mod} = Enum.find(resp, fn {status, _} -> status === code end)
