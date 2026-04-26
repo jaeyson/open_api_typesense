@@ -117,7 +117,10 @@ defmodule OpenApiTypesense.Client do
   end
 
   defp encode_body(opts) do
-    body = opts[:args][:body]
+    body =
+      opts[:args][:body]
+      # Use a unified recursive scrubber
+      |> scrub_data()
 
     case {opts[:request], body} do
       {nil, _} ->
@@ -136,6 +139,25 @@ defmodule OpenApiTypesense.Client do
         body
     end
   end
+
+  # Recursive scrubber to handle nested maps, lists, and Ash.NotLoaded
+  defp scrub_data(%{__struct__: Ash.NotLoaded}), do: nil
+
+  defp scrub_data(struct) when is_struct(struct) do
+    struct
+    |> Map.from_struct()
+    |> scrub_data()
+  end
+
+  defp scrub_data(map) when is_map(map) do
+    for {k, v} <- map, into: %{}, do: {k, scrub_data(v)}
+  end
+
+  defp scrub_data(list) when is_list(list) do
+    Enum.map(list, &scrub_data/1)
+  end
+
+  defp scrub_data(other), do: other
 
   defp parse_resp(%Req.Response{status: code, body: body}, %{response: resp}) do
     {_status, mod} = Enum.find(resp, fn {status, _} -> status === code end)

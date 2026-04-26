@@ -359,7 +359,10 @@ defmodule OpenApiTypesense.Documents do
   **Content Types**: `application/json`
   """
   @doc since: "0.4.0"
-  @spec multi_search(body :: OpenApiTypesense.MultiSearchSearchesParameter.t(), opts :: keyword) ::
+  @spec multi_search(
+          body :: list(map) | OpenApiTypesense.MultiSearchSearchesParameter.t(),
+          opts :: keyword
+        ) ::
           {:ok, OpenApiTypesense.MultiSearchResult.t()}
           | {:error, OpenApiTypesense.ApiResponse.t()}
   def multi_search(body, opts \\ []) do
