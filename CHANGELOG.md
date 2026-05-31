@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 1.3.3 (2026.05.31)
+
+### Fixed
+
+* Relax :poison constraint to allow 4.x, 5.x, or 6.x ([PR #50](https://github.com/jaeyson/open_api_typesense/pull/50)). Thanks [@kianmeng](https://github.com/kianmeng)!
+
 ## 1.3.2 (2026.04.26)
 
 ### Fixed
