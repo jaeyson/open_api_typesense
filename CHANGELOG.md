@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 1.3.4 (2026.06.07)
+
+### Chore
+
+* Force Hex resolution to pick from 2.x or 3.x line validly for [Decimal](https://github.com/advisories/GHSA-rhv4-8758-jx7v): Unbounded exponent in `Decimal.new` enables unauthenticated DoS.
+
 ## 1.3.3 (2026.05.31)
 
 ### Fixed

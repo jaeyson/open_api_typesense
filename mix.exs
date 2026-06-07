@@ -3,7 +3,7 @@ defmodule OpenApiTypesense.MixProject do
 
   @source_url "https://github.com/jaeyson/open_api_typesense"
   @hex_url "https://hexdocs.pm/open_api_typesense"
-  @version "1.3.3"
+  @version "1.3.4"
 
   def project do
     [
@@ -51,7 +51,14 @@ defmodule OpenApiTypesense.MixProject do
       {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
       {:poison, "~> 4.0 or ~> 5.0 or ~> 6.0"},
       {:oapi_generator, "~> 0.4.0", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+
+      # URL: https://github.com/advisories/GHSA-rhv4-8758-jx7v
+      # Title: Decimal: Unbounded exponent in `Decimal.new` enables unauthenticated DoS
+      # Severity: moderate
+      # Vulnerable versions: >= 0.1.0, < 3.0.0
+      # First patched versions: 3.0.0
+      {:decimal, "~> 2.1 or ~> 3.0"}
     ]
   end
 
