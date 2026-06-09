@@ -8,7 +8,7 @@ defmodule OpenApiTypesense.SearchOverridesResponse do
 
   defstruct [:overrides]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.SearchOverridesResponse) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.SearchOverridesResponse) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

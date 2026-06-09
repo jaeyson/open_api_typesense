@@ -8,7 +8,7 @@ defmodule OpenApiTypesense.AnalyticsEventsResponse do
 
   defstruct [:events]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.AnalyticsEventsResponse) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.AnalyticsEventsResponse) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

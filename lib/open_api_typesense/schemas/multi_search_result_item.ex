@@ -40,7 +40,7 @@ defmodule OpenApiTypesense.MultiSearchResultItem do
     :union_request_params
   ]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.MultiSearchResultItem) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.MultiSearchResultItem) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

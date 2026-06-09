@@ -8,7 +8,7 @@ defmodule OpenApiTypesense.CollectionAliasesResponse do
 
   defstruct [:aliases]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.CollectionAliasesResponse) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.CollectionAliasesResponse) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

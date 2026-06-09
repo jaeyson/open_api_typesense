@@ -8,7 +8,7 @@ defmodule OpenApiTypesense.StemmingDictionary do
 
   defstruct [:id, :words]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.StemmingDictionary) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.StemmingDictionary) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

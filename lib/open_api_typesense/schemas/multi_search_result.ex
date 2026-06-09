@@ -11,7 +11,7 @@ defmodule OpenApiTypesense.MultiSearchResult do
 
   defstruct [:conversation, :results]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.MultiSearchResult) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.MultiSearchResult) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

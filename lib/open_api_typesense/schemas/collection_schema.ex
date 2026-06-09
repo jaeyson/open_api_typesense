@@ -28,7 +28,7 @@ defmodule OpenApiTypesense.CollectionSchema do
     token_separators: []
   ]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.CollectionSchema) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.CollectionSchema) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

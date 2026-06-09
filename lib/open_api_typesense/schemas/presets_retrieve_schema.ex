@@ -8,7 +8,7 @@ defmodule OpenApiTypesense.PresetsRetrieveSchema do
 
   defstruct [:presets]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.PresetsRetrieveSchema) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.PresetsRetrieveSchema) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

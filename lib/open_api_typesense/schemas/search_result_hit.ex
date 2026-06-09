@@ -28,7 +28,7 @@ defmodule OpenApiTypesense.SearchResultHit do
     :vector_distance
   ]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.SearchResultHit) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.SearchResultHit) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

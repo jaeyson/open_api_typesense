@@ -32,7 +32,7 @@ defmodule OpenApiTypesense.CollectionResponse do
     token_separators: []
   ]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.CollectionResponse) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.CollectionResponse) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do
