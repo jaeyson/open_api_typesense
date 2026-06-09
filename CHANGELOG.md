@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Chore
 
-* [Forked Poison](https://github.com/jaeyson/poison) to use Decimal v3.
+* [Forked Poison](https://github.com/jaeyson/fork_poison) to use Decimal v3.
 
 ## 1.3.4 (2026.06.07)
 
