@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+## 1.3.5 (2026.06.09)
+
+### Chore
+
+* [Forked Poison](https://github.com/jaeyson/poison) to use Decimal v3.
+
 ## 1.3.4 (2026.06.07)
 
 ### Chore
