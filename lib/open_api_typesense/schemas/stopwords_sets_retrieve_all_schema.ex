@@ -8,7 +8,7 @@ defmodule OpenApiTypesense.StopwordsSetsRetrieveAllSchema do
 
   defstruct [:stopwords]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.StopwordsSetsRetrieveAllSchema) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.StopwordsSetsRetrieveAllSchema) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

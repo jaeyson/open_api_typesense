@@ -36,7 +36,7 @@ defmodule OpenApiTypesense.SearchOverride do
     :stop_processing
   ]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.SearchOverride) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.SearchOverride) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

@@ -12,7 +12,7 @@ defmodule OpenApiTypesense.SearchGroupedHit do
 
   defstruct [:found, :group_key, :hits]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.SearchGroupedHit) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.SearchGroupedHit) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

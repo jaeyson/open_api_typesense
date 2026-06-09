@@ -12,7 +12,7 @@ defmodule OpenApiTypesense.CurationSetSchema do
 
   defstruct [:description, :items, :name]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.CurationSetSchema) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.CurationSetSchema) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

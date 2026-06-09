@@ -12,7 +12,7 @@ defmodule OpenApiTypesense.CollectionUpdateSchema do
 
   defstruct [:fields, :metadata, :synonym_sets]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.CollectionUpdateSchema) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.CollectionUpdateSchema) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

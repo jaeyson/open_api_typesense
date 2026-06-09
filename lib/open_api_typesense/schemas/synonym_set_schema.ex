@@ -8,7 +8,7 @@ defmodule OpenApiTypesense.SynonymSetSchema do
 
   defstruct [:items, :name]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.SynonymSetSchema) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.SynonymSetSchema) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

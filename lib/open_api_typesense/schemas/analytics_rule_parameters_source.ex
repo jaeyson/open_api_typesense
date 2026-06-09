@@ -11,7 +11,7 @@ defmodule OpenApiTypesense.AnalyticsRuleParametersSource do
 
   defstruct [:collections, :events]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.AnalyticsRuleParametersSource) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.AnalyticsRuleParametersSource) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

@@ -8,7 +8,7 @@ defmodule OpenApiTypesense.AnalyticsRulesRetrieveSchema do
 
   defstruct [:rules]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.AnalyticsRulesRetrieveSchema) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.AnalyticsRulesRetrieveSchema) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

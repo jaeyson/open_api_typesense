@@ -305,7 +305,7 @@ if Mix.env() == :dev do
     @spec declare_defimpl(mod :: atom()) :: Macro.t()
     defp declare_defimpl(mod) do
       quote do
-        defimpl Poison.Decoder, for: unquote(mod) do
+        defimpl ForkPoison.Decoder, for: unquote(mod) do
           def decode(value, %{as: struct}) do
             mod =
               case struct do

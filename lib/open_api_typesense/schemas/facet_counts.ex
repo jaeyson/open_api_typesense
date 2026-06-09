@@ -13,7 +13,7 @@ defmodule OpenApiTypesense.FacetCounts do
 
   defstruct [:counts, :field_name, :sampled, :stats]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.FacetCounts) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.FacetCounts) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do

@@ -36,7 +36,7 @@ defmodule OpenApiTypesense.CurationItemCreateSchema do
     :stop_processing
   ]
 
-  defimpl(Poison.Decoder, for: OpenApiTypesense.CurationItemCreateSchema) do
+  defimpl(ForkPoison.Decoder, for: OpenApiTypesense.CurationItemCreateSchema) do
     def decode(value, %{as: struct}) do
       mod =
         case struct do
