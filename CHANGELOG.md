@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## major.minor.patch (yyyy.mm.dd)
 
+### Fixed
+
+* Do not attach a body to bodyless requests. `encode_body/1` serialized a nil body to the literal `"null"`, so every GET/DELETE carried a JSON body. Older HTTP clients dropped it, but Req >= 0.7 transmits it and Typesense returns 404 for a GET-with-body (e.g. `get_collection` on `/collections/:name`), breaking collection existence checks and reindexing.
+
 ## 1.3.5 (2026.06.09)
 
 ### Chore

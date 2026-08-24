@@ -123,6 +123,14 @@ defmodule OpenApiTypesense.Client do
       |> scrub_data()
 
     case {opts[:request], body} do
+      # No request-body spec and no body (e.g. GET/DELETE) — send no body at all.
+      # Encoding `nil` to the literal "null" makes bodyless requests carry a JSON body, which
+      # older HTTP clients silently dropped but Req >= 0.7 transmits. Typesense then returns 404
+      # for a GET-with-body on routes like `/collections/:name`, so `get_collection` cannot see a
+      # collection that exists. Returning nil lets Req omit the body.
+      {nil, nil} ->
+        nil
+
       {nil, _} ->
         Jason.encode_to_iodata!(body)
 

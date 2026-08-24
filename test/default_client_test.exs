@@ -57,6 +57,23 @@ defmodule DefaultClientTest do
                max_retries: 0
              }
     end
+
+    @tag [
+      "30.1": true,
+      "30.0": true,
+      "29.0": true,
+      "28.0": true,
+      "27.1": true,
+      "27.0": true,
+      "26.0": true
+    ]
+    test "does not attach a body to bodyless requests" do
+      # A GET/DELETE with no body must not carry the literal "null" — Req >= 0.7 transmits it and
+      # Typesense 404s a GET-with-body (e.g. get_collection). See encode_body/1.
+      req = Client.build_req_client(Connection.new(), url: "/collections/foo", method: :get)
+
+      assert req.body == nil
+    end
   end
 
   @tag [
